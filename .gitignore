@@ -1,0 +1,15 @@
+*.egg-info
+*.pyc
+.installed.cfg
+.project
+.pydevproject
+.settings/
+bin/
+buildout-cache/
+develop-eggs/
+parts/
+var/
+*.swp
+include/
+lib/
+local/
