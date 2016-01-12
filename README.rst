@@ -54,15 +54,14 @@ Example display
 Source Code and Contributions
 -----------------------------
 
-If you want to help with the development (improvement, update, bug-fixing, ...) of ``pas.plugins.authomatic`` this is a great idea!
+If you want to help with the development (improvement, update, bug-fixing, ...) of ``plone.versioncheck`` this is a great idea!
 
-- `Source code at Github <https://github.com/collective/pas.plugins.authomatic>`_
-- `Issue tracker at Github <https://github.com/collective/pas.plugins.authomatic/issues>`_
+Please follow the `contribution guidelines <http://docs.plone.org/develop/coredev/docs/guidelines.html>`_.
 
-You can clone it or `get access to the github-collective <http://collective.github.com/>`_ and work directly on the project.
-Please do larger changes on a branch and submit a Pull Request.
+- `Source code at Github <https://github.com/plone/plone.versioncheck>`_
+- `Issue tracker at Github <https://github.com/plone/plone.versioncheck>`_
 
-Maintainer of pas.plugins.authomatic is Jens Klein.
+Maintainer of plone.versioncheck is Jens Klein.
 We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us.
 
 Development
