@@ -55,7 +55,6 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
 
 def parse(buildout_filename):
     base_relative = _find_relative(buildout_filename)
-    print base_relative
     version_sections = _extract_versions_section(
         buildout_filename,
         relative=base_relative
