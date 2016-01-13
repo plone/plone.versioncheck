@@ -24,7 +24,8 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
     if (
         relative is not None and
         "://" not in filename and
-        not filename.startswith('/')
+        not filename.startswith('/') and
+        not filename.startswith(relative)
     ):
         filename = relative + '/' + filename
     logger.info('lookup versions in {0}'.format(filename))
@@ -53,8 +54,8 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
 
 
 def parse(buildout_filename):
-
     base_relative = _find_relative(buildout_filename)
+    print base_relative
     version_sections = _extract_versions_section(
         buildout_filename,
         relative=base_relative
