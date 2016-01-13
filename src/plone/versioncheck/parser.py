@@ -3,9 +3,12 @@ from collections import OrderedDict
 from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 from ConfigParser import NoSectionError
+import logging
 import os.path
 import urllib2
 import urlparse
+
+logger = logging.getLogger(__name__)
 
 
 def _find_relative(extend):
@@ -24,7 +27,7 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
         not filename.startswith('/')
     ):
         filename = relative + '/' + filename
-    print "lookup versions in ", filename
+    logger.info('lookup versions in {0}'.format(filename))
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)

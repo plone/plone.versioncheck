@@ -33,8 +33,9 @@ setup(
     include_package_data=True,
     zip_safe=True,
     install_requires=[
-        'setuptools',
+        'colorama',
         'requests',
+        'setuptools',
     ],
     entry_points={
         'console_scripts': [

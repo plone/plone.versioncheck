@@ -2,7 +2,10 @@
 from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
+import logging
 import requests
+
+logger = logging.getLogger(__name__)
 
 
 PYPI_URL = "https://pypi.python.org/pypi"
@@ -97,13 +100,15 @@ def check(name, version):
     return result
 
 
-def check_all(pkgsinfo):
+def check_all(pkgsinfo, limit=None):
     pkgsinfo['pypi'] = {}
     pkgs = pkgsinfo['pkgs']
     for idx, pkgname in enumerate(sorted(pkgs)):
-        print idx+1, ' pypi check ', pkgname
+        logger.info('{0} pypi check {1}'.format(idx+1, pkgname))
         current = next(iter(pkgs[pkgname]))
         pkgsinfo['pypi'][pkgname] = check(
             pkgname,
             pkgs[pkgname][current]
         )
+        if limit and idx == limit:
+            break

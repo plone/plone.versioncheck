@@ -25,11 +25,16 @@ parser.add_argument(
     help='check pypi for newer versions',
     action="store_true"
 )
+parser.add_argument(
+    '--debug-limit',
+    type=int,
+    help='Limit the number of pypi versions fetched for debugging'
+)
 
 
 def run():
     args = parser.parse_args()
     pkgsinfo = parse(args.buildout)
     if args.pypi:
-        check_all(pkgsinfo)
-    display(pkgsinfo, overrides_only=args.overrides)
+        check_all(pkgsinfo, args.debug_limit)
+    display(pkgsinfo, overrides_only=args.overrides, limit=args.debug_limit)

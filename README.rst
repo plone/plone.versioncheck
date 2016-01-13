@@ -16,12 +16,16 @@ Command line script to check a buildouts ``[versions]`` section while stepping t
 The script collects the inherited version pins, remembers where a version pin comes from.
 It displays then sorted result in order to enable a human to check pins and overrides are ok.
 
+Optional Python Package Index (PyPI) may be checked for newer versions.
+It works only with sematically korrekt version numbers.
+If a newer major, minor or bugfix (or a prerelease) is available it will get printed.
+
 Usage
 -----
 
 ::
 
-    usage: versioncheck [-h] [-b BUILDOUT] [-o]
+    usage: versioncheck [-h] [-b BUILDOUT] [-o] [-p]
 
     Print info about pinned versions and its overrides
 
