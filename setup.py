@@ -34,7 +34,7 @@ setup(
     zip_safe=True,
     install_requires=[
         'setuptools',
-        'requests'
+        'requests',
     ],
     entry_points={
         'console_scripts': [

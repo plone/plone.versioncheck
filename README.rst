@@ -30,24 +30,31 @@ Usage
      -b BUILDOUT, --buildout BUILDOUT
                             path to buildout.cfg or other cfg file
      -o, --overrides       display only packages with overrides
+     -p, --pypi            check pypi for newer versions
 
 Example display
 ---------------
 
 ::
 
-    check versions
-    --------------
-    accesscontrol........................ 3.0.11................ coredev5/versions.cfg
+    accesscontrol........................ 3.0.11................ ../coredev5/versions.cfg
                                           2.13.13............... http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+                                          3.0.12................ PYPI bugfix
     acquisition.......................... 2.13.9................ http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-    archetypes.multilingual.............. 3.0.1................. coredev5/versions.cfg
-    archetypes.referencebrowserwidget.... 2.5.6................. coredev5/versions.cfg
-    archetypes.schemaextender............ 2.1.5................. coredev5/versions.cfg
-    argcomplete.......................... 0.8.3................. coredev5/tests.cfg
-    argh................................. 0.25.0................ coredev5/tests.cfg
+                                          4.2.2................. PYPI major
+    archetypes.multilingual.............. 3.0.1................. ../coredev5/versions.cfg
+    archetypes.referencebrowserwidget.... 2.5.6................. ../coredev5/versions.cfg
+    archetypes.schemaextender............ 2.1.5................. ../coredev5/versions.cfg
+    argcomplete.......................... 0.8.3................. ../coredev5/tests.cfg
+                                          1.0.0................. PYPI major
+                                          0.9.0................. PYPI minor
+                                          0.8.9................. PYPI bugfix
+    argh................................. 0.25.0................ ../coredev5/tests.cfg
+                                          0.26.1................ PYPI minor
     argparse............................. 1.1................... http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-    autopep8............................. 0.9.7................. coredev5/tests.cfg
+                                          1.4.0................. PYPI minor
+    autopep8............................. 0.9.7................. ../coredev5/tests.cfg
+                                          1.2.1................. PYPI major
     ... and so on ...
 
 

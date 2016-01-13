@@ -18,17 +18,14 @@ def _find_relative(extend):
 
 
 def _extract_versions_section(filename, version_sections=None, relative=None):
-    print '-' * 40
-    print filename
-    print relative
     if (
         relative is not None and
         "://" not in filename and
         not filename.startswith('/')
     ):
         filename = relative + '/' + filename
+    print "lookup versions in ", filename
     config = ConfigParser()
-    print filename
     if os.path.isfile(filename):
         config.read(filename)
     else:
@@ -48,7 +45,6 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
         if not extend:
             continue
         sub_relative = _find_relative(extend) or relative
-        print "sub relative ", sub_relative
         _extract_versions_section(extend, version_sections, sub_relative)
     return version_sections
 
