@@ -6,6 +6,9 @@ Changelog
 1.1 (unreleased)
 ----------------
 
+- Refacoring of display output and show tracked info
+  [jensens]
+
 - Add buildout extension to optional track required by and if its use at all
   [jensens]
 

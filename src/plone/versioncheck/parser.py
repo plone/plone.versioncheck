@@ -3,21 +3,12 @@ from collections import OrderedDict
 from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 from ConfigParser import NoSectionError
+from plone.versioncheck.utils import find_relative
 import logging
 import os.path
 import urllib2
-import urlparse
 
 logger = logging.getLogger(__name__)
-
-
-def _find_relative(extend):
-    if "://" in extend:
-        parts = list(urlparse.urlparse(extend))
-        parts[2] = '/'.join(parts[2].split('/')[:-1])
-        return urlparse.urlunparse(parts)
-    elif '/' in extend:
-        return os.path.dirname(extend)
 
 
 def _extract_versions_section(filename, version_sections=None, relative=None):
@@ -48,13 +39,13 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
         extend = extend.strip()
         if not extend:
             continue
-        sub_relative = _find_relative(extend) or relative
+        sub_relative = find_relative(extend) or relative
         _extract_versions_section(extend, version_sections, sub_relative)
     return version_sections
 
 
 def parse(buildout_filename):
-    base_relative = _find_relative(buildout_filename)
+    base_relative = find_relative(buildout_filename)
     version_sections = _extract_versions_section(
         buildout_filename,
         relative=base_relative

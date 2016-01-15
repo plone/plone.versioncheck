@@ -36,76 +36,101 @@ Usage
       -b BUILDOUT, --buildout BUILDOUT
                             path to buildout.cfg or other cfg file
       -o, --overrides       display only packages with overrides
+      -b BUILDOUT, --buildout BUILDOUT
+                            path to .plone.versioncheck.tracked.json or other json file
+      -o, --overrides       display only packages with overrides
       -p, --pypi            check pypi for newer versions
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
                             debugging
 
 
-Example display
----------------
+Output explained
+----------------
 
-Here w/o colors::
+Legend:
+
+``orphaned``
+    If buildout extension generated file is given it shows if the package in the given configuration was used.
+    Be careful with this information!
+    I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
+
+``D``
+    Development Egg, active.
+
+``A``
+    Active pinned version (active if not development egg).
+
+``I``
+    Inherited pin, unused.
+
+``U``
+    Update from PyPI is available.
+
+``P``
+    Prerelease update from PyPI is available.
+
+
+Colors of package name:
+
+``white``
+    Package is used and recent, all seems fine.
+
+``green``
+    Development package is used.
+
+``cyan``
+    A release update is available (major, minor or bugfix).
+
+``yellow``
+    Inherited package version number is greater than used.
+
+``blue``
+    A prerelease update is available, but no non-prerelease update.
+
+``red``
+    Package seems orphaned.
+
+
+Example (here w/o colors)::
 
     $ plone.versioncheck/bin/versioncheck -pb coredev5/buildout.cfg
 
     Check Versions
     --------------
-    accesscontrol........................ 3.0.11................ coredev5/versions.cfg
-                                          2.13.13............... http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-                                          3.0.12................ bugfix (PyPI)
-    acquisition.......................... 2.13.9................ http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-                                          4.2.2................. major (PyPI)
-    archetypes.multilingual.............. 3.0.1................. coredev5/versions.cfg
-    archetypes.referencebrowserwidget.... 2.5.6................. coredev5/versions.cfg
-    archetypes.schemaextender............ 2.1.5................. coredev5/versions.cfg
-    argcomplete.......................... 0.8.3................. coredev5/tests.cfg
-                                          1.0.0................. major (PyPI)
-                                          0.9.0................. minor (PyPI)
-                                          0.8.9................. bugfix (PyPI)
-    argh................................. 0.25.0................ coredev5/tests.cfg
-                                          0.26.1................ minor (PyPI)
+    accesscontrol
+        orphaned
+        3.0.11 ................ P coredev5/versions.cfg
+        2.13.13 ............... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+        3.0.12 ................ U Bugfix
+    acquisition
+        2.13.9 ................ P http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+        4.2.2 ................. U Major
+    archetypes.multilingual
+        3.0.1 ................. P coredev5/versions.cfg
+    archetypes.referencebrowserwidget
+        2.5.6 ................. P coredev5/versions.cfg
+    archetypes.schemaextender
+        2.1.5 ................. P coredev5/versions.cfg
+    argcomplete
+        0.8.3 ................. P coredev5/tests.cfg
+        1.0.0 ................. U Major
+        0.9.0 ................. U Minor
+        0.8.9 ................. U Bugfix
+    argh
+        0.25.0 ................ P coredev5/tests.cfg
+        0.26.1 ................ U Minor
 
     [... skipped a bunch ...]
 
-                                          0.16.................. minor (PyPI)
-    collective.recipe.sphinxbuilder...... 0.7.1................. coredev5/tests.cfg
-                                          0.8.2................. minor (PyPI)
-                                          0.7.4................. bugfix (PyPI)
-    collective.recipe.template........... 1.9................... coredev5/versions.cfg
-                                          1.13.................. minor (PyPI)
-    collective.xmltestreport............. 1.3.3................. coredev5/versions.cfg
-    collective.z3cform.datagridfield..... 1.1................... coredev5/versions.cfg
-    collective.z3cform.datagridfield-demo 0.5................... coredev5/versions.cfg
-                                          0.6................... minor (PyPI)
-    collective.z3cform.datetimewidget.... 1.2.7................. coredev5/versions.cfg
-    colorama............................. 0.3.3................. coredev5/tests.cfg
-                                          0.3.6................. bugfix (PyPI)
-    configparser......................... 3.5.0b2............... coredev5/tests.cfg
-    coverage............................. 3.5.2................. http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-                                          4.0.3................. major (PyPI)
-                                          3.7.1................. minor (PyPI)
-                                          3.5.3................. bugfix (PyPI)
-                                          4.1b1................. majorpre (PyPI)
-
-    [... skipped a bunch ...]
-
-    zope.testing......................... 3.9.7................. http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-                                          4.5.0................. major (PyPI)
-                                          3.10.3................ minor (PyPI)
-    zope.testrunner...................... 4.4.4................. coredev5/versions.cfg
-                                          4.4.9................. bugfix (PyPI)
-    zope.thread.......................... 3.4................... http://dist.plone.org/versions/zopetoolkit-1-0-8-zopeapp-versions.cfg
-    zope.traversing...................... 3.13.2................ http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-                                          4.0.0................. major (PyPI)
-                                          3.14.0................ minor (PyPI)
-    zope.viewlet......................... 3.7.2................. http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-                                          4.0.0................. major (PyPI)
-    zope.xmlpickle....................... 3.4.0................. http://dist.plone.org/versions/zopetoolkit-1-0-8-zopeapp-versions.cfg
-                                          3.5.0dev.............. minorpre (PyPI)
-    zope2................................ 2.13.23............... http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-    zopeundo............................. 2.12.0................ http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-                                          4.0................... major (PyPI)
+    collective.recipe.sphinxbuilder
+        0.7.1 ................. P coredev5/tests.cfg
+        0.8.2 ................. U Minor
+        0.7.4 ................. U Bugfix
+    collective.recipe.template
+        1.10a1.dev0 ........... D path/to/source
+        1.9 ................... P coredev5/versions.cfg
+        1.13 .................. U Minor
 
 
 Source Code and Contributions

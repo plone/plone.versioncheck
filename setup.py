@@ -42,7 +42,7 @@ setup(
             'versioncheck = plone.versioncheck.script:run',
         ],
         'zc.buildout.extension': [
-            'default = plone.versioncheck.extension:install',
+            'default = plone.versioncheck.tracking:install',
         ]
     },
 )
