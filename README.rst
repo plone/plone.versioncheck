@@ -129,9 +129,9 @@ Legend of states and colors:
     Color: Red
 
 
-Example (here w/o colors)::
+Example (here w/o colors) on buildout.coredev::
 
-    $ plone.versioncheck/bin/versioncheck -pb coredev5/buildout.cfg
+    $ ./bin/versioncheck -p buildout.cfg
 
     accesscontrol
         3.0.12 .... A versions.cfg
