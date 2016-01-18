@@ -6,6 +6,7 @@ from zc.buildout import easy_install
 import json
 import logging
 import os
+import sys
 
 logger = easy_install.logger
 
@@ -20,7 +21,7 @@ def _log_requirement(ws, req):
         if req not in dist.requires():
             continue
         req_ = str(req)
-        dist_ = str(dist)
+        dist_ = str(dist).split(' ')
         if req_ in required_by and dist_ not in required_by[req_]:
             required_by[req_].append(dist_)
         else:
@@ -51,7 +52,7 @@ def write_tracked(old_logging_shutdown, logfilepath):
             'required_by': required_by,
             'versions': versions_by_name,
         }
-        with open(logfilepath, 'a') as fp:
+        with open(logfilepath, 'w') as fp:
             json.dump(result, fp, indent=2)
         old_logging_shutdown()
     return logging_shutdown
@@ -71,7 +72,17 @@ def install(buildout):
 
 
 def get(pkginfo, buildout):
+    filepath = TRACKINGFILENAME
     relative = find_relative(buildout)
-    filepath = os.path.join(relative, TRACKINGFILENAME)
-    with open(filepath, 'r') as fp:
-        pkginfo['tracking'] = json.load(fp)
+    if relative:
+        filepath = os.path.join(relative, TRACKINGFILENAME)
+    sys.stderr.write(
+        "Read tracking information from buildout extension: {0}\n".format(
+            filepath
+        )
+    )
+    try:
+        with open(filepath, 'r') as fp:
+            pkginfo['tracking'] = json.load(fp)
+    except (IOError, ValueError) as e:
+        sys.stderr.write(str(e) + '\n')

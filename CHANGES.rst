@@ -6,6 +6,12 @@ Changelog
 1.1 (unreleased)
 ----------------
 
+- Enhancement: machine readable output (json)
+  [jensens]
+
+- Enhancement: write pure processing-info output to sys.stdout
+  [jensens]
+
 - Fix #5 - Require setuptools>=12
   [jensens]
 

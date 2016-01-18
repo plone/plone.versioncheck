@@ -4,6 +4,7 @@ from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
 import logging
 import requests
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -105,9 +106,16 @@ def check(name, version):
 
 
 def check_all(pkgsinfo, limit=None):
-    pkgsinfo['pypi'] = {}
     pkgs = pkgsinfo['pkgs']
+    sys.stderr.write(
+        'Check PyPI for updates of {0:d} packages.'.format(len(pkgs))
+    )
+    if limit:
+        sys.stderr.write(' Check limited to {0:d} packages.'.format(limit))
+    pkgsinfo['pypi'] = {}
     for idx, pkgname in enumerate(sorted(pkgs)):
+        if not idx % 20 and idx != limit:
+            sys.stderr.write('\n{0:4d} '.format(idx))
         logger.info('{0} pypi check {1}'.format(idx+1, pkgname))
         current = next(iter(pkgs[pkgname]))
         pkgsinfo['pypi'][pkgname] = check(
@@ -116,3 +124,6 @@ def check_all(pkgsinfo, limit=None):
         )
         if limit and idx == limit:
             break
+        sys.stderr.write('.')
+    sys.stderr.write('\nPyPI check finished\n')
+
