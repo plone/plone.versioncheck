@@ -149,8 +149,8 @@ We appreciate any contribution and if a release is needed to be done on pypi, pl
 Development
 -----------
 
-There must be an ``python`` binary available in system path pointing to Python 2.7.
-Also you need to have all installed to develop with Plone (see http://docs.plone.org/) then::
+There must be a ``python`` binary available in system path pointing to Python >=2.7.x
+Clone the project. Then::
 
     $ bootstrap.sh
 
