@@ -80,7 +80,8 @@ def get(pkginfo, buildout):
     if relative:
         filepath = os.path.join(relative, TRACKINGFILENAME)
     sys.stderr.write(
-        "Read tracking information from buildout extension: {0}\n".format(
+        '\nRead tracking information from buildout extension: \n'
+        '- {0}\n'.format(
             filepath
         )
     )
@@ -88,4 +89,14 @@ def get(pkginfo, buildout):
         with open(filepath, 'r') as fp:
             pkginfo['tracking'] = json.load(fp)
     except (IOError, ValueError) as e:
-        sys.stderr.write(str(e) + '\n')
+        sys.stderr.write(' - ' + str(e) + '\n')
+    delta = time.time() - pkginfo['tracking']['generated']
+    days = int(delta // (60*60*24))
+    hours = int(delta // (60*60) - days*60*60)
+    minutes = int(delta // (60) - days*60*60 - hours*60)
+    seconds = delta % 60
+    sys.stderr.write(
+        '- age of gathered data: {0:d}d {1:d}h {2:d}m {3:2.3f}s\n'.format(
+            days, hours, minutes, seconds,
+        )
+    )
