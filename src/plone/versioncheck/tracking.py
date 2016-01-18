@@ -35,8 +35,8 @@ def enable_tracking(old_get_dist):
         for dist in dists:
             versions_by_name[dist.project_name.lower()] = (
                 dist.version,
-                dist.precedence == (
-                    DEVELOP_DIST and
+                (
+                    dist.precedence == DEVELOP_DIST and
                     # heuristics, may fail if not named site-packages
                     'site-packages' not in dist.location and
                     dist.location

@@ -133,41 +133,51 @@ Example (here w/o colors)::
 
     $ plone.versioncheck/bin/versioncheck -pb coredev5/buildout.cfg
 
-    Check Versions
-    --------------
-    accesscontrol
-        orphaned
-        3.0.11 ................ P coredev5/versions.cfg
-        2.13.13 ............... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-        3.0.12 ................ U Bugfix
-    acquisition
-        2.13.9 ................ P http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-        4.2.2 ................. U Major
-    archetypes.multilingual
-        3.0.1 ................. P coredev5/versions.cfg
-    archetypes.referencebrowserwidget
-        2.5.6 ................. P coredev5/versions.cfg
-    archetypes.schemaextender
-        2.1.5 ................. P coredev5/versions.cfg
-    argcomplete
-        0.8.3 ................. P coredev5/tests.cfg
-        1.0.0 ................. U Major
-        0.9.0 ................. U Minor
-        0.8.9 ................. U Bugfix
-    argh
-        0.25.0 ................ P coredev5/tests.cfg
-        0.26.1 ................ U Minor
+accesscontrol
+    3.0.12 .... A versions.cfg
+    2.13.13 ... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+acquisition
+    4.2.2 ..... A versions.cfg
+    2.13.9 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+alabaster
+    0.7.7 ..... X unpinned
+archetypes.multilingual
+    3.0.1 ..... A versions.cfg
+archetypes.referencebrowserwidget
+    2.5.6 ..... A versions.cfg
+archetypes.schemaextender
+    2.1.5 ..... A versions.cfg
+argcomplete
+    1.0.0 ..... A tests.cfg
+argh
+    0.26.1 .... A tests.cfg
+argparse
+    (unset) ... A versions.cfg
+    1.1 ....... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
+    Can not check legacy version number.  U Error
+autopep8
+    1.2.1 ..... A tests.cfg
+babel
 
     [... skipped a bunch ...]
 
-    collective.recipe.sphinxbuilder
-        0.7.1 ................. P coredev5/tests.cfg
-        0.8.2 ................. U Minor
-        0.7.4 ................. U Bugfix
-    collective.recipe.template
-        1.10a1.dev0 ........... D path/to/source
-        1.9 ................... P coredev5/versions.cfg
-        1.13 .................. U Minor
+configparser
+    3.5.0b2 ... A tests.cfg
+coverage
+    3.7.1 ..... A tests.cfg
+    3.5.2 ..... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
+    4.0.3 ..... U Major
+    4.1b1 ..... P Majorpre
+cssmin
+    0.2.0 ..... A versions.cfg
+cssselect
+    0.9.1 ..... A versions.cfg
+datetime
+    3.0.3 ..... A versions.cfg
+    2.12.8 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+    4.0.1 ..... U Major
+decorator
+    4.0.6 ..... A versions.cfg
 
 
 Source Code and Contributions
