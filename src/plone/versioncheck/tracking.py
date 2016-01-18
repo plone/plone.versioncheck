@@ -21,7 +21,7 @@ def _log_requirement(ws, req):
         if req not in dist.requires():
             continue
         req_ = str(req)
-        dist_ = str(dist).split(' ')
+        dist_ = str(dist).split(' ')[0]
         if req_ in required_by and dist_ not in required_by[req_]:
             required_by[req_].append(dist_)
         else:
