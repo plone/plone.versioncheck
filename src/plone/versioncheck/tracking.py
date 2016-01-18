@@ -32,14 +32,10 @@ def enable_tracking(old_get_dist):
     def get_dist(self, requirement, *ags, **kw):
         dists = old_get_dist(self, requirement, *ags, **kw)
         for dist in dists:
-            if not (
-                len(requirement.specs) == 1 and  # ???
-                requirement.specs[0][0] == '=='  # ???
-            ):
-                versions_by_name[dist.project_name] = (
-                    dist.version,
-                    dist.precedence == DEVELOP_DIST and dist.location
-                )
+            versions_by_name[dist.project_name] = (
+                dist.version,
+                dist.precedence == DEVELOP_DIST and dist.location
+            )
         return dists
     return get_dist
 
