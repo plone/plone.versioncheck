@@ -18,13 +18,19 @@ def build_version(
     key,
     idx,
     flavor='versions',
+    orphaned=False,
 ):
     record = {}
     if flavor == 'versions':
         record['version'] = pkg[key] or "(unset)"
         record['description'] = key
         if idx == 0:
-            record['state'] = 'I' if tracked and tracked[1] else 'A'
+            if orphaned:
+                record['state'] = 'O'
+            elif tracked and tracked[1]:
+                record['state'] = 'I'
+            else:
+                record['state'] = 'A'
         elif analyser.is_cfgidx_newer(pkg, idx):
             record['state'] = 'In'
         else:
@@ -92,6 +98,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
                     location,
                     idx,
                     flavor='versions',
+                    orphaned=current_tracked is None and not devegg
                 )
             )
         if not devegg and current_tracked is not None and not len(versions):
