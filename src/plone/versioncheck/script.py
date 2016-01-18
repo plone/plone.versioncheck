@@ -1,14 +1,31 @@
 # -*- coding: utf-8 -*-
 from argparse import ArgumentParser
+from argparse import RawDescriptionHelpFormatter
 from plone.versioncheck import formatter
+from plone.versioncheck import tracking
+from plone.versioncheck import utils
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
-from plone.versioncheck import tracking
+
+EPILOG = """\
+States and color codes:
+  [A]ctive (white)
+  [D]evelop (green)
+  [O]rphaned (magenta)
+  [I]nherited (older or same versions are gray, newer are yellow)
+  [U]pdate of final release on pypi available (cyan)
+  [P]rerelease update on pypi available (blue)
+  [X] unpinned (red)
+
+Color of package name helps to indicate overall state of a package.
+"""
 
 
 parser = ArgumentParser(
     description="Fetch information about pinned versions and its overrides in"
-                "simple and complex/cascaded buildouts."
+                "simple and complex/cascaded buildouts.",
+    epilog=EPILOG,
+    formatter_class=RawDescriptionHelpFormatter,
 )
 parser.add_argument(
     'buildout',
@@ -74,9 +91,9 @@ def run():
             limit=args.debug_limit,
         )
     else:
+        utils.COLORED = not args.no_colors
         formatter.human(
             pkgsinfo,
             newer_only=args.newer,
-            colored=args.no_colors,
             limit=args.debug_limit,
         )

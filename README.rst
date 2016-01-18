@@ -63,75 +63,70 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-b BUILDOUT] [-o] [-p] [--debug-limit DEBUG_LIMIT]
+    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-colors]
+                        [--debug-limit DEBUG_LIMIT]
+                        [buildout]
 
-    Print info about pinned versions and its overrides
+    Fetch information about pinned versions and its overrides insimple and complex/cascaded buildouts.
+
+    positional arguments:
+      buildout              path to buildout.cfg or other *.cfg file
 
     optional arguments:
       -h, --help            show this help message and exit
-      -b BUILDOUT, --buildout BUILDOUT
-                            path to buildout.cfg or other cfg file
-      -o, --overrides       display only packages with overrides
-      -b BUILDOUT, --buildout BUILDOUT
-                            path to .plone.versioncheck.tracked.json or other json file
-      -o, --overrides       display only packages with overrides
       -p, --pypi            check pypi for newer versions
+      -n, --newer           display only packages with newer version than active
+      -r, --required-by     show information about requirements (only if tracking
+                            file is available)
+      -i, --ignore-tracking
+                            ignore tracking file (if present)
+      -m, --machine         show as machine readable output (json)
+      --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
                             debugging
+
+    [...]
 
 
 Output explained
 ----------------
 
-Legend:
+Legend of states and colors:
 
-``orphaned``
+``O``rphaned
     If buildout extension generated file is given it shows if the package in the given configuration was used.
     Be careful with this information!
     I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
+    Color: Magenta
 
-``D``
-    Development Egg, active.
-
-``A``
-    Active pinned version (active if not development egg).
-
-``I``
-    Inherited pin, unused.
-
-``U``
-    Update from PyPI is available.
-
-``P``
-    Prerelease update from PyPI is available.
-
-``X``
-    unpinned - tracked, but no pin in versions section was found
+``D``evelopmen Egg
+    A development egg is usally active.
+    Description show location.
+    Color: Green
 
 
-Colors of package name:
+``A``ctive Pin
+     Pinned version. Package is used and recent, all seems fine.
+     Color: White
 
-``white``
-    Package is used and recent, all seems fine.
+``I``nherited Pin
+     unused pin. If older than active pin color is gray, if newer yellow.
 
-``green``
-    Development package is used.
+``U``pdate final release
+    At PyPI there is a newer final version available (major, minor or bugfix).
+    Descriptions shows on which level.
+    Color: Cyan
 
-``cyan``
-    A release update is available (major, minor or bugfix).
+``P``rerelease update
+    At PyPI there is a newer prerelease version available (major, minor or bugfix).
+    Descriptions shows on which level.
+    Only if there is no final release updatye available.
+    Color: Blue
 
-``yellow``
-    Inherited package version number is greater than used.
-
-``blue``
-    A prerelease update is available, but no non-prerelease update.
-
-``magenta``
-    Package seems orphaned.
-
-``red``
-    Package is unpinnend.
+``X`` Unpinnend
+    Tracked, but no pin in versions sections were found.
+    Color: Red
 
 
 Example (here w/o colors)::

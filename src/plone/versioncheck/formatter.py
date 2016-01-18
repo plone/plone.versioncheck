@@ -64,7 +64,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
         unpinned = False
         required_by = requ.get(name, None)
         if required_by:
-            record['required_by'] = required_by[0]
+            record['required_by'] = required_by
 
         # handle dev-eggs
         devegg = False
@@ -145,7 +145,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
     return result
 
 
-def human(pkgsinfo, newer_only=False, colored=True, limit=None):
+def human(pkgsinfo, newer_only=False, limit=None):
     color_init()
     sys.stderr.write('\nReport for humans\n\n')
     data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
