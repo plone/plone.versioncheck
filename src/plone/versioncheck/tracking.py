@@ -7,6 +7,7 @@ import json
 import logging
 import os
 import sys
+import time
 
 logger = easy_install.logger
 
@@ -50,6 +51,7 @@ def write_tracked(old_logging_shutdown, logfilepath):
     def logging_shutdown():
         # WRITE FILE
         result = {
+            'generated': time.time(),
             'required_by': required_by,
             'versions': versions_by_name,
         }
