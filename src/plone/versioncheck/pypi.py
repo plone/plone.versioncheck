@@ -11,6 +11,19 @@ logger = logging.getLogger(__name__)
 PYPI_URL = "https://pypi.python.org/pypi"
 
 
+def mmbp_tuple(version):
+    """major minor bugfix, postfix tuple from version
+
+    - 1.0     -> 1.0.0.0
+    - 1.2     -> 1.2.0.0
+    - 1.3.4   -> 1.3.4.0
+    - 1.3.4.5 -> 1.3.4.5
+    """
+    parts = version.base_version.split('.')
+    parts += ['0'] * (4 - len(parts))
+    return [int(_) for _ in parts]
+
+
 def check(name, version):
     result = OrderedDict([
         ('error', None),
@@ -26,17 +39,12 @@ def check(name, version):
     try:
         version = parse_version(version)
     except TypeError:
-        result['error'] = "Version not checkable (TypeError)."
+        result['error'] = "Version broken/ not checkable."
         return result
     if not isinstance(version, SetuptoolsVersion):
-        result['error'] = "Version not checkable (Legacy)."
+        result['error'] = "Can not check legacy version number."
         return result
-    no_minor = len(tuple(version)) < 2 or version[1].startswith('*')
-    no_bugfix = (
-        no_minor or
-        len(tuple(version)) < 3 or
-        version[2].startswith('*')
-    )
+    vtuple = mmbp_tuple(version)
 
     # fetch pkgs json info from pypi
     url = "{0}/{1}/json".format(PYPI_URL, name)
@@ -53,31 +61,27 @@ def check(name, version):
         rel_v = parse_version(release)
         if not isinstance(rel_v, SetuptoolsVersion) or not rel_v > version:
             continue
-        if rel_v[0] > version[0]:
+        rel_vtuple = mmbp_tuple(rel_v)
+        if rel_vtuple[0] > vtuple[0]:
             if rel_v.is_prerelease:
                 result['majorpre'] = release
             else:
                 result['major'] = release
             continue
-        if no_minor or len(tuple(rel_v)) < 2 or rel_v[1].startswith('*'):
-            # version like '10'
-            continue
-        if rel_v[1] > version[1]:
+        if rel_vtuple[1] > vtuple[1]:
             if rel_v.is_prerelease:
                 result['minorpre'] = release
             else:
                 result['minor'] = release
             continue
-        if no_bugfix or len(tuple(rel_v)) < 3 or rel_v[2].startswith('*'):
-            # version like '10.1'
-            continue
-        if rel_v[2] > version[2]:
+        if rel_vtuple[2] > vtuple[2]:
             if rel_v.is_prerelease:
                 result['bugfixpre'] = release
             else:
                 result['bugfix'] = release
             continue
 
+    # filter out older
     if (
         result['major'] and
         result['majorpre'] and
