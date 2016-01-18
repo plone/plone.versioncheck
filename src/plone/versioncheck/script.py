@@ -96,4 +96,5 @@ def run():
             pkgsinfo,
             newer_only=args.newer,
             limit=args.debug_limit,
+            show_requiredby=args.required_by
         )

@@ -7,6 +7,7 @@ from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 import json
 import sys
+import textwrap
 
 
 def build_version(
@@ -145,7 +146,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
     return result
 
 
-def human(pkgsinfo, newer_only=False, limit=None):
+def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
     color_init()
     sys.stderr.write('\nReport for humans\n\n')
     data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
@@ -160,6 +161,17 @@ def human(pkgsinfo, newer_only=False, limit=None):
                 ' ' + color_by_state(version['state']) +
                 version['state'][0] + ' ' + version['description']
             )
+            if show_requiredby and version.get('required_by', False):
+                req = ' '.join(version.get('required_by'))
+                indent = (pkgsinfo['ver_maxlen']+4)*' '
+                print(
+                    textwrap.fill(
+                        req,
+                        80 - pkgsinfo['ver_maxlen'],
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    ) + '\n'
+                )
 
 
 def machine(pkgsinfo, newer_only=False, limit=None):

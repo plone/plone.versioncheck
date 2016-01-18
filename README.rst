@@ -12,15 +12,19 @@ Checks pinned versions with overrides in a cascaded buildout
 Features
 --------
 
-Command line script to check a buildouts ``[versions]`` section while stepping through the cascaded ``extends``.
-The script collects the inherited version pins, remembers where a version pin comes from.
-It displays then sorted result in order to enable a human to check pins and overrides are ok.
+1) Command line script to check a buildouts ``[versions]`` section while stepping through the cascaded ``extends``.
+   The script collects the inherited version pins, remembers where a version pin comes from.
+   It displays then sorted result in order to enable a human to check pins and overrides are ok.
+2) Checks Python Package Index (PyPI) for newer versions (optional).
+   Detects if a newer major, minor or bugfix (or a prerelease) is available.
+3) Works as buildout extension and record the current sate of a buildout (version-wise).
+   The state is written to a file and read by the command line tool to be included to the report.
+4) Shows by which package as dependency a package ws demanded (together with builtout extension only).
 
-Optional Python Package Index (PyPI) may be checked for newer versions.
-It works only with sematically korrekt version numbers.
-If a newer major, minor or bugfix (or a prerelease) is available it will get printed.
+- It works only with sematically korrekt version numbers!
+- Output is colored, this helps to identify packages which have newer versions available.
+- Machine readable output as JSON on demand.
 
-Output is colored, this helps to identify packages which have newer versions available.
 
 Usage
 -----
@@ -92,7 +96,8 @@ commandline
 Output explained
 ----------------
 
-Legend of states and colors:
+Legend of states and colors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [O]rphaned
     If buildout extension generated file is given it shows if the package in the given configuration was used.
@@ -129,7 +134,10 @@ Legend of states and colors:
     Color: Red
 
 
-Example (here w/o colors) on buildout.coredev::
+Example
+~~~~~~~
+
+Here w/o colors, run on buildout.coredev::
 
     $ ./bin/versioncheck -p buildout.cfg
 
