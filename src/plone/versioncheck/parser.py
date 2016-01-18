@@ -12,6 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 def _extract_versions_section(filename, version_sections=None, relative=None):
+    print filename
     if (
         relative is not None and
         "://" not in filename and
@@ -34,7 +35,7 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
     try:
         extends = config.get('buildout', 'extends').strip()
     except (NoSectionError, NoOptionError):
-        return {}
+        return version_sections
     for extend in extends.splitlines():
         extend = extend.strip()
         if not extend:
@@ -50,7 +51,6 @@ def parse(buildout_filename):
         buildout_filename,
         relative=base_relative
     )
-
     pkgs = {}
     pkg_maxlen = 0
     ver_maxlen = 0
