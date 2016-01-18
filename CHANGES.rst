@@ -3,7 +3,7 @@ Changelog
 
 
 
-1.1 (unreleased)
+1.1 (2016-01-19)
 ----------------
 
 - Enhancement: show requirements
