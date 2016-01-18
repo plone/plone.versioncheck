@@ -35,7 +35,10 @@ setup(
     install_requires=[
         'colorama',
         'requests',
-        'setuptools',
+        'setuptools>=12',
+    ],
+    setup_requires=[
+        'setuptools>=12'
     ],
     entry_points={
         'console_scripts': [
