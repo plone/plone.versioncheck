@@ -170,17 +170,17 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
                 ' ' + color_by_state(version['state']) +
                 version['state'][0] + ' ' + version['description']
             )
-            if show_requiredby and version.get('required_by', False):
-                req = ' '.join(version.get('required_by'))
-                indent = (pkgsinfo['ver_maxlen']+4)*' '
-                print(
-                    textwrap.fill(
-                        req,
-                        80 - pkgsinfo['ver_maxlen'],
-                        initial_indent=indent,
-                        subsequent_indent=indent,
-                    ) + '\n'
-                )
+        if show_requiredby and record.get('required_by', False):
+            req = ' '.join(sorted(record.get('required_by')))
+            indent = (pkgsinfo['ver_maxlen']+5)*' ' + 'R '
+            print(
+                textwrap.fill(
+                    req,
+                    80 - pkgsinfo['ver_maxlen'],
+                    initial_indent=indent,
+                    subsequent_indent=indent,
+                ) + '\n'
+            )
 
 
 def machine(pkgsinfo, newer_only=False, limit=None):

@@ -30,7 +30,7 @@ def enable_tracking(old_get_dist):
                     dist.location
                 )
             )
-            dist_ = str(dist).split(' ')[0]
+            dist_ = str(dist).split(' ')[0].lower()
             for req in dist.requires():
                 if req.key not in required_by:
                     required_by[req.key] = []
