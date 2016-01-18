@@ -6,10 +6,19 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Refacoring of display output and show tracked info
+- Fix #5 - Require setuptools>=12
   [jensens]
 
-- Add buildout extension to optional track required by and if its use at all
+- Fix #7 - Available update from 'lazy' 1.0 to 1.2 is not found.
+  [jensens]
+
+- Enhancement: Rethink colors and document them, fixes #2 and #3.
+  [jensens]
+
+- Enhancement: display output and show tracked info
+  [jensens]
+
+- Feature: Add buildout extension to optional track required by and if its use at all
   [jensens]
 
 
