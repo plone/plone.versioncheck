@@ -130,6 +130,8 @@ def builder(pkgsinfo, newer_only=False, limit=None):
             record['state'] = 'D'
         elif unpinned:
             record['state'] = 'X'
+        elif name in pkgs and name not in tracked:
+            record['state'] = 'O'
         elif 'pypifinal' in states:
             record['state'] = 'U'
         elif 'cfg' in states:
