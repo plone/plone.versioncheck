@@ -17,18 +17,6 @@ versions_by_name = {}
 TRACKINGFILENAME = '.plone.versioncheck.tracked.json'
 
 
-def _log_requirement(ws, req):
-    for dist in sorted(list(ws)):
-        if req not in dist.requires():
-            continue
-        req_ = str(req)
-        dist_ = str(dist).split(' ')[0]
-        if req_ in required_by and dist_ not in required_by[req_]:
-            required_by[req_].append(dist_)
-        else:
-            required_by[req_] = [dist_]
-
-
 def enable_tracking(old_get_dist):
     def get_dist(self, requirement, *ags, **kw):
         dists = old_get_dist(self, requirement, *ags, **kw)
@@ -42,6 +30,12 @@ def enable_tracking(old_get_dist):
                     dist.location
                 )
             )
+            dist_ = str(dist).split(' ')[0]
+            for req in dist.requires():
+                if req.key not in required_by:
+                    required_by[req.key] = []
+                if dist_ not in required_by[req.key]:
+                    required_by[req.key].append(dist_)
         return dists
     return get_dist
 
@@ -67,7 +61,6 @@ def install(buildout):
         TRACKINGFILENAME,
     )
     easy_install.Installer.__tracked_versions = {}
-    easy_install._log_requirement = _log_requirement
     easy_install.Installer._get_dist = enable_tracking(
         easy_install.Installer._get_dist
     )
