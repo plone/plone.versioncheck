@@ -35,11 +35,17 @@ setup(
     install_requires=[
         'colorama',
         'requests',
-        'setuptools',
+        'setuptools>=12',
+    ],
+    setup_requires=[
+        'setuptools>=12'
     ],
     entry_points={
         'console_scripts': [
             'versioncheck = plone.versioncheck.script:run',
         ],
+        'zc.buildout.extension': [
+            'default = plone.versioncheck.tracking:install',
+        ]
     },
 )

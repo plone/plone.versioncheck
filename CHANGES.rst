@@ -6,7 +6,26 @@ Changelog
 1.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Enhancement: machine readable output (json)
+  [jensens]
+
+- Enhancement: write pure processing-info output to sys.stdout
+  [jensens]
+
+- Fix #5 - Require setuptools>=12
+  [jensens]
+
+- Fix #7 - Available update from 'lazy' 1.0 to 1.2 is not found.
+  [jensens]
+
+- Enhancement: Rethink colors and document them, fixes #2 and #3.
+  [jensens]
+
+- Enhancement: display output and show tracked info
+  [jensens]
+
+- Feature: Add buildout extension to optional track required by and if its use at all
+  [jensens]
 
 
 1.0 (2016-01-13)

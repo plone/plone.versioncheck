@@ -51,7 +51,7 @@ TEST_PRERELEASE = set(['majorpre', 'minorpre', 'bugfixpre'])
 
 
 def is_pypi_newer(pypiinfo):
-    keys = {_ for _ in pypiinfo if pypiinfo[_]}
+    keys = {_ for _ in pypiinfo if pypiinfo.get(_, False)}
     if TEST_FINALS.intersection(keys):
         return 'pypifinal'
     if TEST_PRERELEASE.intersection(keys):
