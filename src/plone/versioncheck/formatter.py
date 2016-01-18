@@ -2,7 +2,6 @@
 from collections import OrderedDict
 from plone.versioncheck import analyser
 from plone.versioncheck.utils import color_by_state
-from plone.versioncheck.utils import color_dimmed
 from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 
@@ -96,7 +95,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
                     )
                 )
 
-        states = analyser.uptodate_analysis(current_pkg, pypi.get(name, None))
+        states = analyser.uptodate_analysis(current_pkg, pypi.get(name, {}))
         if devegg:
             # dev always wins
             record['state'] = 'D'
