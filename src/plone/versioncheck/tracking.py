@@ -32,7 +32,7 @@ def enable_tracking(old_get_dist):
     def get_dist(self, requirement, *ags, **kw):
         dists = old_get_dist(self, requirement, *ags, **kw)
         for dist in dists:
-            versions_by_name[dist.project_name] = (
+            versions_by_name[dist.project_name.lower()] = (
                 dist.version,
                 dist.precedence == (
                     DEVELOP_DIST and
