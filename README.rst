@@ -133,52 +133,61 @@ Example (here w/o colors)::
 
     $ plone.versioncheck/bin/versioncheck -pb coredev5/buildout.cfg
 
-accesscontrol
-    3.0.12 .... A versions.cfg
-    2.13.13 ... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-acquisition
-    4.2.2 ..... A versions.cfg
-    2.13.9 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-alabaster
-    0.7.7 ..... X unpinned
-archetypes.multilingual
-    3.0.1 ..... A versions.cfg
-archetypes.referencebrowserwidget
-    2.5.6 ..... A versions.cfg
-archetypes.schemaextender
-    2.1.5 ..... A versions.cfg
-argcomplete
-    1.0.0 ..... A tests.cfg
-argh
-    0.26.1 .... A tests.cfg
-argparse
-    (unset) ... A versions.cfg
-    1.1 ....... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-    Can not check legacy version number.  U Error
-autopep8
-    1.2.1 ..... A tests.cfg
-babel
+    accesscontrol
+        3.0.12 .... A versions.cfg
+        2.13.13 ... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+    acquisition
+        4.2.2 ..... A versions.cfg
+        2.13.9 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+    alabaster
+        0.7.7 ..... X unpinned
+    archetypes.multilingual
+        3.0.1 ..... A versions.cfg
+    archetypes.referencebrowserwidget
+        2.5.6 ..... A versions.cfg
+    archetypes.schemaextender
+        2.1.5 ..... A versions.cfg
+    argcomplete
+        1.0.0 ..... A tests.cfg
+    argh
+        0.26.1 .... A tests.cfg
+    argparse
+        (unset) ... A versions.cfg
+        1.1 ....... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
+        Can not check legacy version number.  U Error
+    autopep8
+        1.2.1 ..... A tests.cfg
 
     [... skipped a bunch ...]
 
-configparser
-    3.5.0b2 ... A tests.cfg
-coverage
-    3.7.1 ..... A tests.cfg
-    3.5.2 ..... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
-    4.0.3 ..... U Major
-    4.1b1 ..... P Majorpre
-cssmin
-    0.2.0 ..... A versions.cfg
-cssselect
-    0.9.1 ..... A versions.cfg
-datetime
-    3.0.3 ..... A versions.cfg
-    2.12.8 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
-    4.0.1 ..... U Major
-decorator
-    4.0.6 ..... A versions.cfg
+    coverage
+        3.7.1 ..... A tests.cfg
+        3.5.2 ..... I http://dist.plone.org/versions/zopetoolkit-1-0-8-ztk-versions.cfg
+        4.0.3 ..... U Major
+        4.1b1 ..... P Majorpre
+    cssmin
+        0.2.0 ..... A versions.cfg
+    cssselect
+        0.9.1 ..... A versions.cfg
+    datetime
+        3.0.3 ..... A versions.cfg
+        2.12.8 .... I http://dist.plone.org/versions/zope-2-13-23-versions.cfg
+        4.0.1 ..... U Major
+    decorator
+        4.0.6 ..... A versions.cfg
 
+    [... skipped a bunch ...]
+
+    plone.app.textfield
+        1.2.6 ..... A versions.cfg
+    plone.app.theming
+        1.2.17.dev0  D /home/workspacejensens/coredev5/src/plone.app.theming/src
+        1.2.16 .... I versions.cfg
+    plone.app.tiles
+        2.1.0 ..... A versions.cfg
+        2.2.0 ..... U Minor
+
+    [... skipped a bunch ...]
 
 Source Code and Contributions
 -----------------------------
