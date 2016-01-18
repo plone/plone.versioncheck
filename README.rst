@@ -94,37 +94,37 @@ Output explained
 
 Legend of states and colors:
 
-``O``rphaned
+[O]rphaned
     If buildout extension generated file is given it shows if the package in the given configuration was used.
     Be careful with this information!
     I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
     Color: Magenta
 
-``D``evelopmen Egg
+[D]evelopmen Egg
     A development egg is usally active.
     Description show location.
     Color: Green
 
 
-``A``ctive Pin
+[A]ctive Pin
      Pinned version. Package is used and recent, all seems fine.
      Color: White
 
-``I``nherited Pin
+[I]nherited Pin
      unused pin. If older than active pin color is gray, if newer yellow.
 
-``U``pdate final release
+[U]pdate final release
     At PyPI there is a newer final version available (major, minor or bugfix).
     Descriptions shows on which level.
     Color: Cyan
 
-``P``rerelease update
+[P]rerelease update
     At PyPI there is a newer prerelease version available (major, minor or bugfix).
     Descriptions shows on which level.
     Only if there is no final release updatye available.
     Color: Blue
 
-``X`` Unpinnend
+[X] Unpinnend
     Tracked, but no pin in versions sections were found.
     Color: Red
 
