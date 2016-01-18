@@ -25,6 +25,9 @@ Output is colored, this helps to identify packages which have newer versions ava
 Usage
 -----
 
+commandline
+~~~~~~~~~~~
+
 ::
 
     usage: versioncheck [-h] [-b BUILDOUT] [-o] [-p] [--debug-limit DEBUG_LIMIT]
@@ -43,6 +46,25 @@ Usage
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
                             debugging
+
+buildout extension
+~~~~~~~~~~~~~~~~~~
+
+Add it as an extension to your builodut::
+
+    [buildout]
+    ...
+    extensions =
+        plone.versioncheck
+    ...
+
+Run buildout as usal.
+
+Now a file ``.plone.versioncheck.tracked.json`` was generated in the buildout-directory.
+
+This file will be used by ``versioncheck`` to figure out which packages were finally used.
+
+Run buildout again to regenerate this file.
 
 
 Output explained
