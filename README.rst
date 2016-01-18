@@ -70,6 +70,9 @@ Legend:
 ``P``
     Prerelease update from PyPI is available.
 
+``X``
+    unpinned - tracked, but no pin in versions section was found
+
 
 Colors of package name:
 
@@ -88,8 +91,11 @@ Colors of package name:
 ``blue``
     A prerelease update is available, but no non-prerelease update.
 
-``red``
+``magenta``
     Package seems orphaned.
+
+``red``
+    Package is unpinnend.
 
 
 Example (here w/o colors)::

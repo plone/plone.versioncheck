@@ -27,7 +27,10 @@ _STATEMAP = {
     'P': Style.BRIGHT+Fore.BLUE,
 
     # orphaned
-    'O': Style.BRIGHT+Fore.RED,
+    'O': Style.BRIGHT+Fore.MAGENTA,
+
+    # unpinned
+    'X': Style.BRIGHT+Fore.RED,
 }
 
 
