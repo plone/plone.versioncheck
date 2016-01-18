@@ -58,7 +58,10 @@ def color_dimmed():
 
 def dots(value, max):
     """ljust, but the dots only"""
-    return color_dimmed() + '.' * (max - len(value))
+    dots = '.' * (max - len(value))
+    if dots:
+        dots = ' ' + dots[1:]
+    return color_dimmed() + dots
 
 
 def find_relative(extend):

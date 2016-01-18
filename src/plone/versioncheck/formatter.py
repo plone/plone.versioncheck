@@ -89,7 +89,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
 
         # handle versions.cfg and inherited
         for idx, location in enumerate(current_pkg):
-            ver_maxlen = max([ver_maxlen, len(current_pkg.get(name, ''))])
+            ver_maxlen = max([ver_maxlen, len(current_pkg[location])])
             versions.append(
                 build_version(
                     name,
@@ -116,6 +116,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
             for label, version in current_pypi.items():
                 if version is None:
                     continue
+                ver_maxlen = max([ver_maxlen, len(version)])
                 versions.append(
                     build_version(
                         name,
@@ -167,8 +168,8 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
             print(
                 ' ' * 4 +
                 color_by_state(version['state']) +
-                version['version'] + ' ' +
-                dots(version['version'], pkgsinfo['ver_maxlen']-1) +
+                version['version'] +
+                dots(version['version'], pkgsinfo['ver_maxlen']) +
                 ' ' + color_by_state(version['state']) +
                 version['state'][0] + ' ' + version['description']
             )
