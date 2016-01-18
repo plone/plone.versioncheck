@@ -10,7 +10,7 @@ Checks pinned versions with overrides in a cascaded buildout
 **plone.versioncheck**
 
 Features
---------
+========
 
 1) Command line script to check a buildouts ``[versions]`` section while stepping through the cascaded ``extends``.
    The script collects the inherited version pins, remembers where a version pin comes from.
@@ -27,10 +27,10 @@ Features
 
 
 Usage
------
+=====
 
 Install with your buildout
-~~~~~~~~~~~~~~~~~~~~~~~~~~
+--------------------------
 
 Add a section to install it as a script and add it as an extension to your builodut::
 
@@ -63,7 +63,7 @@ Run buildout again to regenerate this file.
 
 
 commandline
-~~~~~~~~~~~
+-----------
 
 ::
 
@@ -94,10 +94,10 @@ commandline
 
 
 Output explained
-----------------
+================
 
 Legend of states and colors
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 [D]evelopmen Egg
     A development egg is usally active.
@@ -139,7 +139,7 @@ Legend of states and colors
 
 
 Example
-~~~~~~~
+-------
 
 Here w/o colors, run on buildout.coredev::
 
@@ -202,7 +202,7 @@ Here w/o colors, run on buildout.coredev::
     [... skipped a bunch ...]
 
 Source Code and Contributions
------------------------------
+=============================
 
 If you want to help with the development (improvement, update, bug-fixing, ...) of ``plone.versioncheck`` this is a great idea!
 
@@ -215,7 +215,7 @@ Maintainer of plone.versioncheck is Jens Klein.
 We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us.
 
 Development
------------
+===========
 
 There must be a ``python`` binary available in system path pointing to Python >=2.7.x
 Clone the project. Then::
@@ -223,7 +223,7 @@ Clone the project. Then::
     $ bootstrap.sh
 
 License
--------
+=======
 
 The project is licensed under the GPLv2.
 
