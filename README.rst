@@ -99,17 +99,10 @@ Output explained
 Legend of states and colors
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-[O]rphaned
-    If buildout extension generated file is given it shows if the package in the given configuration was used.
-    Be careful with this information!
-    I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
-    Color: Magenta
-
 [D]evelopmen Egg
     A development egg is usally active.
     Description show location.
     Color: Green
-
 
 [A]ctive Pin
      Pinned version. Package is used and recent, all seems fine.
@@ -117,6 +110,16 @@ Legend of states and colors
 
 [I]nherited Pin
      unused pin. If older than active pin color is gray, if newer yellow.
+
+[O]rphaned
+    If tracked, it shows if the package in the given configuration was used at all.
+    Be careful with this information!
+    I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
+    Color: Magenta
+
+[X] Unpinnend
+    Tracked, but no pin in versions sections were found.
+    Color: Red
 
 [U]pdate final release
     At PyPI there is a newer final version available (major, minor or bugfix).
@@ -129,9 +132,10 @@ Legend of states and colors
     Only if there is no final release updatye available.
     Color: Blue
 
-[X] Unpinnend
-    Tracked, but no pin in versions sections were found.
-    Color: Red
+[R] Required by
+    If tracked and option ``--required-by`` was given, show packages this package is required by.
+    Valid for current active/ used version.
+    Keep in mind this is based on the declared requirements, missing or implicit requirements are not covered.
 
 
 Example

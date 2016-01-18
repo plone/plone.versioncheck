@@ -5,6 +5,7 @@ from plone.versioncheck import analyser
 from plone.versioncheck.utils import color_by_state
 from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
+from plone.versioncheck.utils import get_terminal_size
 import json
 import sys
 import textwrap
@@ -36,12 +37,12 @@ def build_version(
         else:
             record['state'] = 'I'
     else:  # pypi
+        record['version'] = pypi[key]
+        record['description'] = key.capitalize()
         if 'pre' in key:
             record['state'] = 'P'
         else:
             record['state'] = 'U'
-        record['version'] = pypi[key]
-        record['description'] = key.capitalize()
     return record
 
 
@@ -159,6 +160,7 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
     color_init()
     sys.stderr.write('\nReport for humans\n\n')
     data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
+    termx, termy = get_terminal_size()
     for name, record in data.items():
         print(color_by_state(record['state']) + name)
         for version in record['versions']:
@@ -176,7 +178,7 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
             print(
                 textwrap.fill(
                     req,
-                    80 - pkgsinfo['ver_maxlen'],
+                    termx - pkgsinfo['ver_maxlen'],
                     initial_indent=indent,
                     subsequent_indent=indent,
                 ) + '\n'

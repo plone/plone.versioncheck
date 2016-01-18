@@ -2,11 +2,8 @@
 from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
-import logging
 import requests
 import sys
-
-logger = logging.getLogger(__name__)
 
 
 PYPI_URL = "https://pypi.python.org/pypi"
@@ -27,7 +24,6 @@ def mmbp_tuple(version):
 
 def check(name, version):
     result = OrderedDict([
-        ('error', None),
         ('major', None),
         ('minor', None),
         ('bugfix', None),
@@ -40,11 +36,9 @@ def check(name, version):
     try:
         version = parse_version(version)
     except TypeError:
-        result['error'] = "Version broken/ not checkable."
-        return result
+        return False, "Version broken/ not checkable."
     if not isinstance(version, SetuptoolsVersion):
-        result['error'] = "Can not check legacy version number."
-        return result
+        return False, "Can not check legacy version number."
     vtuple = mmbp_tuple(version)
 
     # fetch pkgs json info from pypi
@@ -53,8 +47,7 @@ def check(name, version):
 
     # TODO check status code
     if resp.status_code != 200:
-        result['error'] = str(resp.status_code)
-        return result
+        return False, str(resp.status_code)
     data = resp.json()
     releases = sorted(data['releases'].keys())
     for release in releases:
@@ -102,7 +95,7 @@ def check(name, version):
     ):
         result['bugfixpre'] = None
 
-    return result
+    return True, result
 
 
 def check_all(pkgsinfo, limit=None):
@@ -113,17 +106,28 @@ def check_all(pkgsinfo, limit=None):
     if limit:
         sys.stderr.write(' Check limited to {0:d} packages.'.format(limit))
     pkgsinfo['pypi'] = {}
+    errors = []
     for idx, pkgname in enumerate(sorted(pkgs)):
         if not idx % 20 and idx != limit:
             sys.stderr.write('\n{0:4d} '.format(idx))
-        logger.info('{0} pypi check {1}'.format(idx+1, pkgname))
         current = next(iter(pkgs[pkgname]))
-        pkgsinfo['pypi'][pkgname] = check(
+        ok, result = check(
             pkgname,
             pkgs[pkgname][current]
         )
+        if not ok:
+            sys.stderr.write('e')
+            errors.append((pkgname, pkgs[pkgname][current], str(result)))
+            continue
+        pkgsinfo['pypi'][pkgname] = result
         if limit and idx == limit:
             break
         sys.stderr.write('.')
-    sys.stderr.write('\nPyPI check finished\n')
+    for error in errors:
+        sys.stderr.write(
+            '\nError in {0} version {1} reason {2}'.format(
+                *error
+            )
+        )
 
+    sys.stderr.write('\nPyPI check finished\n')

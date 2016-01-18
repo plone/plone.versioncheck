@@ -16,6 +16,7 @@ States and color codes:
   [U]pdate of final release on pypi available (cyan)
   [P]rerelease update on pypi available (blue)
   [X] unpinned (red)
+  [R] Requirement (gray)
 
 Color of package name helps to indicate overall state of a package.
 """
