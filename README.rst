@@ -17,11 +17,11 @@ Features
    It displays then sorted result in order to enable a human to check pins and overrides are ok.
 2) Checks Python Package Index (PyPI) for newer versions (optional).
    Detects if a newer major, minor or bugfix (or a prerelease) is available.
-3) Works as buildout extension and record the current sate of a buildout (version-wise).
+3) Works as buildout extension and record the current state of a buildout (version-wise).
    The state is written to a file and read by the command line tool to be included to the report.
-4) Shows by which package as dependency a package ws demanded (together with builtout extension only).
+4) Shows by whom as dependency a package was demanded (together with builtout extension only).
 
-- It works only with sematically korrekt version numbers!
+- It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
 - Output is colored, this helps to identify packages which have newer versions available.
 - Machine readable output as JSON on demand.
 
