@@ -100,7 +100,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
                     location,
                     idx,
                     flavor='versions',
-                    orphaned=current_tracked is None and not devegg
+                    orphaned=tracked and current_tracked is None and not devegg
                 )
             )
         if not devegg and current_tracked is not None and not len(versions):
@@ -140,7 +140,7 @@ def builder(pkgsinfo, newer_only=False, limit=None):
             record['state'] = 'D'
         elif unpinned:
             record['state'] = 'X'
-        elif name in pkgs and name not in tracked:
+        elif tracked and name in pkgs and name not in tracked:
             record['state'] = 'O'
         elif 'pypifinal' in states:
             record['state'] = 'U'
