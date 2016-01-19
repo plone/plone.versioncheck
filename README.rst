@@ -39,7 +39,7 @@ Add a section to install it as a script and add it as an extension to your builo
     extensions =
         plone.versioncheck
 
-    part =
+    parts =
         ...
         versioncheck
         ...
