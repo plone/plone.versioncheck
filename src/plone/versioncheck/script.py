@@ -71,6 +71,12 @@ parser.add_argument(
     action="store_true"
 )
 parser.add_argument(
+    "-b",
+    "--browser",
+    help='show as html for webbrowser',
+    action="store_true"
+)
+parser.add_argument(
     '--no-colors',
     help='do not show colors',
     action="store_true"
@@ -95,6 +101,13 @@ def run():
             pkgsinfo,
             newer_only=args.newer,
             limit=args.debug_limit,
+        )
+    elif args.browser:
+        formatter.browser(
+            pkgsinfo,
+            newer_only=args.newer,
+            limit=args.debug_limit,
+            show_requiredby=args.required_by
         )
     else:
         utils.COLORED = not args.no_colors
