@@ -35,6 +35,7 @@ setup(
     install_requires=[
         'CacheControl[filecache]',
         'colorama',
+        'jinja2',
         'requests',
         'setuptools>=12',
         'zc.buildout',
