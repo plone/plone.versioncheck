@@ -3,6 +3,7 @@ from __future__ import print_function
 from collections import OrderedDict
 from plone.versioncheck import analyser
 from plone.versioncheck.utils import color_by_state
+from plone.versioncheck.utils import color_dimmed
 from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 from plone.versioncheck.utils import get_terminal_size
@@ -177,6 +178,7 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
             req = ' '.join(sorted(record.get('required_by')))
             indent = (pkgsinfo['ver_maxlen']+5)*' ' + 'R '
             print(
+                color_dimmed() +
                 textwrap.fill(
                     req,
                     termx - pkgsinfo['ver_maxlen'],

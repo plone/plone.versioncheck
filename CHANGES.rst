@@ -6,7 +6,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix: Color of requirements was not set explicitly.
+  [jensens]
 
 
 1.1 (2016-01-19)
