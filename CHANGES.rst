@@ -6,6 +6,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Fix: Exception raised when no tracking file was present
+  [jensens]
+
 - Fix: Color of requirements was not set explicitly.
   [jensens]
 

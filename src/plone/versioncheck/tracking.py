@@ -83,6 +83,7 @@ def get(pkginfo, buildout):
             pkginfo['tracking'] = json.load(fp)
     except (IOError, ValueError) as e:
         sys.stderr.write(' - ' + str(e) + '\n')
+        return
     delta = time.time() - pkginfo['tracking']['generated']
     days = int(delta // (60*60*24))
     hours = int(delta // (60*60) - days*60*60)
