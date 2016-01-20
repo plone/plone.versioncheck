@@ -3,8 +3,8 @@ Changelog
 
 
 
-1.2 (unreleased)
-----------------
+1.1.1 (2016-01-20)
+------------------
 
 - Fix: Orphan detection failed when no tracking file was present.
   [jensens]
