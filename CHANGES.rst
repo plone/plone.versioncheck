@@ -6,7 +6,7 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix #13: Added missing ``zc.buildout`` requirement.  [maurits]
 
 
 1.1.1 (2016-01-20)
@@ -55,4 +55,3 @@ Changelog
 
 - Initial work.
   [jensens]
-
