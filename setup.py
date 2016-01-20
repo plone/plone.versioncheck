@@ -18,7 +18,7 @@ setup(
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
-      'Framework :: Plone',
+      'Framework :: Buildout',
       'Programming Language :: Python',
       'Programming Language :: Python :: 2.7',
     ],
