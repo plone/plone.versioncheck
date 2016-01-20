@@ -72,6 +72,10 @@ def get(pkginfo, buildout):
     relative = find_relative(buildout)
     if relative:
         filepath = os.path.join(relative, TRACKINGFILENAME)
+    if not os.path.exists(filepath):
+        # We are not used as a buildout extension, so this file is
+        # not available.
+        return
     sys.stderr.write(
         '\nRead tracking information from buildout extension: \n'
         '- {0}\n'.format(

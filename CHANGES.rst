@@ -6,6 +6,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Fix: Do not complain about missing track file.  If it is not there,
+  the buildout is simply not using the buildout extension.  [maurits]
+
 - Fix #13: Added missing ``zc.buildout`` requirement.  [maurits]
 
 
