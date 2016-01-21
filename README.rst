@@ -75,7 +75,7 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-colors]
+    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-cache] [--no-colors]
                         [--debug-limit DEBUG_LIMIT]
                         [buildout]
 
@@ -93,12 +93,25 @@ commandline
       -i, --ignore-tracking
                             ignore tracking file (if present)
       -m, --machine         show as machine readable output (json)
+      --no-cache            do not use a cache for pypi
       --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
                             debugging
 
     [...]
+
+
+Files created
+-------------
+
+If the script was used with ``--pypi`` option a directory ``.plone.versioncheck.cache`` will be created.
+It contains the cache of the requests to PyPI.
+To clear the cache remove the directory.
+The caching library uses the expiration headers of the response from PyPI, so even with cache it starts fetching new records.
+
+If extension was used a file ``.plone.versioncheck.tracked.json`` will be created.
+It contains the information from last buildout run.
 
 
 Output explained

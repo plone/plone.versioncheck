@@ -2,7 +2,7 @@
 *.pyc
 *.swp
 .installed.cfg
-.plone.versioncheck.tracked.json
+.plone.versioncheck.*
 .project
 .pydevproject
 .settings/

@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from cachecontrol import CacheControl
+from cachecontrol.caches import FileCache
 from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
@@ -7,6 +9,7 @@ import sys
 
 
 PYPI_URL = "https://pypi.python.org/pypi"
+CACHE_FILENAME = '.plone.versioncheck.cache'
 
 
 def mmbp_tuple(version):
@@ -22,7 +25,7 @@ def mmbp_tuple(version):
     return [int(_) for _ in parts]
 
 
-def check(name, version):
+def check(name, version, session):
     result = OrderedDict([
         ('major', None),
         ('minor', None),
@@ -43,7 +46,7 @@ def check(name, version):
 
     # fetch pkgs json info from pypi
     url = "{0}/{1}/json".format(PYPI_URL, name)
-    resp = requests.get(url)
+    resp = session.get(url)
 
     # TODO check status code
     if resp.status_code != 200:
@@ -98,7 +101,14 @@ def check(name, version):
     return True, result
 
 
-def check_all(pkgsinfo, limit=None):
+def check_all(pkgsinfo, limit=None, nocache=False):
+    if nocache:
+        session = requests.Session()
+    else:
+        session = CacheControl(
+            requests.Session(),
+            cache=FileCache(CACHE_FILENAME)
+        )
     pkgs = pkgsinfo['pkgs']
     sys.stderr.write(
         'Check PyPI for updates of {0:d} packages.'.format(len(pkgs))
@@ -113,7 +123,8 @@ def check_all(pkgsinfo, limit=None):
         current = next(iter(pkgs[pkgname]))
         ok, result = check(
             pkgname,
-            pkgs[pkgname][current]
+            pkgs[pkgname][current],
+            session
         )
         if not ok:
             sys.stderr.write('e')

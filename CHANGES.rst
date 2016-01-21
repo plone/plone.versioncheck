@@ -6,7 +6,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Feature: It caches now responses from PyPI.
+  [jensens]
 
 
 1.1.2 (2016-01-21)

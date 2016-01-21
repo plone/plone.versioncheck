@@ -33,6 +33,7 @@ setup(
     include_package_data=True,
     zip_safe=True,
     install_requires=[
+        'CacheControl[filecache]',
         'colorama',
         'requests',
         'setuptools>=12',

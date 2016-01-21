@@ -66,6 +66,11 @@ parser.add_argument(
     action="store_true"
 )
 parser.add_argument(
+    '--no-cache',
+    help='do not use a cache for pypi',
+    action="store_true"
+)
+parser.add_argument(
     '--no-colors',
     help='do not show colors',
     action="store_true"
@@ -82,7 +87,7 @@ def run():
     pkgsinfo = {}
     pkgsinfo['pkgs'] = parse(args.buildout)
     if args.pypi:
-        check_all(pkgsinfo, args.debug_limit)
+        check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
     if args.machine:
