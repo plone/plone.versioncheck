@@ -9,6 +9,8 @@ Checks pinned versions with overrides in a cascaded buildout
 
 **plone.versioncheck**
 
+.. contents::
+
 Features
 ========
 
