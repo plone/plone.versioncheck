@@ -3,8 +3,8 @@ Changelog
 
 
 
-1.2 (unreleased)
-----------------
+1.1.2 (2016-01-21)
+------------------
 
 - Fix: Resolution order buildout extends chain was wrong. Also documented the
   resolution order and included in own builodut a small example.
