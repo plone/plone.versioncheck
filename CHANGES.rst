@@ -6,7 +6,8 @@ Changelog
 1.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Fix: Formatter printed a newline to much after ``required by``.
+  [jensens]
 
 
 1.1.1 (2016-01-20)

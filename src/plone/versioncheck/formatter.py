@@ -184,7 +184,7 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
                     termx - pkgsinfo['ver_maxlen'],
                     initial_indent=indent,
                     subsequent_indent=indent,
-                ) + '\n'
+                )
             )
 
 
