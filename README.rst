@@ -14,7 +14,7 @@ Features
 
 1) **Checks buildouts ``[versions]`` sections** while stepping through the cascaded ``extends``
 
-   - Commandline script collects the inherited version pins, remembers where a version pin comes from.
+   - command line script collects the inherited version pins, remembers where a version pin comes from.
    - It displays the result in order to enable a human to check pins and overrides are ok.
    - Output is colored, this helps to identify packages which have newer versions available.
    - Machine readable output as JSON on demand.
@@ -25,10 +25,10 @@ Features
 
 3) **Buildout extension** records the **current versions state** and **requirements**
 
-   - The state and requirements are written to a file,
+   - versions state and requirements are written to a file,
    - versions from the file will be consumed by the command line tool
-       - and orphaned version pin are detected,
-       - also it shows by whom as dependency a package was demanded.
+       - orphaned version pin are detected,
+       - it shows by whom as dependency a package was demanded.
 
 It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
 
