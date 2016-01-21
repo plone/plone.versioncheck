@@ -1,4 +1,4 @@
 include *.rst
 include *.sh
-include buildout.cfg
+include *.cfg
 

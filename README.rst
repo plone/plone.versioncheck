@@ -12,19 +12,25 @@ Checks pinned versions with overrides in a cascaded buildout
 Features
 ========
 
-1) Command line script to check a buildouts ``[versions]`` section while stepping through the cascaded ``extends``.
-   The script collects the inherited version pins, remembers where a version pin comes from.
-   It displays then sorted result in order to enable a human to check pins and overrides are ok.
-2) Checks Python Package Index (PyPI) for newer versions (optional).
-   Detects if a newer major, minor or bugfix (or a prerelease) is available.
-3) Works as buildout extension and record the current state of a buildout (version-wise).
-   The state is written to a file and read by the command line tool to be included to the report.
-4) Shows by whom as dependency a package was demanded (together with builtout extension only).
+1) **Checks buildouts ``[versions]`` sections** while stepping through the cascaded ``extends``
 
-- It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
-- Output is colored, this helps to identify packages which have newer versions available.
-- Machine readable output as JSON on demand.
+   - Commandline script collects the inherited version pins, remembers where a version pin comes from.
+   - It displays the result in order to enable a human to check pins and overrides are ok.
+   - Output is colored, this helps to identify packages which have newer versions available.
+   - Machine readable output as JSON on demand.
 
+2) **Checks Python Package Index (PyPI)** for newer versions.
+
+   - Detects if a newer major, minor or bugfix (or a prerelease) is available.
+
+3) **Buildout extension** records the **current versions state** and **requirements**
+
+   - The state and requirements are written to a file,
+   - versions from the file will be consumed by the command line tool
+       - and orphaned version pin are detected,
+       - also it shows by whom as dependency a package was demanded.
+
+It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
 
 Usage
 =====
@@ -41,12 +47,12 @@ Add a section to install it as a script and add it as an extension to your builo
 
     parts =
         ...
-        versioncheck
+        ploneversioncheck
         ...
 
     ...
 
-    [versioncheck]
+    [ploneversioncheck]
     recipe = zc.recipe.egg
     eggs = plone.versioncheck
 
@@ -159,7 +165,7 @@ Example, given in each a version of ``my.pkg`` was declared
     2. minor ``my.pkg=3.2``
     3. major ``prerelease my.pkg=5.1b2``
 
-The we get (after I fixed the bug above)::
+Output looks like so::
 
     my.pkg
         3.0.3............... A buildout.cfg
