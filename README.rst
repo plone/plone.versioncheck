@@ -138,6 +138,40 @@ Legend of states and colors
     Keep in mind this is based on the declared requirements, missing or implicit requirements are not covered.
 
 
+Order of versions
+-----------------
+
+Order of versions is the buildout resolution order (how they are resolved by buildout in the extends chain/tree).
+After that the PyPI releases are shown (major, minor, pre, then the prereleases)
+
+Example, given in each a version of ``my.pkg`` was declared
+
+1. ``buildout.cfg`` with ``my.pkg=3.0.3``
+
+    1. ``buildout.cfg`` extends ``foo.cfg`` with ``my.pkg=3.0.1``
+    2. ``buildout.cfg`` extends ``bar.cfg`` with ``my.pkg=2.0``
+
+       2. ``foo cfg`` extends ``baz.cfg`` with ``my.pkg=3.1``
+
+2. found a newer versions at pypi
+
+    1. major ``my.pkg=4.0``
+    2. minor ``my.pkg=3.2``
+    3. major ``prerelease my.pkg=5.1b2``
+
+The we get (after I fixed the bug above)::
+
+    my.pkg
+        3.0.3............... A buildout.cfg
+        2.0 ................ I bar.cfg
+        3.0.1 .............. I foo.cfg
+        3.1 ................ I baz.cfg
+        4.0 ................ U Major
+        3.2 ................ U Minor
+        5.1b2............... P Majorpre
+
+
+
 Example
 -------
 

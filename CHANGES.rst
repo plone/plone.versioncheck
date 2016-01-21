@@ -6,6 +6,10 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Fix: Resolution order buildout extends chain was wrong. Also documented the
+  resolution order and included in own builodut a small example.
+  [jensens]
+
 - Fix: Formatter printed a newline to much after ``required by``.
   [jensens]
 

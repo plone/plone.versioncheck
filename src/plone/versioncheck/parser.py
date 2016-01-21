@@ -36,7 +36,7 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
         extends = config.get('buildout', 'extends').strip()
     except (NoSectionError, NoOptionError):
         return version_sections
-    for extend in extends.splitlines():
+    for extend in reversed(extends.splitlines()):
         extend = extend.strip()
         if not extend:
             continue
