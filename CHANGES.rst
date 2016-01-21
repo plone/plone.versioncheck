@@ -13,6 +13,11 @@ Changelog
 - Fix: Formatter printed a newline to much after ``required by``.
   [jensens]
 
+- Fix: Do not complain about missing track file.  If it is not there,
+  the buildout is simply not using the buildout extension.  [maurits]
+
+- Fix #13: Added missing ``zc.buildout`` requirement.  [maurits]
+
 
 1.1.1 (2016-01-20)
 ------------------
@@ -60,4 +65,3 @@ Changelog
 
 - Initial work.
   [jensens]
-

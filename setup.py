@@ -36,6 +36,7 @@ setup(
         'colorama',
         'requests',
         'setuptools>=12',
+        'zc.buildout',
     ],
     setup_requires=[
         'setuptools>=12'
