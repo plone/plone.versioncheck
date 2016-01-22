@@ -98,7 +98,7 @@ def check(name, version, session):
     ):
         result['bugfixpre'] = None
 
-    return True, result
+    return 2 if resp.from_cache else 1, result
 
 
 def check_all(pkgsinfo, limit=None, nocache=False):
@@ -121,19 +121,19 @@ def check_all(pkgsinfo, limit=None, nocache=False):
         if not idx % 20 and idx != limit:
             sys.stderr.write('\n{0:4d} '.format(idx))
         current = next(iter(pkgs[pkgname]))
-        ok, result = check(
+        state, result = check(
             pkgname,
             pkgs[pkgname][current],
             session
         )
-        if not ok:
-            sys.stderr.write('e')
+        if not state:
+            sys.stderr.write('E')
             errors.append((pkgname, pkgs[pkgname][current], str(result)))
             continue
         pkgsinfo['pypi'][pkgname] = result
+        sys.stderr.write('O' if state == 1 else 'o')
         if limit and idx == limit:
             break
-        sys.stderr.write('.')
     for error in errors:
         sys.stderr.write(
             '\nError in {0} version {1} reason {2}'.format(
