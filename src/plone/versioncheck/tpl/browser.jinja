@@ -28,7 +28,7 @@
             color: orange;
           }
           .color-U {
-            color: cyan;
+            color: darkcyan;
           }
           .color-P {
             color: blue;
@@ -62,7 +62,7 @@
             <td class="color-{{version['state']}}">{{version['version']}}</td>
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
-            {% if outer_loop.first and req_by %}
+            {% if loop.first and req_by %}
             <td rowspan="{{loop.length}}">
             {% for req in record.get('required_by', [])|sort %}
             {{req}}
