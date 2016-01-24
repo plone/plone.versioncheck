@@ -3,9 +3,14 @@
       <meta charset="utf-8">
       <title>plone.versioncheck</title>
       <style type="text/css" media="screen">
+          table {
+            font-family: sans-serif;
+            font-size: 80%;
+          }
           td {
             border: none;
             padding: 0.5em;
+            vertical-align: top;
           }
           thead th {
             border: none;
@@ -58,14 +63,14 @@
         {% set outer_loop = loop %}
         {% for version in record['versions'] %}
         <tr class="{{outer_loop.cycle('odd', 'even')}}">
-            <td class="color-{{record['state']}}">{% if loop.first%}{{name}}{% endif %}</td>
+            <td class="color-{{record['state']}}">{% if loop.first%}<span id="{{name}}">{{name}}</span>{% endif %}</td>
             <td class="color-{{version['state']}}">{{version['version']}}</td>
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
             {% if loop.first and req_by %}
             <td rowspan="{{loop.length}}">
             {% for req in record.get('required_by', [])|sort %}
-            {{req}}
+            <a href="#{{req}}">{{req}}</a>
             {% else %}
             &nbsp;
             {% endfor %}
