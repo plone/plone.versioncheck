@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
+from cachecontrol import CacheControl
+from cachecontrol.caches import FileCache
 from colorama import Fore
 from colorama import init as colorama_init
 from colorama import Style
 import os
 import platform
+import requests
 import shlex
 import struct
 import subprocess
@@ -62,6 +65,18 @@ def dots(value, max):
     if dots:
         dots = ' ' + dots[1:]
     return color_dimmed() + dots
+
+
+CACHE_FILENAME = '.plone.versioncheck.cache'
+
+
+def requests_session(nocache=False):
+    if nocache:
+        return requests.Session()
+    return CacheControl(
+        requests.Session(),
+        cache=FileCache(CACHE_FILENAME)
+    )
 
 
 def find_relative(extend):

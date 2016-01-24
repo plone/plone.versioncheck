@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-from cachecontrol import CacheControl
-from cachecontrol.caches import FileCache
 from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
-import requests
+from plone.versioncheck.utils import requests_session
 import sys
 
 
 PYPI_URL = "https://pypi.python.org/pypi"
-CACHE_FILENAME = '.plone.versioncheck.cache'
 
 
 def mmbp_tuple(version):
@@ -102,13 +99,7 @@ def check(name, version, session):
 
 
 def check_all(pkgsinfo, limit=None, nocache=False):
-    if nocache:
-        session = requests.Session()
-    else:
-        session = CacheControl(
-            requests.Session(),
-            cache=FileCache(CACHE_FILENAME)
-        )
+    session = requests_session(nocache=nocache)
     pkgs = pkgsinfo['pkgs']
     sys.stderr.write(
         'Check PyPI for updates of {0:d} packages.'.format(len(pkgs))
