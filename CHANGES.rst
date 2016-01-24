@@ -6,6 +6,9 @@ Changelog
 1.2 (unreleased)
 ----------------
 
+- Cache buildout cfg files fetched over the network.
+  [jensens]
+
 - Feature: It caches now responses from PyPI.
   [jensens]
 
