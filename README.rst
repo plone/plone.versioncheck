@@ -93,7 +93,7 @@ commandline
       -i, --ignore-tracking
                             ignore tracking file (if present)
       -m, --machine         show as machine readable output (json)
-      --no-cache            do not use a cache for pypi
+      --no-cache            do not use a cache for pypi/ external buildout configuration files
       --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
@@ -106,7 +106,7 @@ Files created
 -------------
 
 If the script was used with ``--pypi`` option a directory ``.plone.versioncheck.cache`` will be created.
-It contains the cache of the requests to PyPI.
+It contains the cache of the requests to PyPI or external buildout configuration files.
 To clear the cache remove the directory.
 The caching library uses the expiration headers of the response from PyPI, so even with cache it starts fetching new records.
 

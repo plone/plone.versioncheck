@@ -1,0 +1,85 @@
+<html>
+  <head>
+      <meta charset="utf-8">
+      <title>plone.versioncheck</title>
+      <style type="text/css" media="screen">
+          table {
+            font-family: sans-serif;
+            font-size: 80%;
+          }
+          td {
+            border: none;
+            padding: 0.5em;
+            vertical-align: top;
+          }
+          thead th {
+            border: none;
+            padding: 0.5em;
+            background-color: #ddddee;
+          }
+          .even {
+            background-color: #eeeeff;
+          }
+          .color-D {
+            color: green;
+          }
+          .color-A {
+            color: black;
+          }
+          .color-I {
+            color: gray;
+          }
+          .color-In {
+            color: orange;
+          }
+          .color-U {
+            color: darkcyan;
+          }
+          .color-P {
+            color: blue;
+          }
+          .color-O {
+            color: magenta;
+          }
+          .color-X {
+            color: red;
+          }
+
+      </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>package</th>
+          <th>version</th>
+          <th>state</th>
+          <th>info</th>
+          {% if req_by%}<th>required by</th>{% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for name, record in data.items() %}
+        {% set outer_loop = loop %}
+        {% for version in record['versions'] %}
+        <tr class="{{outer_loop.cycle('odd', 'even')}}">
+            <td class="color-{{record['state']}}">{% if loop.first%}<span id="{{name}}">{{name}}</span>{% endif %}</td>
+            <td class="color-{{version['state']}}">{{version['version']}}</td>
+            <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
+            <td class="color-{{version['state']}}">{{version['description']}}</td>
+            {% if loop.first and req_by %}
+            <td rowspan="{{loop.length}}">
+            {% for req in record.get('required_by', [])|sort %}
+            <a href="#{{req}}">{{req}}</a>
+            {% else %}
+            &nbsp;
+            {% endfor %}
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>

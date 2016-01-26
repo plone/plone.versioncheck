@@ -4,12 +4,18 @@ from ConfigParser import ConfigParser
 from ConfigParser import NoOptionError
 from ConfigParser import NoSectionError
 from plone.versioncheck.utils import find_relative
+from plone.versioncheck.utils import requests_session
+from StringIO import StringIO
 import os.path
 import sys
-import urllib2
 
 
-def _extract_versions_section(filename, version_sections=None, relative=None):
+def _extract_versions_section(
+    session,
+    filename,
+    version_sections=None,
+    relative=None
+):
     sys.stderr.write('\n- {0}'.format(filename))
     if (
         relative is not None and
@@ -22,8 +28,14 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
     if os.path.isfile(filename):
         config.read(filename)
     else:
-        response = urllib2.urlopen(filename)
-        config.readfp(response)
+        resp = session.get(filename)
+        config.readfp(StringIO(resp.text))
+        if resp.from_cache:
+            sys.stderr.write('\n  from cache')
+        elif resp.status_code != 200:
+            sys.stderr.write('\n  ERROR {0:d}'.format(resp.status_code))
+        else:
+            sys.stderr.write('\n  fresh from server')
     # first read own versions section
     if config.has_section('versions'):
         version_sections[filename] = OrderedDict(config.items('versions'))
@@ -41,14 +53,23 @@ def _extract_versions_section(filename, version_sections=None, relative=None):
         if not extend:
             continue
         sub_relative = find_relative(extend) or relative
-        _extract_versions_section(extend, version_sections, sub_relative)
+        _extract_versions_section(
+            session,
+            extend,
+            version_sections,
+            sub_relative
+        )
     return version_sections
 
 
-def parse(buildout_filename):
+def parse(buildout_filename, nocache=False):
     sys.stderr.write("Parsing buildout files:")
+    if nocache:
+        sys.stderr.write("\n(not using caches)")
     base_relative = find_relative(buildout_filename)
+    session = requests_session(nocache=nocache)
     version_sections = _extract_versions_section(
+        session,
         buildout_filename,
         version_sections=OrderedDict(),
         relative=base_relative

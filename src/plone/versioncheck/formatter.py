@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from collections import OrderedDict
+from jinja2 import Environment
+from jinja2 import PackageLoader
 from plone.versioncheck import analyser
 from plone.versioncheck.utils import color_by_state
 from plone.versioncheck.utils import color_dimmed
@@ -10,6 +12,9 @@ from plone.versioncheck.utils import get_terminal_size
 import json
 import sys
 import textwrap
+
+
+jenv = Environment(loader=PackageLoader('plone.versioncheck', 'tpl'))
 
 
 def build_version(
@@ -186,6 +191,14 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
                     subsequent_indent=indent,
                 )
             )
+
+
+def browser(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
+    color_init()
+    sys.stderr.write('\nReport for brower\n\n')
+    data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
+    template = jenv.get_template('browser.jinja')
+    print(template.render(data=data, req_by=show_requiredby))
 
 
 def machine(pkgsinfo, newer_only=False, limit=None):
