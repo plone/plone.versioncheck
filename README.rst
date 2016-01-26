@@ -75,8 +75,8 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-cache] [--no-colors]
-                        [--debug-limit DEBUG_LIMIT]
+    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-cache] [-b]
+                        [--no-colors] [--debug-limit DEBUG_LIMIT]
                         [buildout]
 
     Fetch information about pinned versions and its overrides insimple and complex/cascaded buildouts.
@@ -93,7 +93,8 @@ commandline
       -i, --ignore-tracking
                             ignore tracking file (if present)
       -m, --machine         show as machine readable output (json)
-      --no-cache            do not use a cache for pypi/ external buildout configuration files
+      --no-cache            do not use a cache for pypi
+      -b, --browser         show as html for webbrowser
       --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
                             Limit the number of pypi versions fetched for
