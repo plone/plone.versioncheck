@@ -3,8 +3,8 @@ Changelog
 
 
 
-1.2 (unreleased)
-----------------
+1.2.1 (2016-01-26)
+------------------
 
 - Cache buildout cfg files fetched over the network.
   [jensens]
