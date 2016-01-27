@@ -1,13 +1,22 @@
 # -*- coding: utf-8 -*-
+
 from collections import OrderedDict
-from ConfigParser import ConfigParser
-from ConfigParser import NoOptionError
-from ConfigParser import NoSectionError
 from plone.versioncheck.utils import find_relative
 from plone.versioncheck.utils import requests_session
-from StringIO import StringIO
+
 import os.path
 import sys
+
+if sys.version_info < (3, 0):
+    from ConfigParser import ConfigParser
+    from ConfigParser import NoOptionError
+    from ConfigParser import NoSectionError
+    from StringIO import StringIO
+elif sys.version_info >= (3, 0):
+    from configparser import ConfigParser
+    from configparser import NoOptionError
+    from configparser import NoSectionError
+    from io import StringIO
 
 
 def _extract_versions_section(

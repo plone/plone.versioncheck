@@ -4,13 +4,21 @@ from cachecontrol.caches import FileCache
 from colorama import Fore
 from colorama import init as colorama_init
 from colorama import Style
+
 import os
 import platform
 import requests
 import shlex
 import struct
 import subprocess
-import urlparse
+import sys
+
+if sys.version_info < (3, 0):
+    from urlparse import urlparse
+    from urlparse import urlunparse
+elif sys.version_info >= (3, 0):
+    from urllib.parse import urlparse
+    from urllib.parse import urlunparse
 
 
 COLORED = True
@@ -81,9 +89,9 @@ def requests_session(nocache=False):
 
 def find_relative(extend):
     if "://" in extend:
-        parts = list(urlparse.urlparse(extend))
+        parts = list(urlparse(extend))
         parts[2] = '/'.join(parts[2].split('/')[:-1])
-        return urlparse.urlunparse(parts)
+        return urlunparse(parts)
     elif '/' in extend:
         return os.path.dirname(extend)
 
