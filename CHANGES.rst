@@ -6,7 +6,8 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Add .editorconfig File to maintain code convetions following Plone API
+- Add Support for Python 3
 
 
 1.2.1 (2016-01-26)
