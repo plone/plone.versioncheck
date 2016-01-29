@@ -13,8 +13,8 @@ States and color codes:
   [D]evelop (green)
   [O]rphaned (magenta)
   [I]nherited (older or same versions are gray, newer are yellow)
-  [U]pdate of final release on pypi available (cyan)
-  [P]rerelease update on pypi available (blue)
+  [U]pdate of final release on PyPI available (cyan)
+  [P]rerelease update on PyPI available (blue)
   [X] unpinned (red)
   [R] Requirement (gray)
 
@@ -23,7 +23,7 @@ Color of package name helps to indicate overall state of a package.
 
 
 parser = ArgumentParser(
-    description="Fetch information about pinned versions and its overrides in"
+    description="Fetch information about pinned versions and its overrides in "
                 "simple and complex/cascaded buildouts.",
     epilog=EPILOG,
     formatter_class=RawDescriptionHelpFormatter,
@@ -37,7 +37,7 @@ parser.add_argument(
 parser.add_argument(
     "-p",
     "--pypi",
-    help='check pypi for newer versions',
+    help='check PyPI for newer versions',
     action="store_true"
 )
 parser.add_argument(
@@ -67,7 +67,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '--no-cache',
-    help='do not use a cache for pypi',
+    help='do not use a cache for PyPI',
     action="store_true"
 )
 parser.add_argument(
@@ -84,7 +84,7 @@ parser.add_argument(
 parser.add_argument(
     '--debug-limit',
     type=int,
-    help='Limit the number of pypi versions fetched for debugging'
+    help='Limit the number of PyPI versions fetched for debugging'
 )
 
 

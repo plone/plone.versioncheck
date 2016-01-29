@@ -17,8 +17,8 @@ Features
 1) **Checks buildouts ``[versions]`` sections** while stepping through the cascaded ``extends``
 
    - command line script collects the inherited version pins, remembers where a version pin comes from.
-   - It displays the result in order to enable a human to check pins and overrides are ok.
-   - Output is colored, this helps to identify packages which have newer versions available.
+   - It displays the result in order to enable a human to check that pins and overrides are OK.
+   - Output is colored; this helps to identify packages which have newer versions available.
    - Machine readable output as JSON on demand.
 
 2) **Checks Python Package Index (PyPI)** for newer versions.
@@ -29,8 +29,8 @@ Features
 
    - versions state and requirements are written to a file,
    - versions from the file will be consumed by the command line tool
-       - orphaned version pin are detected,
-       - it shows by whom as dependency a package was demanded.
+       - orphaned version pins are detected,
+       - it shows which package pulled in another package as dependency.
 
 It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
 
@@ -61,7 +61,7 @@ Add a section to install it as a script and add it as an extension to your builo
     ...
 
 
-Run buildout as usal.
+Run buildout as usual.
 
 Now a file ``.plone.versioncheck.tracked.json`` was generated in the buildout-directory.
 
@@ -79,7 +79,7 @@ commandline
                         [--no-colors] [--debug-limit DEBUG_LIMIT]
                         [buildout]
 
-    Fetch information about pinned versions and its overrides insimple and complex/cascaded buildouts.
+    Fetch information about pinned versions and its overrides in simple and complex/cascaded buildouts.
 
     positional arguments:
       buildout              path to buildout.cfg or other *.cfg file
@@ -106,12 +106,12 @@ commandline
 Files created
 -------------
 
-If the script was used with ``--pypi`` option a directory ``.plone.versioncheck.cache`` will be created.
+If the script was used with the ``--pypi`` option, a directory ``.plone.versioncheck.cache`` will be created.
 It contains the cache of the requests to PyPI or external buildout configuration files.
-To clear the cache remove the directory.
+To clear the cache, remove the directory.
 The caching library uses the expiration headers of the response from PyPI, so even with cache it starts fetching new records.
 
-If extension was used a file ``.plone.versioncheck.tracked.json`` will be created.
+If the extension was used, a file ``.plone.versioncheck.tracked.json`` will be created.
 It contains the information from last buildout run.
 
 
@@ -121,9 +121,9 @@ Output explained
 Legend of states and colors
 ---------------------------
 
-[D]evelopmen Egg
-    A development egg is usally active.
-    Description show location.
+[D]evelopment Egg
+    A development egg is usually active.
+    Description shows location.
     Color: Green
 
 [A]ctive Pin
@@ -131,16 +131,16 @@ Legend of states and colors
      Color: White
 
 [I]nherited Pin
-     unused pin. If older than active pin color is gray, if newer yellow.
+     Unused pin. If older than active, the pin color is gray; if newer, it is yellow.
 
 [O]rphaned
-    If tracked, it shows if the package in the given configuration was used at all.
+    If tracked, it shows whether the package in the given configuration was used at all.
     Be careful with this information!
-    I.e. in a development buildout file other packages are used than in a live or continious integration buildout!
+    I.e. in a development buildout file, other packages are used than in a live or continuous integration buildout!
     Color: Magenta
 
 [X] Unpinnend
-    Tracked, but no pin in versions sections were found.
+    Tracked, but no pin in ``[versions]`` sections were found.
     Color: Red
 
 [U]pdate final release
@@ -151,12 +151,12 @@ Legend of states and colors
 [P]rerelease update
     At PyPI there is a newer prerelease version available (major, minor or bugfix).
     Descriptions shows on which level.
-    Only if there is no final release updatye available.
+    Only if there is no final release update available.
     Color: Blue
 
 [R] Required by
     If tracked and option ``--required-by`` was given, show packages this package is required by.
-    Valid for current active/ used version.
+    Valid for current active/used version.
     Keep in mind this is based on the declared requirements, missing or implicit requirements are not covered.
 
 
@@ -164,9 +164,9 @@ Order of versions
 -----------------
 
 Order of versions is the buildout resolution order (how they are resolved by buildout in the extends chain/tree).
-After that the PyPI releases are shown (major, minor, pre, then the prereleases)
+After that, the PyPI releases are shown (major, minor, pre, then the prereleases)
 
-Example, given in each a version of ``my.pkg`` was declared
+Example, given in each a version of ``my.pkg`` was declared:
 
 1. ``buildout.cfg`` with ``my.pkg=3.0.3``
 
@@ -197,7 +197,7 @@ Output looks like so::
 Example
 -------
 
-Here w/o colors, run on buildout.coredev::
+Here w/o colors, run on ``buildout.coredev``::
 
     $ ./bin/versioncheck -p buildout.cfg
 
@@ -267,8 +267,8 @@ Please follow the `contribution guidelines <http://docs.plone.org/develop/corede
 - `Source code at Github <https://github.com/plone/plone.versioncheck>`_
 - `Issue tracker at Github <https://github.com/plone/plone.versioncheck>`_
 
-Maintainer of plone.versioncheck is Jens Klein.
-We appreciate any contribution and if a release is needed to be done on pypi, please just contact one of us.
+Maintainer of ``plone.versioncheck`` is Jens Klein.
+We appreciate any contribution and if a release is needed to be done on PyPI, please just contact one of us.
 
 Development
 ===========
