@@ -278,8 +278,15 @@ Clone the project. Then::
 
     $ bootstrap.sh
 
+Tests
+-----
+
+Given you have launched `bootstrap.sh` as suggested,
+you can run the tests with::
+
+    $ ./bin/py setup.py test
+
 License
 =======
 
 The project is licensed under the GPLv2.
-

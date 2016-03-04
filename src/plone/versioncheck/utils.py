@@ -88,11 +88,18 @@ def requests_session(nocache=False):
 
 
 def find_relative(extend):
+    ''' takes an extend line and parses it.
+
+    Returns the directory containing the file
+    '''
+    if extend.startswith('../'):
+        # BBB fix me!
+        return ''
     if "://" in extend:
         parts = list(urlparse(extend))
-        parts[2] = '/'.join(parts[2].split('/')[:-1])
+        parts[2] = parts[2].rpartition('/')[0]
         return urlunparse(parts)
-    elif '/' in extend:
+    if '/' in extend:
         return os.path.dirname(extend)
 
 ###########################################################

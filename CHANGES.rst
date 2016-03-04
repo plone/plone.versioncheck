@@ -6,8 +6,16 @@ Changelog
 1.2.2 (unreleased)
 ------------------
 
-- Add .editorconfig File to maintain code convetions following Plone API
-- Add Support for Python 3
+New:
+
+  - Add .editorconfig File to maintain code conventions following Plone API
+  - Add Support for Python 3
+  - Basic test support (via ./bin/py setup.py test)
+
+Fix:
+
+  - handle extends in parent folder (initial work to fix #20)
+    [ale-rt]
 
 
 1.2.1 (2016-01-26)
