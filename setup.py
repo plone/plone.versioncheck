@@ -18,9 +18,9 @@ setup(
     # Get more strings from
     # http://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
-      'Framework :: Buildout',
-      'Programming Language :: Python',
-      'Programming Language :: Python :: 2.7',
+        'Framework :: Buildout',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2.7',
     ],
     keywords='plone buildout version ',
     author='Jens W. Klein',
@@ -51,4 +51,5 @@ setup(
             'default = plone.versioncheck.tracking:install',
         ]
     },
+    test_suite='plone.versioncheck.tests',
 )
