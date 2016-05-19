@@ -27,7 +27,6 @@ setup(
       'Programming Language :: Python :: 3',
       'Programming Language :: Python :: 3.5',
     ],
-    ],
     keywords='plone buildout version ',
     author='Jens W. Klein',
     author_email='jens@bluedynamics.com',
