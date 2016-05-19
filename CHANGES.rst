@@ -1,14 +1,17 @@
 Changelog
 =========
 
-
-
 1.2.2 (unreleased)
 ------------------
 
 - Add .editorconfig File to maintain code convetions following Plone API
-- Add Support for Python 3
+  [loechel]
 
+- Add Support for Python 3
+  [loechel]
+
+- Fix various documentation typos.
+  [jean]
 
 1.2.1 (2016-01-26)
 ------------------
