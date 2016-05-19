@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.2.2 (unreleased)
-------------------
+1.3 (2016-05-19)
+----------------
 
 - Add .editorconfig File to maintain code convetions following Plone API
   [loechel]
