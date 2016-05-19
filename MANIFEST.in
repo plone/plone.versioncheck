@@ -1,4 +1,4 @@
 include *.rst
 include *.sh
 include *.cfg
-
+recursive-include src *.jinja
