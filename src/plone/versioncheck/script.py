@@ -47,6 +47,12 @@ parser.add_argument(
     action="store_true"
 )
 parser.add_argument(
+    "-N",
+    "--newer-orphaned",
+    help='display orphaned packages only when newer versions available',
+    action="store_true"
+)
+parser.add_argument(
     "-r",
     "--required-by",
     help='show information about requirements (only if tracking file is '
@@ -100,12 +106,14 @@ def run():
         formatter.machine(
             pkgsinfo,
             newer_only=args.newer,
+            orphaned_newer_only=args.newer_orphaned,
             limit=args.debug_limit,
         )
     elif args.browser:
         formatter.browser(
             pkgsinfo,
             newer_only=args.newer,
+            newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
             show_requiredby=args.required_by
         )
@@ -114,6 +122,7 @@ def run():
         formatter.human(
             pkgsinfo,
             newer_only=args.newer,
+            newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
             show_requiredby=args.required_by
         )

@@ -9,6 +9,7 @@ from plone.versioncheck.utils import color_dimmed
 from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 from plone.versioncheck.utils import get_terminal_size
+
 import json
 import sys
 import textwrap
@@ -52,7 +53,7 @@ def build_version(
     return record
 
 
-def builder(pkgsinfo, newer_only=False, limit=None):
+def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None):
     """build
     - OrderedDict with pkgname as keys
     - each entry an record:
@@ -158,15 +159,32 @@ def builder(pkgsinfo, newer_only=False, limit=None):
 
         if newer_only and record['state'] == 'A':
             continue
+        if (
+            newer_orphaned_only and
+            record['versions'][0]['state'] == 'O' and
+            len(record['versions']) == 1
+        ):
+            continue
 
         result[name] = record
     return result
 
 
-def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
+def human(
+    pkgsinfo,
+    newer_only=False,
+    newer_orphaned_only=False,
+    limit=None,
+    show_requiredby=False
+):
     color_init()
     sys.stderr.write('\nReport for humans\n\n')
-    data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
+    data = builder(
+        pkgsinfo,
+        newer_only=newer_only,
+        newer_orphaned_only=newer_orphaned_only,
+        limit=limit
+    )
     termx, termy = get_terminal_size()
     for name, record in data.items():
         print(color_by_state(record['state']) + name)
@@ -181,7 +199,7 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
             )
         if show_requiredby and record.get('required_by', False):
             req = ' '.join(sorted(record.get('required_by')))
-            indent = (pkgsinfo['ver_maxlen']+5)*' ' + 'R '
+            indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'R '
             print(
                 color_dimmed() +
                 textwrap.fill(
@@ -193,15 +211,36 @@ def human(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
             )
 
 
-def browser(pkgsinfo, newer_only=False, limit=None, show_requiredby=False):
+def browser(
+    pkgsinfo,
+    newer_only=False,
+    newer_orphaned_only=False,
+    limit=None,
+    show_requiredby=False
+):
     color_init()
     sys.stderr.write('\nReport for brower\n\n')
-    data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
+    data = builder(
+        pkgsinfo,
+        newer_only=newer_only,
+        newer_orphaned_only=newer_orphaned_only,
+        limit=limit
+    )
     template = jenv.get_template('browser.jinja')
     print(template.render(data=data, req_by=show_requiredby))
 
 
-def machine(pkgsinfo, newer_only=False, limit=None):
+def machine(
+    pkgsinfo,
+    newer_only=False,
+    newer_orphaned_only=False,
+    limit=None
+):
     sys.stderr.write('\nReport for machines\n\n')
-    data = builder(pkgsinfo, newer_only=newer_only, limit=limit)
+    data = builder(
+        pkgsinfo,
+        newer_only=newer_only,
+        newer_orphaned_only=newer_orphaned_only,
+        limit=limit
+    )
     print(json.dumps(data, indent=4))

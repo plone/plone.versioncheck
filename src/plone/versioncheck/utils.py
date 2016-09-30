@@ -25,28 +25,28 @@ COLORED = True
 
 _STATEMAP = {
     # develop egg
-    'D': Style.BRIGHT+Fore.GREEN,
+    'D': Style.BRIGHT + Fore.GREEN,
 
     # Active version
-    'A': Style.BRIGHT+Fore.WHITE,
+    'A': Style.BRIGHT + Fore.WHITE,
 
     # inherited, older or equal
-    'I': Style.NORMAL+Fore.WHITE,
+    'I': Style.NORMAL + Fore.WHITE,
 
     # inherited, newer
-    'In': Style.BRIGHT+Fore.YELLOW,
+    'In': Style.BRIGHT + Fore.YELLOW,
 
     # update
-    'U': Style.BRIGHT+Fore.CYAN,
+    'U': Style.BRIGHT + Fore.CYAN,
 
     # update prerelease
-    'P': Style.BRIGHT+Fore.BLUE,
+    'P': Style.BRIGHT + Fore.BLUE,
 
     # orphaned
-    'O': Style.BRIGHT+Fore.MAGENTA,
+    'O': Style.BRIGHT + Fore.MAGENTA,
 
     # unpinned
-    'X': Style.BRIGHT+Fore.RED,
+    'X': Style.BRIGHT + Fore.RED,
 }
 
 
@@ -57,7 +57,7 @@ def color_init():
 
 def color_by_state(state):
     if COLORED:
-        return _STATEMAP.get(state, Style.DIM+Fore.RED)
+        return _STATEMAP.get(state, Style.DIM + Fore.RED)
     return ''
 
 
@@ -142,7 +142,7 @@ def _get_terminal_size_windows():
 
 def _get_terminal_size_tput():
     # get terminal width
-    # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window
+    # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window  # noqa
     try:
         cols = int(subprocess.check_call(shlex.split('tput cols')))
         rows = int(subprocess.check_call(shlex.split('tput lines')))

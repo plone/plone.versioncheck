@@ -4,7 +4,9 @@ Changelog
 1.4 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- New option '-N': feature to hide orphaned without updates.
+  This reduces the noise in a environment where orphaned are used by intend.
+  [jensens]
 
 
 1.3 (2016-05-19)

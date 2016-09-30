@@ -89,9 +89,9 @@ def get(pkginfo, buildout):
         sys.stderr.write(' - ' + str(e) + '\n')
         return
     delta = time.time() - pkginfo['tracking']['generated']
-    days = int(delta // (60*60*24))
-    hours = int(delta // (60*60) - days*60*60)
-    minutes = int(delta // (60) - days*60*60 - hours*60)
+    days = int(delta // (60 * 60 * 24))
+    hours = int(delta // (60 * 60) - days * 60 * 60)
+    minutes = int(delta // (60) - days * 60 * 60 - hours * 60)
     seconds = delta % 60
     sys.stderr.write(
         '- age of gathered data: {0:d}d {1:d}h {2:d}m {3:2.3f}s\n'.format(
