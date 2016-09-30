@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.4 (unreleased)
+1.4 (2016-09-30)
 ----------------
 
 - New option '-N': feature to hide orphaned without updates.
