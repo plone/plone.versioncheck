@@ -23,8 +23,13 @@ def _extract_versions_section(
     session,
     filename,
     version_sections=None,
+    annotations=None,
     relative=None
 ):
+    if version_sections is None:
+        version_sections = OrderedDict()
+    if annotations is None:
+        annotations = OrderedDict()
     sys.stderr.write('\n- {0}'.format(filename))
     if (
         relative is not None and
@@ -53,6 +58,15 @@ def _extract_versions_section(
                 len(version_sections[filename])
             )
         )
+    if config.has_section('versionannotations'):
+        annotations[filename] = OrderedDict(
+            config.items('versionannotations')
+        )
+        sys.stderr.write(
+            '\n  {0:d} entries in annotations section.'.format(
+                len(annotations[filename])
+            )
+        )
     try:
         extends = config.get('buildout', 'extends').strip()
     except (NoSectionError, NoOptionError):
@@ -66,9 +80,10 @@ def _extract_versions_section(
             session,
             extend,
             version_sections,
-            sub_relative
+            annotations,
+            sub_relative,
         )
-    return version_sections
+    return version_sections, annotations
 
 
 def parse(buildout_filename, nocache=False):
@@ -77,10 +92,9 @@ def parse(buildout_filename, nocache=False):
         sys.stderr.write("\n(not using caches)")
     base_relative = find_relative(buildout_filename)
     session = requests_session(nocache=nocache)
-    version_sections = _extract_versions_section(
+    version_sections, annotations = _extract_versions_section(
         session,
         buildout_filename,
-        version_sections=OrderedDict(),
         relative=base_relative
     )
     sys.stderr.write("\nparsing finished.\n")
@@ -93,8 +107,15 @@ def parse(buildout_filename, nocache=False):
 
     for pkgname in pkgs:
         pkg = pkgs[pkgname]
-        for name in version_sections:
-            if pkgname in version_sections[name]:
-                pkg[name] = version_sections[name][pkgname]
+        for name in version_sections.keys():
+            if pkgname in version_sections.get(name, {}):
+                pkg[name] = {'v': version_sections[name][pkgname], 'a': ''}
+
+        for name in annotations.keys():
+            if pkgname in annotations.get(name, {}):
+                if name in pkg:
+                    pkg[name]['a'] = annotations[name][pkgname]
+                else:
+                    pkg[name] = {'v': None, 'a': annotations[name][pkgname]}
 
     return pkgs

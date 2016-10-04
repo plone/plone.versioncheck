@@ -28,7 +28,9 @@ def is_cfgidx_newer(pkginfo, target_idx):
     """
     vcur = None
     for idx, key in enumerate(pkginfo):
-        version = pkginfo[key]
+        version = pkginfo[key]['v']
+        if not version:
+            continue
         if idx == 0:
             vcur = parse_version(version)
         if idx == target_idx:

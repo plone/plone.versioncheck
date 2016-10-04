@@ -30,8 +30,14 @@ def build_version(
 ):
     record = {}
     if flavor == 'versions':
-        record['version'] = pkg[key] or "(unset)"
         record['description'] = key
+        record['annotation'] = pkg[key]['a'].strip()
+        if pkg[key]['v'] is None:
+            record['version'] = '(annotation)'
+            record['state'] = ''
+            return record
+        else:
+            record['version'] = pkg[key]['v'] or "(unset)"
         if idx == 0:
             if orphaned:
                 record['state'] = 'O'
@@ -46,6 +52,7 @@ def build_version(
     else:  # pypi
         record['version'] = pypi[key]
         record['description'] = key.capitalize()
+        record['annotation'] = None
         if 'pre' in key:
             record['state'] = 'P'
         else:
@@ -197,9 +204,21 @@ def human(
                 ' ' + color_by_state(version['state']) +
                 version['state'][0] + ' ' + version['description']
             )
+            if version.get('annotation', None):
+                indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'a '
+                print(
+                    color_dimmed() +
+                    textwrap.fill(
+                        version['annotation'],
+                        termx - pkgsinfo['ver_maxlen'],
+                        initial_indent=indent,
+                        subsequent_indent=indent,
+                    )
+                )
+
         if show_requiredby and record.get('required_by', False):
             req = ' '.join(sorted(record.get('required_by')))
-            indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'R '
+            indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'r '
             print(
                 color_dimmed() +
                 textwrap.fill(

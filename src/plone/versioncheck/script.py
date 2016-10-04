@@ -16,7 +16,8 @@ States and color codes:
   [U]pdate of final release on PyPI available (cyan)
   [P]rerelease update on PyPI available (blue)
   [X] unpinned (red)
-  [R] Requirement (gray)
+  [r] Requirement (gray)
+  [a] Annotation (gray)
 
 Color of package name helps to indicate overall state of a package.
 """
@@ -106,7 +107,7 @@ def run():
         formatter.machine(
             pkgsinfo,
             newer_only=args.newer,
-            orphaned_newer_only=args.newer_orphaned,
+            newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
         )
     elif args.browser:

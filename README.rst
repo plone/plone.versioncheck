@@ -75,7 +75,7 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-p] [-n] [-r] [-i] [-m] [--no-cache] [-b]
+    usage: versioncheck [-h] [-p] [-n] [-N] [-r] [-i] [-m] [--no-cache] [-b]
                         [--no-colors] [--debug-limit DEBUG_LIMIT]
                         [buildout]
 
@@ -86,21 +86,35 @@ commandline
 
     optional arguments:
       -h, --help            show this help message and exit
-      -p, --pypi            check pypi for newer versions
+      -p, --pypi            check PyPI for newer versions
       -n, --newer           display only packages with newer version than active
+      -N, --newer-orphaned  display orphaned packages only when newer versions
+                            available
       -r, --required-by     show information about requirements (only if tracking
                             file is available)
       -i, --ignore-tracking
                             ignore tracking file (if present)
       -m, --machine         show as machine readable output (json)
-      --no-cache            do not use a cache for pypi
+      --no-cache            do not use a cache for PyPI
       -b, --browser         show as html for webbrowser
       --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
-                            Limit the number of pypi versions fetched for
+                            Limit the number of PyPI versions fetched for
                             debugging
 
-    [...]
+    States and color codes:
+      [A]ctive (white)
+      [D]evelop (green)
+      [O]rphaned (magenta)
+      [I]nherited (older or same versions are gray, newer are yellow)
+      [U]pdate of final release on PyPI available (cyan)
+      [P]rerelease update on PyPI available (blue)
+      [X] unpinned (red)
+      [r] Requirement (gray)
+      [a] Annotation (gray)
+
+    Color of package name helps to indicate overall state of a package.
+
 
 
 Files created
@@ -154,10 +168,16 @@ Legend of states and colors
     Only if there is no final release update available.
     Color: Blue
 
-[R] Required by
+[r] Required by
     If tracked and option ``--required-by`` was given, show packages this package is required by.
     Valid for current active/used version.
     Keep in mind this is based on the declared requirements, missing or implicit requirements are not covered.
+
+[a] Annotation
+    It is possible to annotate the reason why a version was chosen.
+    The information is parsed out of a section ``[versionannotations]``.
+    In this section  key is the name of the package and value the text annotations to be displayed.
+    The value can span more than one line using indent (as usal).
 
 
 Order of versions

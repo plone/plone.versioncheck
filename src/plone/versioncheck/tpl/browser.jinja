@@ -6,6 +6,7 @@
           table {
             font-family: sans-serif;
             font-size: 80%;
+            background-color: efefef;
           }
           td {
             border: none;
@@ -18,7 +19,10 @@
             background-color: #ddddee;
           }
           .even {
-            background-color: #eeeeff;
+            background-color: #efefff;
+          }
+          .odd {
+            background-color: #ffffff;
           }
           .color-D {
             color: green;
@@ -55,6 +59,7 @@
           <th>version</th>
           <th>state</th>
           <th>info</th>
+          <th>annotation</th>
           {% if req_by%}<th>required by</th>{% endif %}
         </tr>
       </thead>
@@ -63,10 +68,15 @@
         {% set outer_loop = loop %}
         {% for version in record['versions'] %}
         <tr class="{{outer_loop.cycle('odd', 'even')}}">
-            <td class="color-{{record['state']}}">{% if loop.first%}<span id="{{name}}">{{name}}</span>{% endif %}</td>
+
+            {% if loop.first %}
+            <td class="color-{{record['state']}}" rowspan="{{loop.length}}">{% if loop.first%}<span id="{{name}}">{{name}}</span>{% endif %}</td>
+            {% endif %}
+
             <td class="color-{{version['state']}}">{{version['version']}}</td>
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
+            <td class="color-{{version['state']}}">{% if version['annotation'] %}{{version['annotation']}}<br />{% else %}&nbsp;{% endif %}</td>
             {% if loop.first and req_by %}
             <td rowspan="{{loop.length}}">
             {% for req in record.get('required_by', [])|sort %}

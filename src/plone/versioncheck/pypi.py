@@ -114,12 +114,12 @@ def check_all(pkgsinfo, limit=None, nocache=False):
         current = next(iter(pkgs[pkgname]))
         state, result = check(
             pkgname,
-            pkgs[pkgname][current],
+            pkgs[pkgname][current]['v'],
             session
         )
         if not state:
             sys.stderr.write('E')
-            errors.append((pkgname, pkgs[pkgname][current], str(result)))
+            errors.append((pkgname, pkgs[pkgname][current]['v'], str(result)))
             continue
         pkgsinfo['pypi'][pkgname] = result
         sys.stderr.write('O' if state == 1 else 'o')

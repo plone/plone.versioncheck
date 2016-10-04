@@ -4,7 +4,8 @@ Changelog
 1.5 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Implement #25: Annotate versions used.
+  [jensens]
 
 
 1.4 (2016-09-30)
