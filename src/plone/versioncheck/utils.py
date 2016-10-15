@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from cachecontrol import CacheControl
 from cachecontrol.caches import FileCache
-from colorama import Fore
 from colorama import init as colorama_init
+from colorama import Fore
 from colorama import Style
 
 import os
@@ -12,6 +12,7 @@ import shlex
 import struct
 import subprocess
 import sys
+
 
 if sys.version_info < (3, 0):
     from urlparse import urlparse
@@ -88,7 +89,7 @@ def requests_session(nocache=False):
 
 
 def find_relative(extend):
-    if "://" in extend:
+    if '://' in extend:
         parts = list(urlparse(extend))
         parts[2] = '/'.join(parts[2].split('/')[:-1])
         return urlunparse(parts)
@@ -132,11 +133,11 @@ def _get_terminal_size_windows():
         if res:
             (bufx, bufy, curx, cury, wattr,
              left, top, right, bottom,
-             maxx, maxy) = struct.unpack("hhhhHhhhhhh", csbi.raw)
+             maxx, maxy) = struct.unpack('hhhhHhhhhhh', csbi.raw)
             sizex = right - left + 1
             sizey = bottom - top + 1
             return sizex, sizey
-    except:
+    except Exception:
         pass
 
 
@@ -147,7 +148,7 @@ def _get_terminal_size_tput():
         cols = int(subprocess.check_call(shlex.split('tput cols')))
         rows = int(subprocess.check_call(shlex.split('tput lines')))
         return (cols, rows)
-    except:
+    except Exception:
         pass
 
 
@@ -159,7 +160,7 @@ def _get_terminal_size_linux():
             cr = struct.unpack('hh',
                                fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
             return cr
-        except:
+        except Exception:
             pass
     cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
     if not cr:
@@ -167,11 +168,11 @@ def _get_terminal_size_linux():
             fd = os.open(os.ctermid(), os.O_RDONLY)
             cr = ioctl_GWINSZ(fd)
             os.close(fd)
-        except:
+        except Exception:
             pass
     if not cr:
         try:
             cr = (os.environ['LINES'], os.environ['COLUMNS'])
-        except:
+        except Exception:
             return None
     return int(cr[1]), int(cr[0])

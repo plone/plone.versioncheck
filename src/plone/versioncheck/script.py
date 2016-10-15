@@ -7,6 +7,7 @@ from plone.versioncheck import utils
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 
+
 EPILOG = """\
 States and color codes:
   [A]ctive (white)
@@ -24,8 +25,8 @@ Color of package name helps to indicate overall state of a package.
 
 
 parser = ArgumentParser(
-    description="Fetch information about pinned versions and its overrides in "
-                "simple and complex/cascaded buildouts.",
+    description='Fetch information about pinned versions and its overrides in '
+                'simple and complex/cascaded buildouts.',
     epilog=EPILOG,
     formatter_class=RawDescriptionHelpFormatter,
 )
@@ -36,57 +37,57 @@ parser.add_argument(
     help='path to buildout.cfg or other *.cfg file'
 )
 parser.add_argument(
-    "-p",
-    "--pypi",
+    '-p',
+    '--pypi',
     help='check PyPI for newer versions',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-n",
-    "--newer",
+    '-n',
+    '--newer',
     help='display only packages with newer version than active',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-N",
-    "--newer-orphaned",
+    '-N',
+    '--newer-orphaned',
     help='display orphaned packages only when newer versions available',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-r",
-    "--required-by",
+    '-r',
+    '--required-by',
     help='show information about requirements (only if tracking file is '
          'available)',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-i",
-    "--ignore-tracking",
+    '-i',
+    '--ignore-tracking',
     help='ignore tracking file (if present)',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-m",
-    "--machine",
+    '-m',
+    '--machine',
     help='show as machine readable output (json)',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
     '--no-cache',
     help='do not use a cache for PyPI',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
-    "-b",
-    "--browser",
+    '-b',
+    '--browser',
     help='show as html for webbrowser',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
     '--no-colors',
     help='do not show colors',
-    action="store_true"
+    action='store_true'
 )
 parser.add_argument(
     '--debug-limit',

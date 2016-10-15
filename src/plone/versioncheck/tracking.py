@@ -3,11 +3,13 @@
 from pkg_resources import DEVELOP_DIST
 from plone.versioncheck.utils import find_relative
 from zc.buildout import easy_install
+
 import json
 import logging
 import os
 import sys
 import time
+
 
 logger = easy_install.logger
 

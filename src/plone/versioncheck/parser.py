@@ -7,6 +7,7 @@ from plone.versioncheck.utils import requests_session
 import os.path
 import sys
 
+
 if sys.version_info < (3, 0):
     from ConfigParser import ConfigParser
     from ConfigParser import NoOptionError
@@ -33,7 +34,7 @@ def _extract_versions_section(
     sys.stderr.write('\n- {0}'.format(filename))
     if (
         relative is not None and
-        "://" not in filename and
+        '://' not in filename and
         not filename.startswith('/') and
         not filename.startswith(relative)
     ):
@@ -87,9 +88,9 @@ def _extract_versions_section(
 
 
 def parse(buildout_filename, nocache=False):
-    sys.stderr.write("Parsing buildout files:")
+    sys.stderr.write('Parsing buildout files:')
     if nocache:
-        sys.stderr.write("\n(not using caches)")
+        sys.stderr.write('\n(not using caches)')
     base_relative = find_relative(buildout_filename)
     session = requests_session(nocache=nocache)
     version_sections, annotations = _extract_versions_section(
@@ -97,7 +98,7 @@ def parse(buildout_filename, nocache=False):
         buildout_filename,
         relative=base_relative
     )
-    sys.stderr.write("\nparsing finished.\n")
+    sys.stderr.write('\nparsing finished.\n')
     pkgs = {}
 
     for name in version_sections:

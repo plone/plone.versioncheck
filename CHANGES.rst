@@ -1,8 +1,14 @@
 Changelog
 =========
 
-1.5.1 (unreleased)
+1.5.0 (unreleased)
 ------------------
+
+- Use code analysis for QA (and fix issues with pep8 et al.)
+  [jensens]
+
+- Fix Manifest (jinja file was missing).
+  [jensens]
 
 - Implement #25: Annotate versions used.
   [jensens]

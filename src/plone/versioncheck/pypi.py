@@ -3,10 +3,11 @@ from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
 from plone.versioncheck.utils import requests_session
+
 import sys
 
 
-PYPI_URL = "https://pypi.python.org/pypi"
+PYPI_URL = 'https://pypi.python.org/pypi'
 
 
 def mmbp_tuple(version):
@@ -22,7 +23,7 @@ def mmbp_tuple(version):
     return [int(_) for _ in parts]
 
 
-def check(name, version, session):
+def check(name, version, session):  # noqa: C901
     result = OrderedDict([
         ('major', None),
         ('minor', None),
@@ -36,16 +37,16 @@ def check(name, version, session):
     try:
         version = parse_version(version)
     except TypeError:
-        return False, "Version broken/ not checkable."
+        return False, 'Version broken/ not checkable.'
     if not isinstance(version, SetuptoolsVersion):
-        return False, "Can not check legacy version number."
+        return False, 'Can not check legacy version number.'
     vtuple = mmbp_tuple(version)
 
     # fetch pkgs json info from pypi
-    url = "{0}/{1}/json".format(PYPI_URL, name)
+    url = '{0}/{1}/json'.format(PYPI_URL, name)
     resp = session.get(url)
 
-    # TODO check status code
+    # check status code
     if resp.status_code != 200:
         return False, str(resp.status_code)
     data = resp.json()

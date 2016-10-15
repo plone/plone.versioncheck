@@ -37,7 +37,7 @@ def build_version(
             record['state'] = ''
             return record
         else:
-            record['version'] = pkg[key]['v'] or "(unset)"
+            record['version'] = pkg[key]['v'] or '(unset)'
         if idx == 0:
             if orphaned:
                 record['state'] = 'O'
@@ -60,7 +60,7 @@ def build_version(
     return record
 
 
-def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None):
+def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None):  # noqa: C901
     """build
     - OrderedDict with pkgname as keys
     - each entry an record:
