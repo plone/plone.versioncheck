@@ -1,8 +1,8 @@
 Changelog
 =========
 
-1.5 (unreleased)
-----------------
+1.5.1 (unreleased)
+------------------
 
 - Implement #25: Annotate versions used.
   [jensens]
