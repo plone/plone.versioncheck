@@ -1,4 +1,6 @@
-graft src/plone
-graft docs
-include *.rst
 global-exclude *.pyc
+graft docs
+graft src/plone
+include *.cfg
+include *.rst
+include *.sh
