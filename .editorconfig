@@ -5,10 +5,10 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[{*.py,*.cfg}]
+[*.{py,cfg}]
 indent_size = 4
 
-[{*.html,*.dtml,*.pt,*.zpt,*.xml,*.zcml,*.js}]
+[*.{html,dtml,pt,zpt,xml,zcml,js,jinja}]
 indent_size = 2
 
 [Makefile]

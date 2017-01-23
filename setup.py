@@ -48,6 +48,22 @@ setup(
     setup_requires=[
         'setuptools>=12'
     ],
+    extras_require={
+        'docs': [
+            'Sphinx',
+        ],
+        'release': [
+            'zest.releaser',
+        ],
+        'test': [
+            'pytest',
+            'responses',
+        ],
+        'develop': [
+            'pdbpp',
+            'isort',
+        ],
+    },
     entry_points={
         'console_scripts': [
             'versioncheck = plone.versioncheck.script:run',

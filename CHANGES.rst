@@ -4,15 +4,14 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Added basic tests to package.
+  [loechel]
 
 1.5.1 (2017-01-23)
 ------------------
 
 - Fix Version Compare.
   [loechel]
-
 
 1.5.0 (2016-10-15)
 ------------------
