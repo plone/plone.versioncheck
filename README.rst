@@ -32,7 +32,7 @@ Features
        - orphaned version pins are detected,
        - it shows which package pulled in another package as dependency.
 
-It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://pythonhosted.org/setuptools/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
+It works best with `semantically <http://semver.org/>`_ and only with `syntactically <https://setuptools.readthedocs.io/en/latest/setuptools.html#specifying-your-project-s-version>`_ correct version numbers!
 
 Usage
 =====
