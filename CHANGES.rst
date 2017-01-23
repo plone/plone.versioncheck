@@ -7,6 +7,9 @@ Changelog
 - Fix Version Compare.
   [loechel]
 
+- Added basic tests to package.
+  [loechel]
+
 
 1.5.0 (2016-10-15)
 ------------------
