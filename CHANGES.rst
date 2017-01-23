@@ -1,7 +1,13 @@
 Changelog
 =========
 
-1.5.1 (unreleased)
+1.5.2 (unreleased)
+------------------
+
+- Nothing changed yet.
+
+
+1.5.1 (2017-01-23)
 ------------------
 
 - Fix Version Compare.
