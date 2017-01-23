@@ -1,0 +1,27 @@
+language: python
+sudo: false
+python:
+    - 2.7
+    - 3.3
+    - 3.4
+    - 3.5
+    - 3.6
+    - pypy
+env:
+    - ENVIRON=py
+    - ENVIRON=isort
+matrix:
+    exclude:
+        - env: ENVIRON=isort
+    include:
+        - python: "3.6"
+          env: ENVIRON=isort
+install:
+    - pip install tox coveralls coverage
+script:
+    - tox -e $ENVIRON
+after_success:
+    - coverage combine
+    - coveralls
+notifications:
+    email: false
