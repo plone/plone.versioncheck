@@ -64,27 +64,46 @@ def check(name, version, session):  # noqa: C901
             continue
         rel_vtuple = mmbp_tuple(rel_v)
         if rel_vtuple[0] > vtuple[0]:
-            if rel_v.is_prerelease:
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['majorpre'])
+            ):
                 result['majorpre'] = release
-            else:
-                if rel_vtuple[0] > mmbp_tuple(
-                        parse_version(result['major']))[0]:
-                    result['major'] = release
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['major'])
+            ):
+                result['major'] = release
             continue
-        if rel_vtuple[1] > vtuple[1]:
-            if rel_v.is_prerelease:
+        if (  # Only compare same version line
+            rel_vtuple[0] == vtuple[0] and
+            rel_vtuple[1] > vtuple[1]
+        ):
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['minorpre'])
+            ):
                 result['minorpre'] = release
-            else:
-                if rel_vtuple[1] > mmbp_tuple(
-                        parse_version(result['minor']))[1]:
-                    result['minor'] = release
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['minor'])
+            ):
+                result['minor'] = release
             continue
-        if rel_vtuple[2] > vtuple[2]:
-            if rel_v.is_prerelease:
+        if (  # Only compare same version line
+            rel_vtuple[0] == vtuple[0] and
+            rel_vtuple[1] == vtuple[1] and
+            rel_vtuple[2] > vtuple[2]
+        ):
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['bugfixpre'])
+            ):
                 result['bugfixpre'] = release
-            else:
-                if rel_vtuple[2] > mmbp_tuple(
-                        parse_version(result['bugfix']))[2]:
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['bugfix'])
+            ):
                     result['bugfix'] = release
             continue
 
@@ -98,7 +117,7 @@ def check(name, version, session):  # noqa: C901
                     ]
     for version_tag in version_tags:
         if result[version_tag] == u'0.0.0.0':
-            result['version_tag'] = None
+            result[version_tag] = None
     # filter out older
     if (
         result['major'] and
