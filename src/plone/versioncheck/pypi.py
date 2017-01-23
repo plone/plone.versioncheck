@@ -25,12 +25,18 @@ def mmbp_tuple(version):
 
 def check(name, version, session):  # noqa: C901
     result = OrderedDict([
-        ('major', None),
-        ('minor', None),
-        ('bugfix', None),
-        ('majorpre', None),
-        ('minorpre', None),
-        ('bugfixpre', None),
+        # ('major', None),
+        # ('minor', None),
+        # ('bugfix', None),
+        # ('majorpre', None),
+        # ('minorpre', None),
+        # ('bugfixpre', None),
+        ('major', u'0.0.0.0'),
+        ('minor', u'0.0.0.0'),
+        ('bugfix', u'0.0.0.0'),
+        ('majorpre', u'0.0.0.0'),
+        ('minorpre', u'0.0.0.0'),
+        ('bugfixpre', u'0.0.0.0'),
     ])
 
     # parse version to test against:
@@ -61,21 +67,38 @@ def check(name, version, session):  # noqa: C901
             if rel_v.is_prerelease:
                 result['majorpre'] = release
             else:
-                result['major'] = release
+                if rel_vtuple[0] > mmbp_tuple(
+                        parse_version(result['major']))[0]:
+                    result['major'] = release
             continue
         if rel_vtuple[1] > vtuple[1]:
             if rel_v.is_prerelease:
                 result['minorpre'] = release
             else:
-                result['minor'] = release
+                if rel_vtuple[1] > mmbp_tuple(
+                        parse_version(result['minor']))[1]:
+                    result['minor'] = release
             continue
         if rel_vtuple[2] > vtuple[2]:
             if rel_v.is_prerelease:
                 result['bugfixpre'] = release
             else:
-                result['bugfix'] = release
+                if rel_vtuple[2] > mmbp_tuple(
+                        parse_version(result['bugfix']))[2]:
+                    result['bugfix'] = release
             continue
 
+    # reset non existing versions
+    version_tags = ['major',
+                    'minor',
+                    'bugfix',
+                    'majorpre',
+                    'minorpre',
+                    'bugfixpre',
+                    ]
+    for version_tag in version_tags:
+        if result[version_tag] == u'0.0.0.0':
+            result['version_tag'] = None
     # filter out older
     if (
         result['major'] and
