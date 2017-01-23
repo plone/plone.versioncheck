@@ -60,7 +60,7 @@ def build_version(
     return record
 
 
-def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None):  # noqa: C901
+def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None):  # noqa: C901, E501
     """build
     - OrderedDict with pkgname as keys
     - each entry an record:

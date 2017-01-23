@@ -25,12 +25,18 @@ def mmbp_tuple(version):
 
 def check(name, version, session):  # noqa: C901
     result = OrderedDict([
-        ('major', None),
-        ('minor', None),
-        ('bugfix', None),
-        ('majorpre', None),
-        ('minorpre', None),
-        ('bugfixpre', None),
+        # ('major', None),
+        # ('minor', None),
+        # ('bugfix', None),
+        # ('majorpre', None),
+        # ('minorpre', None),
+        # ('bugfixpre', None),
+        ('major', u'0.0.0.0'),
+        ('minor', u'0.0.0.0'),
+        ('bugfix', u'0.0.0.0'),
+        ('majorpre', u'0.0.0.0'),
+        ('minorpre', u'0.0.0.0'),
+        ('bugfixpre', u'0.0.0.0'),
     ])
 
     # parse version to test against:
@@ -58,24 +64,60 @@ def check(name, version, session):  # noqa: C901
             continue
         rel_vtuple = mmbp_tuple(rel_v)
         if rel_vtuple[0] > vtuple[0]:
-            if rel_v.is_prerelease:
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['majorpre'])
+            ):
                 result['majorpre'] = release
-            else:
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['major'])
+            ):
                 result['major'] = release
             continue
-        if rel_vtuple[1] > vtuple[1]:
-            if rel_v.is_prerelease:
+        if (  # Only compare same version line
+            rel_vtuple[0] == vtuple[0] and
+            rel_vtuple[1] > vtuple[1]
+        ):
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['minorpre'])
+            ):
                 result['minorpre'] = release
-            else:
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['minor'])
+            ):
                 result['minor'] = release
             continue
-        if rel_vtuple[2] > vtuple[2]:
-            if rel_v.is_prerelease:
+        if (  # Only compare same version line
+            rel_vtuple[0] == vtuple[0] and
+            rel_vtuple[1] == vtuple[1] and
+            rel_vtuple[2] > vtuple[2]
+        ):
+            if (
+                rel_v.is_prerelease and
+                rel_v > parse_version(result['bugfixpre'])
+            ):
                 result['bugfixpre'] = release
-            else:
-                result['bugfix'] = release
+            elif (
+                not rel_v.is_prerelease and
+                rel_v > parse_version(result['bugfix'])
+            ):
+                    result['bugfix'] = release
             continue
 
+    # reset non existing versions
+    version_tags = ['major',
+                    'minor',
+                    'bugfix',
+                    'majorpre',
+                    'minorpre',
+                    'bugfixpre',
+                    ]
+    for version_tag in version_tags:
+        if result[version_tag] == u'0.0.0.0':
+            result[version_tag] = None
     # filter out older
     if (
         result['major'] and
