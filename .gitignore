@@ -1,5 +1,6 @@
 *.egg-info
-*.pyc
+*.mo
+*.py[cod]
 *.swp
 .installed.cfg
 .plone.versioncheck.*
@@ -8,6 +9,7 @@
 .Python
 .pyvenv.cfg
 pyvenv.cfg
+pip-selfcheck.json
 .settings/
 bin/
 buildout-cache/
@@ -16,5 +18,6 @@ include/
 lib/
 local/
 parts/
-pip-selfcheck.json
 var/
+.tox/
+.python-version
