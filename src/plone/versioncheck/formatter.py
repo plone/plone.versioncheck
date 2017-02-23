@@ -202,7 +202,8 @@ def human(
                 version['version'] +
                 dots(version['version'], pkgsinfo['ver_maxlen']) +
                 ' ' + color_by_state(version['state']) +
-                version['state'][0] + ' ' + version['description']
+                version['state'][0] if version['state'] else '' +
+                ' ' + version['description']
             )
             if version.get('annotation', None):
                 indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'a '

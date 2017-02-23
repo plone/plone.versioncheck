@@ -4,6 +4,9 @@ Changelog
 1.5.2 (unreleased)
 ------------------
 
+- Fix an ``IndexError: string index out of range`` error with empty states in the formatter.
+  [thet]
+
 - Added basic tests to package.
   [loechel]
 
