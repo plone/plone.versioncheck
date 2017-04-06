@@ -53,7 +53,9 @@ def check(name, version, session):  # noqa: C901
     resp = session.get(url)
 
     # check status code
-    if resp.status_code != 200:
+    if resp.status_code == 404:
+        return False, 'Package "{name}" not on pypi.'.format(name=name)
+    elif resp.status_code != 200:
         return False, str(resp.status_code)
     data = resp.json()
     releases = sorted(data['releases'].keys())
