@@ -280,6 +280,9 @@ Here w/o colors, run on ``buildout.coredev``::
 Source Code and Contributions
 =============================
 
+.. image:: https://travis-ci.org/plone/plone.versioncheck.svg?branch=master
+    :target: https://travis-ci.org/plone/plone.versioncheck
+
 If you want to help with the development (improvement, update, bug-fixing, ...) of ``plone.versioncheck`` this is a great idea!
 
 Please follow the `contribution guidelines <http://docs.plone.org/develop/coredev/docs/guidelines.html>`_.
