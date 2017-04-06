@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
+
+from collections import namedtuple
 from collections import OrderedDict
 from pkg_resources import parse_version
 from pkg_resources import SetuptoolsVersion
 from plone.versioncheck.utils import requests_session
 
+import datetime
 import sys
 
 
 PYPI_URL = 'https://pypi.python.org/pypi'
+
+
+Release = namedtuple('Release', ['version', 'release_date'])
 
 
 def mmbp_tuple(version):
@@ -31,12 +37,18 @@ def check(name, version, session):  # noqa: C901
         # ('majorpre', None),
         # ('minorpre', None),
         # ('bugfixpre', None),
-        ('major', u'0.0.0.0'),
-        ('minor', u'0.0.0.0'),
-        ('bugfix', u'0.0.0.0'),
-        ('majorpre', u'0.0.0.0'),
-        ('minorpre', u'0.0.0.0'),
-        ('bugfixpre', u'0.0.0.0'),
+        ('major', Release(version=u'0.0.0.0',
+                          release_date=datetime.date(1970, 1, 1))),
+        ('minor', Release(version=u'0.0.0.0',
+                          release_date=datetime.date(1970, 1, 1))),
+        ('bugfix', Release(version=u'0.0.0.0',
+                           release_date=datetime.date(1970, 1, 1))),
+        ('majorpre', Release(version=u'0.0.0.0',
+                             release_date=datetime.date(1970, 1, 1))),
+        ('minorpre', Release(version=u'0.0.0.0',
+                             release_date=datetime.date(1970, 1, 1))),
+        ('bugfixpre', Release(version=u'0.0.0.0',
+                              release_date=datetime.date(1970, 1, 1))),
     ])
 
     # parse version to test against:
@@ -56,24 +68,34 @@ def check(name, version, session):  # noqa: C901
     if resp.status_code != 200:
         return False, str(resp.status_code)
     data = resp.json()
-    releases = sorted(data['releases'].keys())
+    releases = sorted(data['releases'])
     for release in releases:
         # major check (overall)
         rel_v = parse_version(release)
         if not isinstance(rel_v, SetuptoolsVersion) or not rel_v > version:
             continue
         rel_vtuple = mmbp_tuple(rel_v)
+        rel_data = data['releases'][release]
+        rel_date = datetime.date(1970, 1, 1)
+        for rel_pkg in rel_data:
+            time_string = rel_pkg.get('upload_time')
+            if time_string:
+                crel_date = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S').date()  # NOQA: E501
+                if crel_date > rel_date:
+                    rel_date = crel_date
         if rel_vtuple[0] > vtuple[0]:
             if (
                 rel_v.is_prerelease and
-                rel_v > parse_version(result['majorpre'])
+                rel_v > parse_version(result['majorpre'].version)
             ):
-                result['majorpre'] = release
+                result['majorpre'] = Release(version=release,
+                                             release_date=rel_date)
             elif (
                 not rel_v.is_prerelease and
-                rel_v > parse_version(result['major'])
+                rel_v > parse_version(result['major'].version)
             ):
-                result['major'] = release
+                result['major'] = Release(version=release,
+                                          release_date=rel_date)
             continue
         if (  # Only compare same version line
             rel_vtuple[0] == vtuple[0] and
@@ -81,14 +103,16 @@ def check(name, version, session):  # noqa: C901
         ):
             if (
                 rel_v.is_prerelease and
-                rel_v > parse_version(result['minorpre'])
+                rel_v > parse_version(result['minorpre'].version)
             ):
-                result['minorpre'] = release
+                result['minorpre'] = Release(version=release,
+                                             release_date=rel_date)
             elif (
                 not rel_v.is_prerelease and
-                rel_v > parse_version(result['minor'])
+                rel_v > parse_version(result['minor'].version)
             ):
-                result['minor'] = release
+                result['minor'] = Release(version=release,
+                                          release_date=rel_date)
             continue
         if (  # Only compare same version line
             rel_vtuple[0] == vtuple[0] and
@@ -97,44 +121,42 @@ def check(name, version, session):  # noqa: C901
         ):
             if (
                 rel_v.is_prerelease and
-                rel_v > parse_version(result['bugfixpre'])
+                rel_v > parse_version(result['bugfixpre'].version)
             ):
-                result['bugfixpre'] = release
+                result['bugfixpre'] = Release(version=release,
+                                              release_date=rel_date)
             elif (
                 not rel_v.is_prerelease and
-                rel_v > parse_version(result['bugfix'])
+                rel_v > parse_version(result['bugfix'].version)
             ):
-                    result['bugfix'] = release
+                    result['bugfix'] = Release(version=release,
+                                               release_date=rel_date)
             continue
 
     # reset non existing versions
-    version_tags = ['major',
-                    'minor',
-                    'bugfix',
-                    'majorpre',
-                    'minorpre',
-                    'bugfixpre',
-                    ]
-    for version_tag in version_tags:
-        if result[version_tag] == u'0.0.0.0':
+    for version_tag in result.keys():
+        if result[version_tag].version == u'0.0.0.0':
             result[version_tag] = None
     # filter out older
     if (
         result['major'] and
         result['majorpre'] and
-        parse_version(result['majorpre']) < parse_version(result['major'])
+        parse_version(result['majorpre'].version) <
+            parse_version(result['major'].version)
     ):
         result['majorpre'] = None
     if (
         result['minor'] and
         result['minorpre'] and
-        parse_version(result['minorpre']) < parse_version(result['minor'])
+        parse_version(result['minorpre'].version) <
+            parse_version(result['minor'].version)
     ):
         result['minorpre'] = None
     if (
         result['bugfix'] and
         result['bugfixpre'] and
-        parse_version(result['bugfixpre']) < parse_version(result['bugfix'])
+        parse_version(result['bugfixpre'].version) <
+            parse_version(result['bugfix'].version)
     ):
         result['bugfixpre'] = None
 

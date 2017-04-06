@@ -10,6 +10,9 @@ Changelog
 - Added basic tests to package.
   [loechel]
 
+- Add function to extract date information from PyPI to analyze package age.
+  [loechel]
+
 1.5.1 (2017-01-23)
 ------------------
 
