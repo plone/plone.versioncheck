@@ -10,7 +10,7 @@ Changelog
 - Added basic tests to package.
   [loechel]
 
-- Changed parser.py to use functions from zc.buildout o get versions and versionannotations section names.
+- Changed parser.py to use functions from zc.buildout to get versions and versionannotations section names.
   [loechel]
 
 1.5.1 (2017-01-23)
