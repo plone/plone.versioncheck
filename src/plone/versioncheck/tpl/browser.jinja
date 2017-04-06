@@ -57,6 +57,7 @@
         <tr>
           <th>package</th>
           <th>version</th>
+          <th>release date</th>
           <th>state</th>
           <th>info</th>
           <th>annotation</th>
@@ -74,6 +75,7 @@
             {% endif %}
 
             <td class="color-{{version['state']}}">{{version['version']}}</td>
+            <td class="color-{{version['state']}}">{{version['release_date']}}</td>
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
             <td class="color-{{version['state']}}">{% if version['annotation'] %}{{version['annotation']}}<br />{% else %}&nbsp;{% endif %}</td>

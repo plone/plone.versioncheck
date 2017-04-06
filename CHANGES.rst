@@ -13,6 +13,9 @@ Changelog
 - Changed parser.py to use functions from zc.buildout to get versions and versionannotations section names.
   [loechel]
 
+- Add function to extract date information from PyPI to analyze package age.
+  [loechel]
+
 1.5.1 (2017-01-23)
 ------------------
 

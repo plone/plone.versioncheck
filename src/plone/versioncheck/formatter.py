@@ -10,6 +10,7 @@ from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 from plone.versioncheck.utils import get_terminal_size
 
+import datetime
 import json
 import sys
 import textwrap
@@ -50,7 +51,8 @@ def build_version(
         else:
             record['state'] = 'I'
     else:  # pypi
-        record['version'] = pypi[key]
+        record['version'] = pypi[key].version
+        record['release_date'] = pypi[key].release_date
         record['description'] = key.capitalize()
         record['annotation'] = None
         if 'pre' in key:
@@ -231,6 +233,15 @@ def human(
             )
 
 
+def json_serial(obj):
+    """JSON serializer for objects not serializable by default json code"""
+
+    if isinstance(obj, datetime.date):
+        serial = obj.isoformat()
+        return serial
+    raise TypeError('Type not serializable')
+
+
 def browser(
     pkgsinfo,
     newer_only=False,
@@ -263,4 +274,4 @@ def machine(
         newer_orphaned_only=newer_orphaned_only,
         limit=limit
     )
-    print(json.dumps(data, indent=4))
+    print(json.dumps(data, indent=4, default=json_serial))
