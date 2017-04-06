@@ -3,6 +3,7 @@
 from collections import OrderedDict
 from plone.versioncheck.utils import find_relative
 from plone.versioncheck.utils import requests_session
+from zc.buildout.buildout import Buildout
 
 import os.path
 import sys
@@ -25,7 +26,9 @@ def _extract_versions_section(
     filename,
     version_sections=None,
     annotations=None,
-    relative=None
+    relative=None,
+    version_section_name=None,
+    versionannotation_section_name=None
 ):
     if version_sections is None:
         version_sections = OrderedDict()
@@ -39,6 +42,7 @@ def _extract_versions_section(
         not filename.startswith(relative)
     ):
         filename = relative + '/' + filename
+    buildout = Buildout(filename, [])  # Use zc.buildout parser
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)
@@ -52,16 +56,32 @@ def _extract_versions_section(
         else:
             sys.stderr.write('\n  fresh from server')
     # first read own versions section
-    if config.has_section('versions'):
-        version_sections[filename] = OrderedDict(config.items('versions'))
+    if version_section_name is None:
+        version_section_name = buildout['buildout'].get('versions')
+    elif version_section_name != buildout['buildout'].get('versions'):
+        sys.stderr.write(
+            '\nName of [versions] (versions = versions) has changed.'
+            '\nGlobal versions section name: "{gname}"'
+            '\nVersions pinned under that new Section namespace "{nname}"'
+            ' will be ignored.'.format(
+                gname=version_section_name,
+                nname=buildout['buildout'].get('versions')))
+    if config.has_section(version_section_name):
+        version_sections[filename] = OrderedDict(
+            config.items(version_section_name)
+        )
         sys.stderr.write(
             '\n  {0:d} entries in versions section.'.format(
                 len(version_sections[filename])
             )
         )
-    if config.has_section('versionannotations'):
+
+    # read versionannotations
+    versionannotation_section_name = buildout['buildout'].get(
+        'versionannotations', versionannotation_section_name)
+    if config.has_section(versionannotation_section_name):
         annotations[filename] = OrderedDict(
-            config.items('versionannotations')
+            config.items(versionannotation_section_name)
         )
         sys.stderr.write(
             '\n  {0:d} entries in annotations section.'.format(
@@ -83,6 +103,8 @@ def _extract_versions_section(
             version_sections,
             annotations,
             sub_relative,
+            version_section_name,
+            versionannotation_section_name
         )
     return version_sections, annotations
 
