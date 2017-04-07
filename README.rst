@@ -192,7 +192,7 @@ After that, the PyPI releases are shown (major, minor, pre, then the prereleases
 
 Example, given in each a version of ``my.pkg`` was declared:
 
-``buildout.cfg`` with ``my.pkg=3.0.3``
+1. ``buildout.cfg`` with ``my.pkg=3.0.3``
 
   1. ``buildout.cfg`` extends ``foo.cfg`` with ``my.pkg=3.0.1``
 
