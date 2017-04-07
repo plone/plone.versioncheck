@@ -7,7 +7,6 @@ from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
 import contextlib
-import io
 import os.path
 import sys
 
@@ -27,7 +26,7 @@ elif sys.version_info >= (3, 0):
 @contextlib.contextmanager
 def nostdout():
     save_stdout = sys.stdout
-    sys.stdout = io.BytesIO()
+    sys.stdout = StringIO()
     yield
     sys.stdout = save_stdout
 
