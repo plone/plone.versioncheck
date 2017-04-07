@@ -192,22 +192,21 @@ After that, the PyPI releases are shown (major, minor, pre, then the prereleases
 
 Example, given in each a version of ``my.pkg`` was declared:
 
-- ``buildout.cfg`` with ``my.pkg=3.0.3``
+``buildout.cfg`` with ``my.pkg=3.0.3``
 
-    - ``buildout.cfg`` extends ``foo.cfg`` with ``my.pkg=3.0.1``
+  1. ``buildout.cfg`` extends ``foo.cfg`` with ``my.pkg=3.0.1``
 
-    - ``buildout.cfg`` extends ``bar.cfg`` with ``my.pkg=2.0``
+  2. ``buildout.cfg`` extends ``bar.cfg`` with ``my.pkg=2.0``
 
-        - ``foo cfg`` extends ``baz.cfg`` with ``my.pkg=3.1``
+    2. ``foo cfg`` extends ``baz.cfg`` with ``my.pkg=3.1``
 
-- found a newer versions at PyPI
+2. found a newer versions at pypi
 
-    - major ``my.pkg=4.0``
+  1. major ``my.pkg=4.0``
 
-    - minor ``my.pkg=3.2``
+  2. minor ``my.pkg=3.2``
 
-    - major ``prerelease my.pkg=5.1b2``
-
+  3. major ``prerelease my.pkg=5.1b2``
 
 Output looks like so::
 
