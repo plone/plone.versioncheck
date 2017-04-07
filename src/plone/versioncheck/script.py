@@ -125,11 +125,10 @@ def run():
     pkgsinfo['pkgs'] = parse(args.buildout)
 
     # retrieve additional informations
-    if args.pypi:  # Find updated packages on PyPI
-        check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
-    if args.pypi:  # Update package infos with PyPI data
+    if args.pypi:
+        check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
         update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
         if not args.ignore_tracking:
             update_tracking_info(pkgsinfo, nocache=args.no_cache)

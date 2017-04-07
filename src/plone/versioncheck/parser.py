@@ -6,6 +6,7 @@ from plone.versioncheck.utils import requests_session
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
+import contextlib
 import os.path
 import sys
 
@@ -22,6 +23,14 @@ elif sys.version_info >= (3, 0):
     from io import StringIO
 
 
+@contextlib.contextmanager
+def nostdout():
+    save_stdout = sys.stdout
+    sys.stdout = StringIO()
+    yield
+    sys.stdout = save_stdout
+
+
 def _extract_versions_section(  # NOQA: C901
     session,
     filename,
@@ -29,7 +38,7 @@ def _extract_versions_section(  # NOQA: C901
     annotations=None,
     relative=None,
     version_section_name=None,
-    versionannotation_section_name=None
+    versionannotation_section_name='versionannotations'
 ):
     if version_sections is None:
         version_sections = OrderedDict()
@@ -45,7 +54,8 @@ def _extract_versions_section(  # NOQA: C901
         filename = relative + '/' + filename
 
     try:
-        buildout = Buildout(filename, [])  # Use zc.buildout parser
+        with nostdout():
+            buildout = Buildout(filename, [])  # Use zc.buildout parser
     except UserError:
         buildout = {'buildout': {}}
 
