@@ -5,8 +5,10 @@ from pkg_resources import SetuptoolsVersion
 from plone.versioncheck.pypi import check
 from plone.versioncheck.pypi import mmbp_tuple
 from plone.versioncheck.pypi import PYPI_URL
+from plone.versioncheck.pypi import Release
 from plone.versioncheck.utils import requests_session
 
+import datetime
 import responses
 
 
@@ -48,12 +50,18 @@ demo_json = '''{
 
 
 assumed_demo_result = OrderedDict([
-    ('major', u'2.0.0'),
-    ('minor', u'1.1.1'),
-    ('bugfix', u'1.0.12'),
-    ('majorpre', u'3.0.a1'),
-    ('minorpre', u'1.2.0.b1'),
-    ('bugfixpre', u'1.0.13.dev0'),
+    ('major', Release(version=u'2.0.0',
+                      release_date=datetime.date(1970, 1, 1))),
+    ('minor', Release(version=u'1.1.1',
+                      release_date=datetime.date(1970, 1, 1))),
+    ('bugfix', Release(version=u'1.0.12',
+                       release_date=datetime.date(1970, 1, 1))),
+    ('majorpre', Release(version=u'3.0.a1',
+                         release_date=datetime.date(1970, 1, 1))),
+    ('minorpre', Release(version=u'1.2.0.b1',
+                         release_date=datetime.date(1970, 1, 1))),
+    ('bugfixpre', Release(version=u'1.0.13.dev0',
+                          release_date=datetime.date(1970, 1, 1))),
 ])
 
 

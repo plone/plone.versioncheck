@@ -25,3 +25,5 @@ var/
 .coverage*
 coverage.xml
 htmlcov/
+
+/*.html

@@ -7,6 +7,9 @@ from plone.versioncheck import utils
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 
+import argparse
+import sys
+
 
 EPILOG = """\
 States and color codes:
@@ -59,7 +62,17 @@ parser.add_argument(
     '--required-by',
     help='show information about requirements (only if tracking file is '
          'available)',
+    default=False,
     action='store_true'
+)
+parser.add_argument(
+    '-d',
+    '--show-release-dates',
+    help='show information about release dates '
+         '(only for package lookup from PyPI)',
+    default=False,
+    action='store_true',
+    dest='show_release_dates'
 )
 parser.add_argument(
     '-i',
@@ -85,6 +98,14 @@ parser.add_argument(
     action='store_true'
 )
 parser.add_argument(
+    '-o',
+    '--output',
+    help='safe output to output-file',
+    nargs='?',
+    type=argparse.FileType('w'),
+    default=sys.stdout
+)
+parser.add_argument(
     '--no-colors',
     help='do not show colors',
     action='store_true'
@@ -100,16 +121,21 @@ def run():
     args = parser.parse_args()
     pkgsinfo = {}
     pkgsinfo['pkgs'] = parse(args.buildout)
-    if args.pypi:
+
+    # retrieve additional informations
+    if args.pypi:  # Find updated packages on PyPI
         check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
+
+    # Create output
     if args.machine:
         formatter.machine(
             pkgsinfo,
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            file=args.output,
         )
     elif args.browser:
         formatter.browser(
@@ -117,7 +143,9 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
-            show_requiredby=args.required_by
+            show_requiredby=args.required_by,
+            show_release_dates=args.show_release_dates,
+            file=args.output,
         )
     else:
         utils.COLORED = not args.no_colors
@@ -126,5 +154,5 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
-            show_requiredby=args.required_by
+            show_requiredby=args.required_by,
         )

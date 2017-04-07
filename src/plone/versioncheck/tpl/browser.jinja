@@ -57,11 +57,11 @@
         <tr>
           <th>package</th>
           <th>version</th>
-          <th>release date</th>
+          {% if rel_date %}<th>release date</th>{% endif %}
           <th>state</th>
           <th>info</th>
           <th>annotation</th>
-          {% if req_by%}<th>required by</th>{% endif %}
+          {% if req_by %}<th>required by</th>{% endif %}
         </tr>
       </thead>
       <tbody>
@@ -75,7 +75,7 @@
             {% endif %}
 
             <td class="color-{{version['state']}}">{{version['version']}}</td>
-            <td class="color-{{version['state']}}">{{version['release_date']}}</td>
+            {% if rel_date %}<td class="color-{{version['state']}}">{{version['release_date']}}</td>{% endif %}
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
             <td class="color-{{version['state']}}">{% if version['annotation'] %}{{version['annotation']}}<br />{% else %}&nbsp;{% endif %}</td>

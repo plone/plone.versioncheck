@@ -247,7 +247,9 @@ def browser(
     newer_only=False,
     newer_orphaned_only=False,
     limit=None,
-    show_requiredby=False
+    show_requiredby=False,
+    show_release_dates=False,
+    file=sys.stdout
 ):
     color_init()
     sys.stderr.write('\nReport for brower\n\n')
@@ -258,14 +260,19 @@ def browser(
         limit=limit
     )
     template = jenv.get_template('browser.jinja')
-    print(template.render(data=data, req_by=show_requiredby))
+    print(template.render(data=data,
+                          req_by=show_requiredby,
+                          rel_date=show_release_dates,
+                          ),
+          file=file)
 
 
 def machine(
     pkgsinfo,
     newer_only=False,
     newer_orphaned_only=False,
-    limit=None
+    limit=None,
+    file=sys.stdout
 ):
     sys.stderr.write('\nReport for machines\n\n')
     data = builder(
@@ -274,4 +281,4 @@ def machine(
         newer_orphaned_only=newer_orphaned_only,
         limit=limit
     )
-    print(json.dumps(data, indent=4, default=json_serial))
+    print(json.dumps(data, indent=4, default=json_serial), file=file)

@@ -16,6 +16,9 @@ Changelog
 - Add function to extract date information from PyPI to analyze package age.
   [loechel]
 
+- Additional cli option for an output file and show release dates.
+  [loechel]
+
 1.5.1 (2017-01-23)
 ------------------
 
