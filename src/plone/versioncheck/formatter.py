@@ -39,6 +39,8 @@ def build_version(
             return record
         else:
             record['version'] = pkg[key]['v'] or '(unset)'
+        if pkg[key].get('release_date', datetime.date(1970, 1, 1)) != datetime.date(1970, 1, 1):  # NOQA: E501
+            record['release_date'] = pkg[key].get('release_date')
         if idx == 0:
             if orphaned:
                 record['state'] = 'O'
@@ -100,6 +102,7 @@ def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None): 
                     'version': current_tracked[0],
                     'state': 'D',
                     'description': current_tracked[1],
+                    'release_date': ''
                 })
                 devegg = True
 
@@ -124,6 +127,7 @@ def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None): 
                 'version': current_tracked[0],
                 'state': 'X',
                 'description': 'unpinned',
+                'release_date': current_tracked[2] if len(current_tracked) >= 3 else ''  # NOQA: E501
             })
             unpinned = True
 

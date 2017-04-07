@@ -6,6 +6,8 @@ from plone.versioncheck import tracking
 from plone.versioncheck import utils
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
+from plone.versioncheck.pypi import update_pkgs_info
+from plone.versioncheck.pypi import update_tracking_info
 
 import argparse
 import sys
@@ -127,6 +129,10 @@ def run():
         check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
+    if args.pypi:  # Update package infos with PyPI data
+        update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+        if not args.ignore_tracking:
+            update_tracking_info(pkgsinfo, nocache=args.no_cache)
 
     # Create output
     if args.machine:
