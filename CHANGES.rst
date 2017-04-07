@@ -4,8 +4,8 @@ Changelog
 1.6.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
-
+- Fix: #36 New buildout parser does not work with buildout.coredev
+  [loechel]
 
 1.6.0 (2017-04-07)
 ------------------
