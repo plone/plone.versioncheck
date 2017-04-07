@@ -61,7 +61,7 @@ def check(name, version, session):  # noqa: C901
     vtuple = mmbp_tuple(version)
 
     # fetch pkgs json info from pypi
-    url = '{0}/{1}/json'.format(PYPI_URL, name)
+    url = '{url}/{name}/json'.format(url=PYPI_URL, name=name)
     resp = session.get(url)
 
     # check status code
@@ -70,6 +70,8 @@ def check(name, version, session):  # noqa: C901
     elif resp.status_code != 200:
         return False, str(resp.status_code)
     data = resp.json()
+
+    # get information about possible updates
     releases = sorted(data['releases'])
     for release in releases:
         # major check (overall)
@@ -139,6 +141,7 @@ def check(name, version, session):  # noqa: C901
     for version_tag in result.keys():
         if result[version_tag].version == u'0.0.0.0':
             result[version_tag] = None
+
     # filter out older
     if (
         result['major'] and
@@ -194,7 +197,7 @@ def check_all(pkgsinfo, limit=None, nocache=False):
             break
     for error in errors:
         sys.stderr.write(
-            '\nError in {0} version {1} reason {2}'.format(
+            '\nError in {0} version {1} reason: {2}'.format(
                 *error
             )
         )
