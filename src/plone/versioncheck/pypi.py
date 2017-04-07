@@ -84,7 +84,8 @@ def check(name, version, session):  # noqa: C901
         for rel_pkg in rel_data:
             time_string = rel_pkg.get('upload_time')
             if time_string:
-                crel_date = datetime.datetime.strptime(time_string, '%Y-%m-%dT%H:%M:%S').date()  # NOQA: E501
+                crel_date = datetime.datetime.strptime(
+                    time_string, '%Y-%m-%dT%H:%M:%S').date()
                 if crel_date > rel_date:
                     rel_date = crel_date
         if rel_vtuple[0] > vtuple[0]:
@@ -198,6 +199,129 @@ def check_all(pkgsinfo, limit=None, nocache=False):
     for error in errors:
         sys.stderr.write(
             '\nError in {0} version {1} reason: {2}'.format(
+                *error
+            )
+        )
+
+    sys.stderr.write('\nPyPI check finished\n')
+
+
+def update_pkg_info(pkg_name, pkg_data, session):
+    for filename, elemdata in pkg_data.items():
+        # fetch pkgs json info from pypi
+        url = '{url}/{name}/{version}/json'.format(url=PYPI_URL,
+                                                   name=pkg_name,
+                                                   version=elemdata['v'])
+        resp = session.get(url)
+
+        # check status code
+        if resp.status_code != 200:
+            continue
+        data = resp.json()
+
+        rel_date = datetime.date(1970, 1, 1)
+        for rel_pkg in data['urls']:
+            time_string = rel_pkg.get('upload_time')
+            if time_string:
+                crel_date = datetime.datetime.strptime(
+                    time_string, '%Y-%m-%dT%H:%M:%S').date()
+                if crel_date > rel_date:
+                    rel_date = crel_date
+        elemdata['release_date'] = rel_date
+
+    return True
+
+
+def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
+    session = requests_session(nocache=nocache)
+    pkgs = pkgsinfo['pkgs']
+    sys.stderr.write(
+        'Check PyPI for data of {0:d} packages.'.format(len(pkgs))
+    )
+    if limit:
+        sys.stderr.write(' Check limited to {0:d} packages.'.format(limit))
+    errors = []
+
+    idx = 0
+    for pkg_name, pkg_data in pkgs.items():
+        if not idx % 20 and idx != limit:
+            sys.stderr.write('\n{0:4d} '.format(idx))
+
+        state = update_pkg_info(pkg_name, pkg_data, session)
+        if not state:
+            sys.stderr.write('E')
+            errors.append((pkg_name, ))
+            continue
+        sys.stderr.write('O' if state == 1 else 'o')
+        if limit and idx == limit:
+            break
+        idx += 1
+
+    for error in errors:
+        sys.stderr.write(
+            '\nError in {0}'.format(
+                *error
+            )
+        )
+
+    sys.stderr.write('\nPyPI check finished\n')
+
+
+def update_tracking_version_info(pkg_name, pkg_data, session):
+    # fetch pkgs json info from pypi
+    url = '{url}/{name}/{version}/json'.format(url=PYPI_URL,
+                                               name=pkg_name,
+                                               # version=pkg_data['version'])
+                                               version=pkg_data[0])
+    resp = session.get(url)
+
+    # check status code
+    if resp.status_code == 404:
+        return False, 'Package Version not on pypi.'
+    elif resp.status_code != 200:
+        return False, str(resp.status_code)
+    data = resp.json()
+
+    rel_date = datetime.date(1970, 1, 1)
+    for rel_pkg in data['urls']:
+        time_string = rel_pkg.get('upload_time')
+        if time_string:
+            crel_date = datetime.datetime.strptime(
+                time_string, '%Y-%m-%dT%H:%M:%S').date()
+            if crel_date > rel_date:
+                rel_date = crel_date
+    # pkg_data['release_date'] = rel_date
+    pkg_data.append(rel_date)
+
+    return 2 if resp.from_cache else 1, True
+
+
+def update_tracking_info(pkgsinfo, nocache=False):
+    session = requests_session(nocache=nocache)
+    pkgs = pkgsinfo['tracking']['versions']
+    sys.stderr.write(
+        'Check PyPI for data of {0:d} packages.'.format(len(pkgs))
+    )
+    errors = []
+
+    idx = 0
+    for pkg_name, pkg_data in pkgs.items():
+        if not idx % 20:
+            sys.stderr.write('\n{0:4d} '.format(idx))
+
+        state, result = update_tracking_version_info(pkg_name,
+                                                     pkg_data,
+                                                     session)
+        if not state:
+            sys.stderr.write('E')
+            errors.append((pkg_name, str(result)))
+            continue
+        sys.stderr.write('O' if state == 1 else 'o')
+        idx += 1
+
+    for error in errors:
+        sys.stderr.write(
+            '\nError in {0} reason: {1}'.format(
                 *error
             )
         )
