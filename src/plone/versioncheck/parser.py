@@ -3,6 +3,7 @@
 from collections import OrderedDict
 from plone.versioncheck.utils import find_relative
 from plone.versioncheck.utils import requests_session
+from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
 import os.path
@@ -42,7 +43,12 @@ def _extract_versions_section(
         not filename.startswith(relative)
     ):
         filename = relative + '/' + filename
-    buildout = Buildout(filename, [])  # Use zc.buildout parser
+
+    try:
+        buildout = Buildout(filename, [])  # Use zc.buildout parser
+    except UserError:
+        buildout = {'buildout': {}}
+
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)
