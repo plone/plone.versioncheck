@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.0 (unreleased)
+1.6.0 (2017-04-07)
 ------------------
 
 - Fix: ``IndexError: string index out of range`` error with empty states in the formatter.
