@@ -22,7 +22,7 @@ elif sys.version_info >= (3, 0):
     from io import StringIO
 
 
-def _extract_versions_section(
+def _extract_versions_section(  # NOQA: C901
     session,
     filename,
     version_sections=None,
