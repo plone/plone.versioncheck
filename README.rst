@@ -75,8 +75,8 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-p] [-n] [-N] [-r] [-i] [-m] [--no-cache] [-b]
-                        [--no-colors] [--debug-limit DEBUG_LIMIT]
+    usage: versioncheck [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-m] [--no-cache] [-b]
+                        [-o [OUTPUT]] [--no-colors] [--debug-limit DEBUG_LIMIT]
                         [buildout]
 
     Fetch information about pinned versions and its overrides in simple and complex/cascaded buildouts.
@@ -92,11 +92,16 @@ commandline
                             available
       -r, --required-by     show information about requirements (only if tracking
                             file is available)
+      -d, --show-release-dates
+                            show information about release dates (only for package
+                            lookup from PyPI)
       -i, --ignore-tracking
                             ignore tracking file (if present)
       -m, --machine         show as machine readable output (json)
       --no-cache            do not use a cache for PyPI
       -b, --browser         show as html for webbrowser
+      -o [OUTPUT], --output [OUTPUT]
+                            safe output to output-file
       --no-colors           do not show colors
       --debug-limit DEBUG_LIMIT
                             Limit the number of PyPI versions fetched for
@@ -114,7 +119,6 @@ commandline
       [a] Annotation (gray)
 
     Color of package name helps to indicate overall state of a package.
-
 
 
 Files created
@@ -290,16 +294,18 @@ Please follow the `contribution guidelines <http://docs.plone.org/develop/corede
 - `Source code at Github <https://github.com/plone/plone.versioncheck>`_
 - `Issue tracker at Github <https://github.com/plone/plone.versioncheck>`_
 
-Maintainer of ``plone.versioncheck`` is Jens Klein.
-We appreciate any contribution and if a release is needed to be done on PyPI, please just contact one of us.
+Maintainer of ``plone.versioncheck`` is Jens Klein and the Plone contributors.
+We appreciate any contribution and if a release is needed to be done on PyPI, please just contact one of us (best by open an issue).
 
 Development
 ===========
 
-There must be a ``python`` binary available in system path pointing to Python >=2.7.x
+There must be ``python`` with ``virtualenv`` and ``pip`` available in system path pointing to Python >=2.7.x
 Clone the project. Then::
 
     $ bootstrap.sh
+
+For non-unix systems please read the contents of bootstrap.py and execute the steps manually adapted to your OS.
 
 License
 =======

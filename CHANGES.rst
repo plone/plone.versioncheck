@@ -1,22 +1,22 @@
 Changelog
 =========
 
-1.5.2 (unreleased)
+1.6.0 (unreleased)
 ------------------
 
-- Fix an ``IndexError: string index out of range`` error with empty states in the formatter.
+- Fix: ``IndexError: string index out of range`` error with empty states in the formatter.
   [thet]
 
-- Added basic tests to package.
+- Development: Added basic tests to package.
   [loechel]
 
-- Changed parser.py to use functions from zc.buildout to get versions and versionannotations section names.
+- Fix: Changed parser.py to use functions from zc.buildout to get versions and versionannotations section names.
   [loechel]
 
-- Add function to extract date information from PyPI to analyze package age.
+- Feature: Add function to extract date information from PyPI to analyze package age.
   [loechel]
 
-- Additional cli option for an output file and show release dates.
+- Feature: Additional cli option for an output file and show release dates.
   [loechel]
 
 1.5.1 (2017-01-23)
@@ -28,20 +28,21 @@ Changelog
 1.5.0 (2016-10-15)
 ------------------
 
-- Use code analysis for QA (and fix issues with pep8 et al.)
+- Development: Use code analysis for QA (and fix issues with pep8 et al.)
   [jensens]
 
-- Fix Manifest (jinja file was missing).
+- Fix: Manifest (jinja file was missing).
   [jensens]
 
-- Implement #25: Annotate versions used.
+- Feature: Implement #25: Annotate versions used.
   [jensens]
 
 
 1.4 (2016-09-30)
 ----------------
 
-- New option '-N': feature to hide orphaned without updates.
+- Feature:
+  New option '-N': feature to hide orphaned without updates.
   This reduces the noise in a environment where orphaned are used by intend.
   [jensens]
 
@@ -49,19 +50,19 @@ Changelog
 1.3 (2016-05-19)
 ----------------
 
-- Add .editorconfig File to maintain code convetions following Plone API
+- Development: Add .editorconfig File to maintain code convetions following Plone API
   [loechel]
 
-- Add Support for Python 3
+- Feature: Add Support for Python 3
   [loechel]
 
-- Fix various documentation typos.
+- Fix: Various documentation typos.
   [jean]
 
 1.2.1 (2016-01-26)
 ------------------
 
-- Cache buildout cfg files fetched over the network.
+- Feature: Cache buildout cfg files fetched over the network.
   [jensens]
 
 - Feature: It caches now responses from PyPI.

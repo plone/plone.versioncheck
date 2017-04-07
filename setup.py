@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '1.5.2.dev0'
+version = '1.6.0.dev0'
 
 long_description = '{0}\n\n{1}'.format(
     open('README.rst').read(),
@@ -20,12 +20,19 @@ setup(
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Buildout',
-        'License :: OSI Approved :: GNU General Public License (GPL)',
-        'Programming Language :: Python',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',
+        'Operating System :: OS Independent',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python',
+        'Topic :: Software Development :: Build Tools',
+        'Topic :: Software Development :: Quality Assurance',
     ],
     keywords='plone buildout version ',
     author='Jens W. Klein',
