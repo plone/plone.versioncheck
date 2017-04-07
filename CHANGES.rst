@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.1 (unreleased)
+1.6.1 (2017-04-07)
 ------------------
 
 - Fix: #36 New buildout parser does not work with buildout.coredev
