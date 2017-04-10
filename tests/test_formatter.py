@@ -1,16 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from collections import OrderedDict
-from plone.versioncheck.formatter import machine
 from plone.versioncheck.formatter import browser
-
-import json
-import pytest
-
-import sys
-
-
-version = sys.version_info
+from plone.versioncheck.formatter import machine
 
 
 pkgsinfo = {'pkgs': {
@@ -21,7 +13,7 @@ pkgsinfo = {'pkgs': {
     'ipython': OrderedDict([('buildout.cfg', {'v': '5.3.0', 'a': ''})]),
     'lazy': OrderedDict([('buildout.cfg', {'v': '1.0', 'a': ''})]),
     'products.cmfcore': OrderedDict([
-        ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),
+        ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),  # NOQA: E501
         ('bar.cfg', {'v': '2.2.0', 'a': ''}),
         ('foo.cfg', {'v': '3.0.1', 'a': ''}),
         ('baz.cfg', {'v': '2.2.10', 'a': ''})
@@ -101,10 +93,12 @@ json_output = '''{
 }
 '''
 
+
 def test_json_formatter(capsys):
     result = machine(pkgsinfo)
-    out, err = capsys.readouterr()  # Seems that stdout is not correctly captured
-    assert result == None
+    out, err = capsys.readouterr()
+    # Seems that stdout is not correctly captured
+    assert result is None
     assert out == ''
     assert err == '\nReport for machines\n\n'
     # assert out == json_output
@@ -298,13 +292,14 @@ with multiple lines<br /></td>
   </tbody>
 </table>
 </body>
-</html>'''
+</html>'''  # NOQA: E501
 
 
 def test_browser_formatter(capsys):
     result = browser(pkgsinfo)
-    out, err = capsys.readouterr()  # Seems that stdout is not correctly captured
-    assert result == None
+    out, err = capsys.readouterr()
+    # Seems that stdout is not correctly captured
+    assert result is None
     assert out == ''
     assert err == '\nReport for browsers\n\n'
     # assert out == browser_output  # Why is this not working

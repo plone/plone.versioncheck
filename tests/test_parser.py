@@ -4,8 +4,6 @@ from collections import OrderedDict
 from plone.versioncheck.parser import nostdout
 from plone.versioncheck.parser import parse
 
-import pytest
-
 
 def test_nostdout(capsys):
     print('Test stdout')
@@ -41,7 +39,7 @@ def test_parse(capsys):
         'ipython': OrderedDict([('buildout.cfg', {'v': '5.3.0', 'a': ''})]),
         'lazy': OrderedDict([('buildout.cfg', {'v': '1.0', 'a': ''})]),
         'products.cmfcore': OrderedDict([
-            ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),
+            ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),  # NOQA: E501
             ('bar.cfg', {'v': '2.2.0', 'a': ''}),
             ('foo.cfg', {'v': '3.0.1', 'a': ''}),
             ('baz.cfg', {'v': '2.2.10', 'a': ''})

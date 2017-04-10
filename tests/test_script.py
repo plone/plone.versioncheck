@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from plone.versioncheck.script import run
-from plone.versioncheck.script import parser
 
 import pytest
 import sys
@@ -52,7 +51,7 @@ States and color codes:
   [a] Annotation (gray)
 
 Color of package name helps to indicate overall state of a package.
-'''
+'''  # NOQA: E501
 
 
 def test_script_help(capsys):
@@ -60,7 +59,7 @@ def test_script_help(capsys):
         sys.argv = ['versioncheck', '--help']
         result = run()
         out, err = capsys.readouterr()
-        assert result == None
+        assert result is None
         assert out == help_output
 
 
@@ -141,7 +140,7 @@ def test_script_machine(capsys):
     sys.argv = ['versioncheck', '-m']
     result = run()
     out, err = capsys.readouterr()
-    assert result == None
+    assert result is None
     # assert out == json_output
 
 
@@ -149,7 +148,7 @@ def test_script_browser(capsys):
     sys.argv = ['versioncheck', '-b']
     result = run()
     out, err = capsys.readouterr()
-    assert result == None
+    assert result is None
     # assert out = browser_output
 
 
@@ -157,7 +156,7 @@ def test_script_pypi(capsys):
     sys.argv = ['versioncheck', '-p']
     result = run()
     out, err = capsys.readouterr()
-    assert result == None
+    assert result is None
     # assert out = browser_output
 
 
@@ -165,5 +164,13 @@ def test_script_ignore_tracking(capsys):
     sys.argv = ['versioncheck', '-i']
     result = run()
     out, err = capsys.readouterr()
-    assert result == None
+    assert result is None
+    # assert out = browser_output
+
+
+def test_script_ignore_tracking_pypi(capsys):
+    sys.argv = ['versioncheck', '-p', '-i']
+    result = run()
+    out, err = capsys.readouterr()
+    assert result is None
     # assert out = browser_output
