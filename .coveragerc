@@ -1,0 +1,9 @@
+[run]
+branch = True
+source = RestrictedPython
+omit =
+    src/plone/__init_-py
+    tests/*.py
+
+[report]
+precision = 3
