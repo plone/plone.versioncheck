@@ -256,7 +256,7 @@ def browser(
     file=sys.stdout
 ):
     color_init()
-    sys.stderr.write('\nReport for brower\n\n')
+    sys.stderr.write('\nReport for browsers\n\n')
     data = builder(
         pkgsinfo,
         newer_only=newer_only,

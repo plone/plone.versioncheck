@@ -1,8 +1,9 @@
 [run]
 branch = True
-source = RestrictedPython
+source = src
 omit =
-    src/plone/__init_-py
+    src/plone/__init__.py
+    src/plone/versioncheck/__init__.py
     tests/*.py
 
 [report]

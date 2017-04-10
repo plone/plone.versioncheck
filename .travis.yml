@@ -9,13 +9,13 @@ python:
     - pypy
 env:
     - ENVIRON=py
-    - ENVIRON=isort
+    - ENVIRON=isort,flake8
 matrix:
     exclude:
-        - env: ENVIRON=isort
+        - env: ENVIRON=isort,flake8
     include:
         - python: "3.6"
-          env: ENVIRON=isort
+          env: ENVIRON=isort,flake8
 install:
     - pip install tox coveralls coverage
 script:
@@ -25,4 +25,3 @@ after_success:
     - coveralls
 notifications:
     email: false
-
