@@ -153,7 +153,7 @@ def test_script_browser(capsys):
     # assert out = browser_output
 
 
-def test_script_human(capsys):
+def test_script_pypi(capsys):
     sys.argv = ['versioncheck', '-p']
     result = run()
     out, err = capsys.readouterr()
@@ -161,7 +161,7 @@ def test_script_human(capsys):
     # assert out = browser_output
 
 
-def test_script_human(capsys):
+def test_script_ignore_tracking(capsys):
     sys.argv = ['versioncheck', '-i']
     result = run()
     out, err = capsys.readouterr()
