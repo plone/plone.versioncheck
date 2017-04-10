@@ -151,3 +151,11 @@ def test_script_browser(capsys):
     out, err = capsys.readouterr()
     assert result == None
     # assert out = browser_output
+
+
+def test_script_human(capsys):
+    sys.argv = ['versioncheck', '-p']
+    result = run()
+    out, err = capsys.readouterr()
+    assert result == None
+    # assert out = browser_output
