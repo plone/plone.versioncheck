@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.2 (unreleased)
+1.6.2 (2017-04-12)
 ------------------
 
 - Fix: Regressions with version-annotations and stdout messages from buildout parser.
