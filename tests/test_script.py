@@ -2,7 +2,6 @@
 
 from plone.versioncheck.script import run
 
-import plone
 import pytest
 import sys
 

@@ -213,6 +213,10 @@ def human(
             )
             if version.get('annotation', None):
                 indent = (pkgsinfo['ver_maxlen'] + 5) * ' ' + 'a '
+                from pprint import pprint
+                pprint(pkgsinfo)
+                pprint(termx - pkgsinfo['ver_maxlen'])
+                pprint(indent)
                 print(
                     color_dimmed() +
                     textwrap.fill(
