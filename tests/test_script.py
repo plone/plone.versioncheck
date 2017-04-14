@@ -2,6 +2,7 @@
 
 from plone.versioncheck.script import run
 
+import plone
 import pytest
 import sys
 
@@ -136,7 +137,12 @@ json_output = '''{
 '''
 
 
-def test_script_machine(capsys):
+def mocked_get_terminal_size():
+    return (80, 25)
+
+
+def test_script_machine(capsys, monkeypatch):
+    monkeypatch.setattr(plone.versioncheck.utils, 'get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
     sys.argv = ['versioncheck', '-m']
     result = run()
     out, err = capsys.readouterr()
@@ -144,7 +150,8 @@ def test_script_machine(capsys):
     # assert out == json_output
 
 
-def test_script_browser(capsys):
+def test_script_browser(capsys, monkeypatch):
+    monkeypatch.setattr(plone.versioncheck.utils, 'get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
     sys.argv = ['versioncheck', '-b']
     result = run()
     out, err = capsys.readouterr()
@@ -152,7 +159,8 @@ def test_script_browser(capsys):
     # assert out = browser_output
 
 
-def test_script_pypi(capsys):
+def test_script_pypi(capsys, monkeypatch):
+    monkeypatch.setattr(plone.versioncheck.utils, 'get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
     sys.argv = ['versioncheck', '-p']
     result = run()
     out, err = capsys.readouterr()
@@ -160,7 +168,8 @@ def test_script_pypi(capsys):
     # assert out = browser_output
 
 
-def test_script_ignore_tracking(capsys):
+def test_script_ignore_tracking(capsys, monkeypatch):
+    monkeypatch.setattr(plone.versioncheck.utils, 'get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
     sys.argv = ['versioncheck', '-i']
     result = run()
     out, err = capsys.readouterr()
@@ -168,7 +177,8 @@ def test_script_ignore_tracking(capsys):
     # assert out = browser_output
 
 
-def test_script_ignore_tracking_pypi(capsys):
+def test_script_ignore_tracking_pypi(capsys, monkeypatch):
+    monkeypatch.setattr(plone.versioncheck.utils, 'get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
     sys.argv = ['versioncheck', '-p', '-i']
     result = run()
     out, err = capsys.readouterr()

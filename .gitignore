@@ -17,6 +17,7 @@ develop-eggs/
 include/
 lib/
 local/
+share/
 parts/
 var/
 .tox/
