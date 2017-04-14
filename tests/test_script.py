@@ -138,7 +138,7 @@ json_output = '''{
 
 
 def mocked_get_terminal_size():
-    return (80, 25)
+    return (180, 125)
 
 
 def test_script_machine(capsys):
