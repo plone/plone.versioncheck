@@ -137,10 +137,6 @@ json_output = '''{
 '''
 
 
-def mocked_get_terminal_size():
-    return (180, 125)
-
-
 def test_script_machine(capsys):
     sys.argv = ['versioncheck', '-m']
     result = run()
@@ -157,8 +153,7 @@ def test_script_browser(capsys):
     # assert out = browser_output
 
 
-def test_script_pypi(capsys, monkeypatch):
-    monkeypatch.setattr('plone.versioncheck.utils.get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
+def test_script_pypi(capsys):
     sys.argv = ['versioncheck', '-p']
     result = run()
     out, err = capsys.readouterr()
@@ -166,8 +161,7 @@ def test_script_pypi(capsys, monkeypatch):
     # assert out = browser_output
 
 
-def test_script_ignore_tracking(capsys, monkeypatch):
-    monkeypatch.setattr('plone.versioncheck.utils.get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
+def test_script_ignore_tracking(capsys):
     sys.argv = ['versioncheck', '-i']
     result = run()
     out, err = capsys.readouterr()
@@ -175,8 +169,7 @@ def test_script_ignore_tracking(capsys, monkeypatch):
     # assert out = browser_output
 
 
-def test_script_ignore_tracking_pypi(capsys, monkeypatch):
-    monkeypatch.setattr('plone.versioncheck.utils.get_terminal_size', mocked_get_terminal_size)  # NOQA: E501
+def test_script_ignore_tracking_pypi(capsys):
     sys.argv = ['versioncheck', '-p', '-i']
     result = run()
     out, err = capsys.readouterr()
