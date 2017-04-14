@@ -13,6 +13,9 @@ Changelog
 - Fix: Regressions with version-annotations and stdout messages from buildout parser.
   [loechel]
 
+- Add more Tests
+  [loechel]
+
 1.6.1 (2017-04-07)
 ------------------
 

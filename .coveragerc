@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = src
+omit =
+    src/plone/__init__.py
+    src/plone/versioncheck/__init__.py
+    tests/*.py
+
+[report]
+precision = 3

@@ -9,15 +9,23 @@ python:
     - pypy
 env:
     - ENVIRON=py
-    - ENVIRON=isort
+    - ENVIRON=isort,flake8
 matrix:
     exclude:
-        - env: ENVIRON=isort
+        - env: ENVIRON=isort,flake8
     include:
         - python: "3.6"
-          env: ENVIRON=isort
+          env: ENVIRON=isort,flake8
 install:
+    - virtualenv .
+    - ./bin/pip install zc.buildout
+    - ./bin/buildout -c buildout.cfg
     - pip install tox coveralls coverage
+before_script:
+    - export DISPLAY=:99.0
+    - export COLUMNS=80
+    - stty cols 80
+    - sh -e /etc/init.d/xvfb start
 script:
     - tox -e $ENVIRON
 after_success:
@@ -25,4 +33,3 @@ after_success:
     - coveralls
 notifications:
     email: false
-

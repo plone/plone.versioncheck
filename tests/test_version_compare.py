@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from collections import OrderedDict
 from pkg_resources import parse_version
-from pkg_resources import SetuptoolsVersion
 from plone.versioncheck.pypi import check
 from plone.versioncheck.pypi import mmbp_tuple
 from plone.versioncheck.pypi import PYPI_URL
