@@ -4,7 +4,8 @@ Changelog
 1.6.3 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Feature: Change package and version fields in html output to links so that you could open pypi page for each package.
+  [loechel]
 
 
 1.6.2 (2017-04-12)
