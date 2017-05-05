@@ -19,11 +19,12 @@ versions_by_name = {}
 TRACKINGFILENAME = '.plone.versioncheck.tracked.json'
 
 
-def enable_tracking(old_get_dist):
+def track_get_dist(old_get_dist):
     def get_dist(self, requirement, *ags, **kw):
         dists = old_get_dist(self, requirement, *ags, **kw)
         for dist in dists:
-            versions_by_name[dist.project_name.lower()] = (
+            dist_name = dist.project_name.lower()
+            versions_by_name[dist_name] = (
                 dist.version,
                 (
                     dist.precedence == DEVELOP_DIST and
@@ -32,12 +33,18 @@ def enable_tracking(old_get_dist):
                     dist.location
                 )
             )
-            dist_ = str(dist).split(' ')[0].lower()
+            if dist_name not in required_by:
+                required_by[dist_name] = []
+            if (
+                requirement.key != dist_name and
+                requirement.key not in required_by[dist_name]
+            ):
+                required_by[dist_name].append(requirement.key)
             for req in dist.requires():
                 if req.key not in required_by:
                     required_by[req.key] = []
-                if dist_ not in required_by[req.key]:
-                    required_by[req.key].append(dist_)
+                if dist_name not in required_by[req.key]:
+                    required_by[req.key].append(dist_name)
         return dists
     return get_dist
 
@@ -63,7 +70,7 @@ def install(buildout):
         TRACKINGFILENAME,
     )
     easy_install.Installer.__tracked_versions = {}
-    easy_install.Installer._get_dist = enable_tracking(
+    easy_install.Installer._get_dist = track_get_dist(
         easy_install.Installer._get_dist
     )
     logging.shutdown = write_tracked(logging.shutdown, filepath)

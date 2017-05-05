@@ -80,7 +80,6 @@ def builder(pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None): 
     pypi = pkgsinfo.get('pypi', {})
     tracked = pkgsinfo.get('tracking', {}).get('versions', {})
     requ = pkgsinfo.get('tracking', {}).get('required_by', {})
-
     names = sorted(set(tracked.keys()) | set(pkgs.keys()))
 
     for nidx, name in enumerate(names):

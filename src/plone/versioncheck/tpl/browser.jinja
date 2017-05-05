@@ -84,7 +84,11 @@
             {% for req in record.get('required_by', [])|sort %}
             <a href="#{{req}}">{{req}}</a>
             {% else %}
+            {% if record['state'] != 'O' %}
+            -/-
+            {% else %}
             &nbsp;
+            {% endif %}
             {% endfor %}
             </td>
             {% endif %}

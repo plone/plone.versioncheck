@@ -4,6 +4,9 @@ Changelog
 1.6.3 (unreleased)
 ------------------
 
+- Fixes #17: Requirements were missing.
+  [jensens]
+
 - Optimization: Reduce load on PyPI when fetching release dates.
   [jensens]
 
