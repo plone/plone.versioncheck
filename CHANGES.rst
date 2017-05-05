@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.3 (unreleased)
+1.6.3 (2017-05-05)
 ------------------
 
 - Fixes #17: Requirements were missing.
