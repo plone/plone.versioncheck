@@ -4,6 +4,9 @@ Changelog
 1.6.3 (unreleased)
 ------------------
 
+- Optimization: Reduce load on PyPI when fetching release dates.
+  [jensens]
+
 - Feature: Change package and version fields in html output to links so that you could open pypi page for each package.
   [loechel]
 

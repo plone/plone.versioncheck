@@ -129,9 +129,10 @@ def run():
         tracking.get(pkgsinfo, args.buildout)
     if args.pypi:
         check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
-        update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
-        if not args.ignore_tracking:
-            update_tracking_info(pkgsinfo, nocache=args.no_cache)
+        if args.show_release_dates:
+            update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+            if not args.ignore_tracking:
+                update_tracking_info(pkgsinfo, nocache=args.no_cache)
 
     # Create output
     if args.machine:

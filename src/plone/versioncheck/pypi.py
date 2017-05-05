@@ -209,9 +209,7 @@ def check_all(pkgsinfo, limit=None, nocache=False):
 def update_pkg_info(pkg_name, pkg_data, session):
     for filename, elemdata in pkg_data.items():
         # fetch pkgs json info from pypi
-        url = '{url}/{name}/{version}/json'.format(url=PYPI_URL,
-                                                   name=pkg_name,
-                                                   version=elemdata['v'])
+        url = '{url}/{name}/json'.format(url=PYPI_URL, name=pkg_name)
         resp = session.get(url)
 
         # check status code
@@ -220,7 +218,12 @@ def update_pkg_info(pkg_name, pkg_data, session):
         data = resp.json()
 
         rel_date = datetime.date(1970, 1, 1)
-        for rel_pkg in data['urls']:
+        try:
+            urls = data['releases'][elemdata['v']]
+        except KeyError:
+            # release not on PyPI
+            continue
+        for rel_pkg in urls:
             time_string = rel_pkg.get('upload_time')
             if time_string:
                 crel_date = datetime.datetime.strptime(
