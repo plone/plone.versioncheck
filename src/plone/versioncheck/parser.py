@@ -72,9 +72,15 @@ def _extract_versions_section(  # NOQA: C901
         else:
             sys.stderr.write('\n  fresh from server')
     # first read own versions section
+    current_version_section_name = buildout['buildout'].get(
+        'versions',
+        'versions',
+    )
     if version_section_name is None:
-        version_section_name = buildout['buildout'].get('versions')
-    elif version_section_name != buildout['buildout'].get('versions'):
+        # initial name
+        version_section_name = current_version_section_name
+    elif version_section_name != current_version_section_name:
+        # name changed, not sure if this works as expected! - jensens
         sys.stderr.write(
             '\nName of [versions] (versions = versions) has changed.'
             '\nGlobal versions section name: "{gname}"'

@@ -4,7 +4,8 @@ Changelog
 1.6.4 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix: Default versions section name ``versions`` was not respected.
+  [jensens]
 
 
 1.6.3 (2017-05-05)
