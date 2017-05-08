@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.4 (unreleased)
+1.6.4 (2017-05-08)
 ------------------
 
 - Fix: Default versions section name ``versions`` was not respected.
