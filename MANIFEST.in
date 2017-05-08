@@ -6,3 +6,5 @@ include *.cfg
 include *.rst
 include *.sh
 include tox.ini
+include .coveragerc
+
