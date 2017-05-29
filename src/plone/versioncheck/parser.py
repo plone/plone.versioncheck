@@ -34,24 +34,28 @@ def nostdout():
 def _extract_versions_section(  # NOQA: C901
     session,
     filename,
+    base_dir=None,
     version_sections=None,
     annotations=None,
     relative=None,
     version_section_name=None,
     versionannotation_section_name='versionannotations'
 ):
+    if base_dir is None:
+        base_dir = os.path.dirname(os.path.abspath(filename))
     if version_sections is None:
         version_sections = OrderedDict()
     if annotations is None:
         annotations = OrderedDict()
+    #sys.stderr.write('\n- {0}'.format(filename))
+    if '://' not in filename:
+        if relative:
+            if filename.startswith(relative + '/'):
+                filename = filename[len(relative + '/'):]
+            filename = os.path.join(base_dir, relative, filename)
+        else:
+            filename = os.path.join(base_dir, filename)
     sys.stderr.write('\n- {0}'.format(filename))
-    if (
-        relative is not None and
-        '://' not in filename and
-        not filename.startswith('/') and
-        not filename.startswith(relative)
-    ):
-        filename = relative + '/' + filename
 
     try:
         with nostdout():
@@ -122,6 +126,7 @@ def _extract_versions_section(  # NOQA: C901
         _extract_versions_section(
             session,
             extend,
+            base_dir,
             version_sections,
             annotations,
             sub_relative,
