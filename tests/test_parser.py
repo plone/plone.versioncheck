@@ -25,11 +25,11 @@ def test_parse(capsys):
 
     result = parse(input, False)
     out, err = capsys.readouterr()
-    assert err[:108] == """Parsing buildout files:
-- buildout.cfg
+    assert err[:23] == "Parsing buildout files:"
+    assert """buildout.cfg
   3 entries in versions section.
   1 entries in annotations section.
-"""
+""" in err
 
     assert result == {
         'collective.quickupload': OrderedDict([
@@ -37,7 +37,10 @@ def test_parse(capsys):
             ('baz.cfg', {'v': '1.5.2', 'a': ''})
         ]),
         'ipython': OrderedDict([('buildout.cfg', {'v': '5.3.0', 'a': ''})]),
-        'lazy': OrderedDict([('buildout.cfg', {'v': '1.0', 'a': ''})]),
+        'lazy': OrderedDict([
+            ('buildout.cfg', {'v': '1.0', 'a': ''}),
+            ('spam.cfg', {'v': '>= 1.1', 'a': ''})
+        ]),
         'products.cmfcore': OrderedDict([
             ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),  # NOQA: E501
             ('bar.cfg', {'v': '2.2.0', 'a': ''}),
