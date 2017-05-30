@@ -4,7 +4,8 @@ Changelog
 1.6.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fix: Relative Paths should work now, tested with subdirectories.
+  [loechel]
 
 
 1.6.4 (2017-05-08)

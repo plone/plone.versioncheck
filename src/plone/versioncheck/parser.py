@@ -34,24 +34,27 @@ def nostdout():
 def _extract_versions_section(  # NOQA: C901
     session,
     filename,
+    base_dir=None,
     version_sections=None,
     annotations=None,
     relative=None,
     version_section_name=None,
     versionannotation_section_name='versionannotations'
 ):
+    if base_dir is None:
+        base_dir = os.path.dirname(os.path.abspath(filename))
     if version_sections is None:
         version_sections = OrderedDict()
     if annotations is None:
         annotations = OrderedDict()
+    if '://' not in filename:
+        if relative:
+            if filename.startswith(relative + '/'):
+                filename = filename[len(relative + '/'):]
+            filename = os.path.join(base_dir, relative, filename)
+        else:
+            filename = os.path.join(base_dir, filename)
     sys.stderr.write('\n- {0}'.format(filename))
-    if (
-        relative is not None and
-        '://' not in filename and
-        not filename.startswith('/') and
-        not filename.startswith(relative)
-    ):
-        filename = relative + '/' + filename
 
     try:
         with nostdout():
@@ -89,12 +92,12 @@ def _extract_versions_section(  # NOQA: C901
                 gname=version_section_name,
                 nname=buildout['buildout'].get('versions')))
     if config.has_section(version_section_name):
-        version_sections[filename] = OrderedDict(
+        version_sections[os.path.basename(filename)] = OrderedDict(
             config.items(version_section_name)
         )
         sys.stderr.write(
             '\n  {0:d} entries in versions section.'.format(
-                len(version_sections[filename])
+                len(version_sections[os.path.basename(filename)])
             )
         )
 
@@ -102,12 +105,12 @@ def _extract_versions_section(  # NOQA: C901
     versionannotation_section_name = buildout['buildout'].get(
         'versionannotations', versionannotation_section_name)
     if config.has_section(versionannotation_section_name):
-        annotations[filename] = OrderedDict(
+        annotations[os.path.basename(filename)] = OrderedDict(
             config.items(versionannotation_section_name)
         )
         sys.stderr.write(
             '\n  {0:d} entries in annotations section.'.format(
-                len(annotations[filename])
+                len(annotations[os.path.basename(filename)])
             )
         )
     try:
@@ -122,6 +125,7 @@ def _extract_versions_section(  # NOQA: C901
         _extract_versions_section(
             session,
             extend,
+            base_dir,
             version_sections,
             annotations,
             sub_relative,
