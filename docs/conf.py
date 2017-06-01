@@ -31,7 +31,8 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.todo',
@@ -50,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'Plone Versioncheck'
+project = 'PloneOrg Versioncheck'
 copyright = '2017, Plone Community (Jens Klein, Alexander Loechel)'
 author = 'Plone Community (Jens Klein, Alexander Loechel)'
 
@@ -104,7 +105,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PloneVersioncheckdoc'
+htmlhelp_basename = 'PloneOrgVersioncheckDoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
