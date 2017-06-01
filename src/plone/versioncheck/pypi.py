@@ -180,7 +180,7 @@ def check_all(pkgsinfo, limit=None, nocache=False):
     pkgsinfo['pypi'] = {}
     errors = []
     for idx, pkgname in enumerate(sorted(pkgs)):
-        if not idx % 20 and idx != limit:
+        if not int(idx) % 20 and idx != limit:
             sys.stderr.write('\n{0:4d} '.format(idx))
         current = next(iter(pkgs[pkgname]))
         state, result = check(
@@ -247,8 +247,8 @@ def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
 
     idx = 0
     for pkg_name, pkg_data in pkgs.items():
-        if not idx % 20 and idx != limit:
-            sys.stderr.write('\n{0:4d} '.format(idx))
+        if not int(idx) % 20 and idx != limit:
+            sys.stderr.write('\n{index:4d} '.format(index=idx))
 
         state = update_pkg_info(pkg_name, pkg_data, session)
         if not state:
@@ -309,8 +309,8 @@ def update_tracking_info(pkgsinfo, nocache=False):
 
     idx = 0
     for pkg_name, pkg_data in pkgs.items():
-        if not idx % 20:
-            sys.stderr.write('\n{0:4d} '.format(idx))
+        if not int(idx) % 20:
+            sys.stderr.write('\n{index:4d} '.format(index=idx))
 
         state, result = update_tracking_version_info(pkg_name,
                                                      pkg_data,
