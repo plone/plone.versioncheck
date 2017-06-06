@@ -11,7 +11,7 @@ Welcome to PloneOrg.Versioncheck's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   API/index.rst
 
 Indices and tables
 ==================
