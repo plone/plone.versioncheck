@@ -1,6 +1,24 @@
 Changelog
 =========
 
+2.0 (unreleased)
+----------------
+
+- Full-Rewrite of this package to make it more capable.
+
+  - Enhancement: Rewrite data structure
+    [loechel]
+
+  - Enhancement: Rewrite to use zc.buildout as base for Parser and Information retrivaial.
+    [loechel]
+
+  - Enhancement: Support also Python projects based on requirements.txt and constraints.txt
+    [loechel]
+
+  - Enhancement: Support also Python Packages dependency analysis based on setup.py data.
+    [loechel]
+
+
 1.6.5 (unreleased)
 ------------------
 

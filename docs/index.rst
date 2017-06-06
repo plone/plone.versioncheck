@@ -11,7 +11,10 @@ Welcome to PloneOrg.Versioncheck's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+   parser/index.rst
+   dependency-tracking/index.rst
    API/index.rst
+
 
 Indices and tables
 ==================
