@@ -4,6 +4,7 @@ from argparse import RawDescriptionHelpFormatter
 from plone.versioncheck import formatter
 from plone.versioncheck import tracking
 from plone.versioncheck import utils
+from plone.versioncheck.buildout_parser import parse_buildout
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 from plone.versioncheck.pypi import update_pkgs_info
@@ -30,8 +31,10 @@ Color of package name helps to indicate overall state of a package.
 
 
 parser = ArgumentParser(
-    description='Fetch information about pinned versions and its overrides in '
-                'simple and complex/cascaded buildouts.',
+    description='versioncheck fetch information about pinned versions and '
+                'its overrides in simple and complex/cascaded buildouts, '
+                'python projects (requirements.txt and constrains.txt) or '
+                'python packages (setup.py).',
     epilog=EPILOG,
     formatter_class=RawDescriptionHelpFormatter,
 )
@@ -40,6 +43,13 @@ parser.add_argument(
     nargs='?',
     default='buildout.cfg',
     help='path to buildout.cfg or other *.cfg file'
+)
+parser.add_argument(
+    '-c'
+    '--config',
+    nargs='?',
+    default='versioncheck.ini',
+    help='path to versioncheck configuration file'
 )
 parser.add_argument(
     '-p',
@@ -77,6 +87,12 @@ parser.add_argument(
     dest='show_release_dates'
 )
 parser.add_argument(
+    '-t',
+    '--tracking',
+    help='enable tracking (will install project in a temp folder)',
+    action='store_true'
+)
+parser.add_argument(
     '-i',
     '--ignore-tracking',
     help='ignore tracking file (if present)',
@@ -98,6 +114,13 @@ parser.add_argument(
     '--browser',
     help='show as html for webbrowser',
     action='store_true'
+)
+parser.add_argument(
+    '--output-format',
+    help='which output format should be generated',
+    nargs='?',
+    type=argparse.FileType('w'),
+    default=sys.stdout
 )
 parser.add_argument(
     '-o',
@@ -123,6 +146,8 @@ def run():
     args = parser.parse_args()
     pkgsinfo = {}
     pkgsinfo['pkgs'] = parse(args.buildout)
+    pkg_data = parse_buildout(args.buildout)
+    print(pkg_data)
 
     # retrieve additional informations
     if not args.ignore_tracking:

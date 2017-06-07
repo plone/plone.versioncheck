@@ -51,7 +51,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'PloneOrg Versioncheck'
+project = 'plone.versioncheck'
 copyright = '2017, Plone Community (Jens Klein, Alexander Loechel)'
 author = 'Plone Community (Jens Klein, Alexander Loechel)'
 
@@ -105,7 +105,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'PloneOrgVersioncheckDoc'
+htmlhelp_basename = 'PloneVersioncheckDoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
