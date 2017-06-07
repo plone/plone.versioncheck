@@ -21,22 +21,35 @@ zc.buildout API
     from zc.buildout.buildout import HistoryItem
     from zc.buildout.buildout import SectionKey
 
-    buildout_config = Buildout('plone.versioncheck/buildout.cfg', [('buildout', 'verbosity', '10')])
+    buildout_config = Buildout('buildout.cfg',
+                               [('buildout', 'verbosity', '10')])
 
-    versions_section = buildout_config.get('buildout').get('versions').value
-    versionannotations_sections = buildout_config.get('buildout').get('versionannotations', SectionKey('versionannotations', 'DEFAULT')).value
+    versions_section = buildout_config.get('buildout').get('versions')
+    versionannotations_sections = buildout_config.get('buildout') \
+                                  .get('versionannotations',
+                                       'versionannotations')
 
-    for pkg_name, pkg_info in buildout_config._annotated.get(versions_section).items():
-        print(pkg_info.history)
+    for pkg_name, pkg_info in buildout_config._annotated \
+                              .get(versions_section).items():
+        print(pkg_name + ': ' + str(pkg_info.history))
 
     constrains = []
-    for key, value in buildout_config.versions:
+    for key, value in buildout_config.versions.items():
         if value[0] in ['=', '>', '<']:
             constrains.append(key + value)
         else:
             constrains.append(key + '==' + value)
     constrains = '\n'.join(constrains)
     print(constrains)
+
+.. testoutput::
+  :hide:
+  :options: +NORMALIZE_WHITESPACE
+
+  ...
+
+.. no valid testoutput providable, as order of a directory is not guaranteed.
+
 
 Core Elements of zc.buildout are those three classes:
 
