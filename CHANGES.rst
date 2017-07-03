@@ -1,10 +1,12 @@
 Changelog
 =========
 
-1.6.5 (unreleased)
+1.6.5 (2017-07-03)
 ------------------
 
-- Fix: Relative Paths should work now, tested with subdirectories.
+Bug fixes:
+
+- Relative Paths should work now, tested with subdirectories.
   [loechel]
 
 
