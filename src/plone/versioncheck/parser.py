@@ -78,6 +78,7 @@ def _extract_versions_section(  # NOQA: C901
             sys.stderr.write('\n  ERROR {0:d}'.format(resp.status_code))
         else:
             sys.stderr.write('\n  fresh from server')
+
     # first read own versions section
     current_version_section_name = buildout['buildout'].get(
         'versions',
@@ -95,13 +96,19 @@ def _extract_versions_section(  # NOQA: C901
             ' will be ignored.'.format(
                 gname=version_section_name,
                 nname=buildout['buildout'].get('versions')))
+
+    if filename.startswith(base_dir):
+        key_name = filename[len(base_dir) + 1:]
+    else:
+        key_name = filename
+
     if config.has_section(version_section_name):
-        version_sections[os.path.basename(filename)] = OrderedDict(
+        version_sections[key_name] = OrderedDict(
             config.items(version_section_name)
         )
         sys.stderr.write(
             '\n  {0:d} entries in versions section.'.format(
-                len(version_sections[os.path.basename(filename)])
+                len(version_sections[key_name])
             )
         )
 
@@ -109,12 +116,12 @@ def _extract_versions_section(  # NOQA: C901
     versionannotation_section_name = buildout['buildout'].get(
         'versionannotations', versionannotation_section_name)
     if config.has_section(versionannotation_section_name):
-        annotations[os.path.basename(filename)] = OrderedDict(
+        annotations[key_name] = OrderedDict(
             config.items(versionannotation_section_name)
         )
         sys.stderr.write(
             '\n  {0:d} entries in annotations section.'.format(
-                len(annotations[os.path.basename(filename)])
+                len(annotations[key_name])
             )
         )
     try:

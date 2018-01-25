@@ -14,6 +14,10 @@ New features:
 
 Bug fixes:
 
+- Fixed: Inherited extends with same name showed up as same.
+  Now show relative to basedir if possible, else full.
+  [jensens]
+
 - Fixed: Relative extends in urls were broken.
   [jensens]
 
