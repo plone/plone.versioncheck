@@ -14,7 +14,8 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Fixed: Relative extends in urls were broken.
+  [jensens]
 
 
 1.6.5 (2017-07-03)

@@ -48,12 +48,17 @@ def _extract_versions_section(  # NOQA: C901
     if annotations is None:
         annotations = OrderedDict()
     if '://' not in filename:
-        if relative:
-            if filename.startswith(relative + '/'):
-                filename = filename[len(relative + '/'):]
-            filename = os.path.join(base_dir, relative, filename)
+        if relative and '://' in relative:
+            # relative to url!
+            filename = '{0}/{1}'.format(relative, filename)
         else:
-            filename = os.path.join(base_dir, filename)
+            if relative:
+                if filename.startswith(relative + '/'):
+                    filename = filename[len(relative + '/'):]
+                filename = os.path.join(base_dir, relative, filename)
+            else:
+                filename = os.path.join(base_dir, filename)
+
     sys.stderr.write('\n- {0}'.format(filename))
 
     try:
@@ -61,7 +66,6 @@ def _extract_versions_section(  # NOQA: C901
             buildout = Buildout(filename, [])  # Use zc.buildout parser
     except UserError:
         buildout = {'buildout': {}}
-
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)
