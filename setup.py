@@ -38,7 +38,7 @@ setup(
     author='Jens W. Klein',
     author_email='jens@bluedynamics.com',
     url='https://github.com/plone/plone.versioncheck',
-    license='GPL',
+    license='GPL version 2',
     packages=find_packages('src', exclude=['ez_setup']),
     namespace_packages=['plone', ],
     package_dir={'': 'src'},
