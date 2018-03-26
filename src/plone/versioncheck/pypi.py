@@ -3,7 +3,6 @@
 from collections import namedtuple
 from collections import OrderedDict
 from pkg_resources import parse_version
-from pkg_resources import SetuptoolsVersion
 from plone.versioncheck.utils import requests_session
 
 import datetime
@@ -14,6 +13,11 @@ PYPI_URL = 'https://pypi.python.org/pypi'
 
 
 Release = namedtuple('Release', ['version', 'release_date'])
+
+FLOOR_RELEASE = Release(
+    version=u'0.0.0.0',
+    release_date=datetime.date(1970, 1, 1),
+)
 
 
 def mmbp_tuple(version):
@@ -31,24 +35,12 @@ def mmbp_tuple(version):
 
 def check(name, version, session):  # noqa: C901
     result = OrderedDict([
-        # ('major', None),
-        # ('minor', None),
-        # ('bugfix', None),
-        # ('majorpre', None),
-        # ('minorpre', None),
-        # ('bugfixpre', None),
-        ('major', Release(version=u'0.0.0.0',
-                          release_date=datetime.date(1970, 1, 1))),
-        ('minor', Release(version=u'0.0.0.0',
-                          release_date=datetime.date(1970, 1, 1))),
-        ('bugfix', Release(version=u'0.0.0.0',
-                           release_date=datetime.date(1970, 1, 1))),
-        ('majorpre', Release(version=u'0.0.0.0',
-                             release_date=datetime.date(1970, 1, 1))),
-        ('minorpre', Release(version=u'0.0.0.0',
-                             release_date=datetime.date(1970, 1, 1))),
-        ('bugfixpre', Release(version=u'0.0.0.0',
-                              release_date=datetime.date(1970, 1, 1))),
+        ('major', FLOOR_RELEASE),
+        ('minor', FLOOR_RELEASE),
+        ('bugfix', FLOOR_RELEASE),
+        ('majorpre', FLOOR_RELEASE),
+        ('minorpre', FLOOR_RELEASE),
+        ('bugfixpre', FLOOR_RELEASE),
     ])
 
     # parse version to test against:
@@ -56,9 +48,10 @@ def check(name, version, session):  # noqa: C901
         version = parse_version(version)
     except TypeError:
         return False, 'Version broken/ not checkable.'
-    if not isinstance(version, SetuptoolsVersion):
+    try:
+        vtuple = mmbp_tuple(version)
+    except ValueError:
         return False, 'Can not check legacy version number.'
-    vtuple = mmbp_tuple(version)
 
     # fetch pkgs json info from pypi
     url = '{url}/{name}/json'.format(url=PYPI_URL, name=name)
@@ -76,7 +69,8 @@ def check(name, version, session):  # noqa: C901
     for release in releases:
         # major check (overall)
         rel_v = parse_version(release)
-        if not isinstance(rel_v, SetuptoolsVersion) or not rel_v > version:
+#        if not isinstance(rel_v, SetuptoolsVersion) or not rel_v > version:
+        if rel_v <= version:
             continue
         rel_vtuple = mmbp_tuple(rel_v)
         rel_data = data['releases'][release]

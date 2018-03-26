@@ -4,8 +4,11 @@ Changelog
 1.6.7 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Bug fixes:
 
+- Fix: Do not trust on setuptools internals. 
+  Works now with newest setuptools.
+  [jensens]
 
 1.6.6 (2018-01-26)
 ------------------
