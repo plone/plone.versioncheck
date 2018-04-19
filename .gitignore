@@ -27,5 +27,6 @@ var/
 coverage.xml
 htmlcov/
 .pytest_cache/
+_build/
 
 /*.html
