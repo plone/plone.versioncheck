@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from cachecontrol import CacheControl
 from cachecontrol.caches import FileCache
-from colorama import init as colorama_init
 from colorama import Fore
+from colorama import init as colorama_init
 from colorama import Style
 
 import os

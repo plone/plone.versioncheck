@@ -1,35 +1,54 @@
 language: python
 sudo: false
-python:
-    - 2.7
-    - 3.3
-    - 3.4
-    - 3.5
-    - 3.6
-    - pypy
-env:
-    - ENVIRON=py
-    - ENVIRON=isort,flake8
+
 matrix:
-    exclude:
-        - env: ENVIRON=isort,flake8
     include:
+        - python: "2.7"
+          env: TOXENV=docs,lint-py27
         - python: "3.6"
-          env: ENVIRON=isort,flake8
+          env: TOXENV=docs,lint-py36
+        - python: "2.7"
+          env: TOXENV=py27
+        - python: "3.4"
+          env: TOXENV=py34
+        - python: "3.5"
+          env: TOXENV=py35
+        - python: "3.6"
+          env: TOXENV=py36
+        - python: "3.7-dev"
+          env: TOXENV=py37
+        - python: "pypy"
+          env: TOXENV=pypy
+        - python: "pypy3"
+          env: TOXENV=pypy
+    allow_failures:
+        - python: "3.7-dev"
+          env: TOXENV=py37
+        - python: "pypy"
+          env: TOXENV=pypy
+        - python: "pypy3"
+          env: TOXENV=pypy
+
 install:
-    - virtualenv .
-    - ./bin/pip install zc.buildout
-    - ./bin/buildout -c buildout.cfg
-    - pip install tox coveralls coverage
+    - travis_retry pip install -U pip setuptools zc.buildout
+    - travis_retry buildout -c buildout.cfg
+    - travis_retry pip install tox coveralls coverage
+
 before_script:
     - export DISPLAY=:99.0
     - export COLUMNS=80
     - stty cols 80
     - sh -e /etc/init.d/xvfb start
+
 script:
-    - tox -e $ENVIRON
+    - travis_retry tox
+
 after_success:
     - coverage combine
     - coveralls
+
 notifications:
     email: false
+
+cache:
+  pip: true

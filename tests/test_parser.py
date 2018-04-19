@@ -39,7 +39,7 @@ def test_parse(capsys):
         'ipython': OrderedDict([('buildout.cfg', {'v': '5.3.0', 'a': ''})]),
         'lazy': OrderedDict([
             ('buildout.cfg', {'v': '1.0', 'a': ''}),
-            ('spam.cfg', {'v': '>= 1.1', 'a': ''})
+            ('buildout.d/spam.cfg', {'v': '>= 1.1', 'a': ''})
         ]),
         'products.cmfcore': OrderedDict([
             ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),  # NOQA: E501

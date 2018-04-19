@@ -26,5 +26,6 @@ var/
 .coverage*
 coverage.xml
 htmlcov/
+.pytest_cache/
 
 /*.html

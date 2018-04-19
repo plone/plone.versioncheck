@@ -71,10 +71,10 @@
         <tr class="{{outer_loop.cycle('odd', 'even')}}">
 
             {% if loop.first %}
-            <td class="color-{{record['state']}}" rowspan="{{loop.length}}">{% if loop.first%}<a id="{{name}}" class="color-{{record['state']}}" href="https://pypi.python.org/pypi/{{name}}">{{name}}</a>{% endif %}</td>
+            <td class="color-{{record['state']}}" rowspan="{{loop.length}}">{% if loop.first%}<a id="{{name}}" class="color-{{record['state']}}" href="https://pypi.org/project/{{name}}">{{name}}</a>{% endif %}</td>
             {% endif %}
 
-            <td class="color-{{version['state']}}"><a class="color-{{version['state']}}" href="https://pypi.python.org/pypi/{{name}}/{{version['version']}}">{{version['version']}}</a></td>
+            <td class="color-{{version['state']}}"><a class="color-{{version['state']}}" href="https://pypi.org/project/{{name}}/{{version['version']}}">{{version['version']}}</a></td>
             {% if rel_date %}<td class="color-{{version['state']}}">{{version['release_date']}}</td>{% endif %}
             <td class="color-{{version['state']}}">{{version['state'][0]}}</td>
             <td class="color-{{version['state']}}">{{version['description']}}</td>
