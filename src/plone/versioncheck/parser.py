@@ -179,3 +179,20 @@ def parse(buildout_filename, nocache=False):
                     pkg[name] = {'v': None, 'a': annotations[name][pkgname]}
 
     return pkgs
+
+
+def add_constraints(pkgs, fn):
+    try:
+        from pip._internal.req import parse_requirements
+    except ImportError:
+        from pip.req import parse_requirements
+    constraints = parse_requirements(fn, constraint=True, session=object())
+    for constraint in constraints:
+        pkg = pkgs.setdefault(constraint.name.lower(), OrderedDict())
+        specs = set(spec._spec for spec in constraint.specifier._specs)
+        specs = sorted(specs)
+        if len(specs) == 1 and specs[0][0] == u'==':
+            pkg[fn] = {'v': specs[0][1], 'a': ''}
+        else:
+            sys.stderr.write(
+                "Don't know how to apply version for %s." % constraint)

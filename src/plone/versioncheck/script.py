@@ -4,6 +4,7 @@ from argparse import RawDescriptionHelpFormatter
 from plone.versioncheck import formatter
 from plone.versioncheck import tracking
 from plone.versioncheck import utils
+from plone.versioncheck.parser import add_constraints
 from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 from plone.versioncheck.pypi import update_pkgs_info
@@ -40,6 +41,13 @@ parser.add_argument(
     nargs='?',
     default='buildout.cfg',
     help='path to buildout.cfg or other *.cfg file'
+)
+parser.add_argument(
+    '-c',
+    '--constraints',
+    help='specify pip constraints file to check for versions, '
+         'multiple possible',
+    action='append'
 )
 parser.add_argument(
     '-p',
@@ -123,6 +131,9 @@ def run():
     args = parser.parse_args()
     pkgsinfo = {}
     pkgsinfo['pkgs'] = parse(args.buildout)
+    if args.constraints is not None:
+        for constraint in args.constraints:
+            add_constraints(pkgsinfo['pkgs'], constraint)
 
     # retrieve additional informations
     if not args.ignore_tracking:
