@@ -127,7 +127,7 @@ def _extract_versions_section(  # NOQA: C901
     try:
         extends = config.get('buildout', 'extends').strip()
     except (NoSectionError, NoOptionError):
-        return version_sections
+        return version_sections, annotations
     for extend in reversed(extends.splitlines()):
         extend = extend.strip()
         if not extend:
