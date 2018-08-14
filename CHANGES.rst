@@ -4,7 +4,20 @@ Changelog
 1.6.8 (unreleased)
 ------------------
 
-- Nothing changed yet.
+Breaking changes:
+
+- *add item here*
+
+New features:
+
+- *add item here*
+
+Bug fixes:
+
+- If a file does not extend any other file, 
+  the return statement was returning only one parameter, 
+  while callers expected 2.
+  [gforcada]
 
 
 1.6.7 (2018-03-26)
@@ -16,23 +29,8 @@ Bug fixes:
   Works now with newest setuptools.
   [jensens]
   
-- If a file does not extend any other file, 
-  the return statement was returning only one parameter, 
-  while callers expected 2.
-  [gforcada]
-
 1.6.6 (2018-01-26)
 ------------------
-
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
-Bug fixes:
 
 - Fixed: Inherited extends with same name showed up as same.
   Now show relative to basedir if possible, else full.
