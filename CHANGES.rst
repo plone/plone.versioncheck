@@ -15,6 +15,11 @@ Bug fixes:
 - Fix: Do not trust on setuptools internals. 
   Works now with newest setuptools.
   [jensens]
+  
+- If a file does not extend any other file, 
+  the return statement was returning only one parameter, 
+  while callers expected 2.
+  [gforcada]
 
 1.6.6 (2018-01-26)
 ------------------
