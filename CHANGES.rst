@@ -4,14 +4,6 @@ Changelog
 1.6.8 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Better handling of relative paths as entry, like ``project/foo/dev.cfg``.
