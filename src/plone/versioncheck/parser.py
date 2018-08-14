@@ -69,7 +69,7 @@ def _extract_versions_section(  # NOQA: C901
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)
-    else:
+    elif '://' in filename:
         resp = session.get(filename)
         config.readfp(StringIO(resp.text))
         if resp.from_cache:
@@ -78,6 +78,8 @@ def _extract_versions_section(  # NOQA: C901
             sys.stderr.write('\n  ERROR {0:d}'.format(resp.status_code))
         else:
             sys.stderr.write('\n  fresh from server')
+    else:
+        raise ValueError('{0} does not exist!'.format(filename))
 
     # first read own versions section
     current_version_section_name = buildout['buildout'].get(
@@ -132,7 +134,7 @@ def _extract_versions_section(  # NOQA: C901
         extend = extend.strip()
         if not extend:
             continue
-        sub_relative = find_relative(extend) or relative
+        sub_relative, extend = find_relative(extend, relative)
         _extract_versions_section(
             session,
             extend,
@@ -150,7 +152,7 @@ def parse(buildout_filename, nocache=False):
     sys.stderr.write('Parsing buildout files:')
     if nocache:
         sys.stderr.write('\n(not using caches)')
-    base_relative = find_relative(buildout_filename)
+    base_relative, buildout_filename = find_relative(buildout_filename)
     session = requests_session(nocache=nocache)
     version_sections, annotations = _extract_versions_section(
         session,

@@ -14,6 +14,9 @@ New features:
 
 Bug fixes:
 
+- Better handling of relative paths as entry, like ``project/foo/dev.cfg``.
+  [jensens]
+
 - If a file does not extend any other file, 
   the return statement was returning only one parameter, 
   while callers expected 2.

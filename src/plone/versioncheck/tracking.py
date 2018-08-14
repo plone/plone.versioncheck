@@ -78,7 +78,7 @@ def install(buildout):
 
 def get(pkginfo, buildout):
     filepath = TRACKINGFILENAME
-    relative = find_relative(buildout)
+    relative, filename = find_relative(buildout)
     if relative:
         filepath = os.path.join(relative, TRACKINGFILENAME)
     if not os.path.exists(filepath):

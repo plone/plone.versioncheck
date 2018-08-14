@@ -88,13 +88,22 @@ def requests_session(nocache=False):
     )
 
 
-def find_relative(extend):
+def find_relative(extend, relative=''):
+    """the base dir or url and the actual filename as tuple
+    """
     if '://' in extend:
         parts = list(urlparse(extend))
-        parts[2] = '/'.join(parts[2].split('/')[:-1])
-        return urlunparse(parts)
-    elif '/' in extend:
-        return os.path.dirname(extend)
+        path = parts[2].split('/')
+        parts[2] = '/'.join(path[:-1])
+        return urlunparse(parts), path[-1]
+    if '://' in relative:
+        return '/'.join(relative.strip('/'), extend.strip('/'))
+    if relative:
+        extend = os.path.join(relative, extend)
+    return (
+        os.path.dirname(os.path.abspath(extend)),
+        os.path.basename(extend),
+    )
 
 ###########################################################
 # below copied from https://gist.github.com/jtriley/1108174
