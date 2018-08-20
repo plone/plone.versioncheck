@@ -4,7 +4,7 @@ Changelog
 1.6.9 (unreleased)
 ------------------
 
-- Fixes bug in `find_relative` introducued in last release.
+- Fixes bug in ``find_relative`` introducued in last release.
   [jensens]
 
 
