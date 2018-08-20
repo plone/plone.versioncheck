@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.6.9 (unreleased)
+1.6.9 (2018-08-20)
 ------------------
 
 - Fixes bug in ``find_relative`` introducued in last release.
