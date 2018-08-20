@@ -4,7 +4,8 @@ Changelog
 1.6.10 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fixes another bug in ``find_relative``.
+  [jensens]
 
 
 1.6.9 (2018-08-20)
