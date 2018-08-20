@@ -97,9 +97,9 @@ def find_relative(extend, relative=''):
         parts[2] = '/'.join(path[:-1])
         return urlunparse(parts), path[-1]
     if '://' in relative:
-        return '/'.join(relative.strip('/'), extend.strip('/'))
+        return '/'.join([relative.strip('/'), extend.strip('/')])
     if relative:
-        extend = os.path.join(relative, extend)
+        extend = os.path.join([relative, extend])
     return (
         os.path.dirname(os.path.abspath(extend)),
         os.path.basename(extend),

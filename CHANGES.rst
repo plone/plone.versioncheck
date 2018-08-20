@@ -4,7 +4,8 @@ Changelog
 1.6.9 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Fixes bug in `find_relative` introducued in last release.
+  [jensens]
 
 
 1.6.8 (2018-08-14)
@@ -15,8 +16,8 @@ Bug fixes:
 - Better handling of relative paths as entry, like ``project/foo/dev.cfg``.
   [jensens]
 
-- If a file does not extend any other file, 
-  the return statement was returning only one parameter, 
+- If a file does not extend any other file,
+  the return statement was returning only one parameter,
   while callers expected 2.
   [gforcada]
 
@@ -26,10 +27,10 @@ Bug fixes:
 
 Bug fixes:
 
-- Fix: Do not trust on setuptools internals. 
+- Fix: Do not trust on setuptools internals.
   Works now with newest setuptools.
   [jensens]
-  
+
 1.6.6 (2018-01-26)
 ------------------
 
