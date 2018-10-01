@@ -16,7 +16,7 @@ setup(
     description='Checks pinned versions with overrides in a cascaded buildout',
     long_description=long_description,
     # Get more strings from
-    # http://pypi.python.org/pypi?:action=list_classifiers
+    # https://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Framework :: Buildout',
