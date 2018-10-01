@@ -39,7 +39,7 @@ setup(
     author_email='jens@bluedynamics.com',
     url='https://github.com/plone/plone.versioncheck',
     license='GPL version 2',
-    packages=find_packages('src', exclude=['ez_setup']),
+    packages=find_packages('src', ),
     namespace_packages=['plone', ],
     package_dir={'': 'src'},
     include_package_data=True,
