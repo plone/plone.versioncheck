@@ -39,7 +39,7 @@ def _extract_versions_section(  # NOQA: C901
     annotations=None,
     relative=None,
     version_section_name=None,
-    versionannotation_section_name='versionannotations'
+    versionannotation_section_name="versionannotations",
 ):
     if base_dir is None:
         base_dir = os.path.dirname(os.path.abspath(filename))
@@ -47,44 +47,43 @@ def _extract_versions_section(  # NOQA: C901
         version_sections = OrderedDict()
     if annotations is None:
         annotations = OrderedDict()
-    if '://' not in filename:
-        if relative and '://' in relative:
+    if "://" not in filename:
+        if relative and "://" in relative:
             # relative to url!
-            filename = '{0}/{1}'.format(relative, filename)
+            filename = "{0}/{1}".format(relative, filename)
         else:
             if relative:
-                if filename.startswith(relative + '/'):
-                    filename = filename[len(relative + '/'):]
+                if filename.startswith(relative + "/"):
+                    filename = filename[len(relative + "/") :]
                 filename = os.path.join(base_dir, relative, filename)
             else:
                 filename = os.path.join(base_dir, filename)
 
-    sys.stderr.write('\n- {0}'.format(filename))
+    sys.stderr.write("\n- {0}".format(filename))
 
     try:
         with nostdout():
             buildout = Buildout(filename, [])  # Use zc.buildout parser
     except UserError:
-        buildout = {'buildout': {}}
+        buildout = {"buildout": {}}
     config = ConfigParser()
     if os.path.isfile(filename):
         config.read(filename)
-    elif '://' in filename:
+    elif "://" in filename:
         resp = session.get(filename)
         config.readfp(StringIO(resp.text))
         if resp.from_cache:
-            sys.stderr.write('\n  from cache')
+            sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:
-            sys.stderr.write('\n  ERROR {0:d}'.format(resp.status_code))
+            sys.stderr.write("\n  ERROR {0:d}".format(resp.status_code))
         else:
-            sys.stderr.write('\n  fresh from server')
+            sys.stderr.write("\n  fresh from server")
     else:
-        raise ValueError('{0} does not exist!'.format(filename))
+        raise ValueError("{0} does not exist!".format(filename))
 
     # first read own versions section
-    current_version_section_name = buildout['buildout'].get(
-        'versions',
-        'versions',
+    current_version_section_name = buildout["buildout"].get(
+        "versions", "versions"
     )
     if version_section_name is None:
         # initial name
@@ -92,15 +91,17 @@ def _extract_versions_section(  # NOQA: C901
     elif version_section_name != current_version_section_name:
         # name changed, not sure if this works as expected! - jensens
         sys.stderr.write(
-            '\nName of [versions] (versions = versions) has changed.'
+            "\nName of [versions] (versions = versions) has changed."
             '\nGlobal versions section name: "{gname}"'
             '\nVersions pinned under that new Section namespace "{nname}"'
-            ' will be ignored.'.format(
+            " will be ignored.".format(
                 gname=version_section_name,
-                nname=buildout['buildout'].get('versions')))
+                nname=buildout["buildout"].get("versions"),
+            )
+        )
 
     if filename.startswith(base_dir):
-        key_name = filename[len(base_dir) + 1:]
+        key_name = filename[len(base_dir) + 1 :]
     else:
         key_name = filename
 
@@ -109,25 +110,26 @@ def _extract_versions_section(  # NOQA: C901
             config.items(version_section_name)
         )
         sys.stderr.write(
-            '\n  {0:d} entries in versions section.'.format(
+            "\n  {0:d} entries in versions section.".format(
                 len(version_sections[key_name])
             )
         )
 
     # read versionannotations
-    versionannotation_section_name = buildout['buildout'].get(
-        'versionannotations', versionannotation_section_name)
+    versionannotation_section_name = buildout["buildout"].get(
+        "versionannotations", versionannotation_section_name
+    )
     if config.has_section(versionannotation_section_name):
         annotations[key_name] = OrderedDict(
             config.items(versionannotation_section_name)
         )
         sys.stderr.write(
-            '\n  {0:d} entries in annotations section.'.format(
+            "\n  {0:d} entries in annotations section.".format(
                 len(annotations[key_name])
             )
         )
     try:
-        extends = config.get('buildout', 'extends').strip()
+        extends = config.get("buildout", "extends").strip()
     except (NoSectionError, NoOptionError):
         return version_sections, annotations
     for extend in reversed(extends.splitlines()):
@@ -143,23 +145,21 @@ def _extract_versions_section(  # NOQA: C901
             annotations,
             sub_relative,
             version_section_name,
-            versionannotation_section_name
+            versionannotation_section_name,
         )
     return version_sections, annotations
 
 
 def parse(buildout_filename, nocache=False):
-    sys.stderr.write('Parsing buildout files:')
+    sys.stderr.write("Parsing buildout files:")
     if nocache:
-        sys.stderr.write('\n(not using caches)')
+        sys.stderr.write("\n(not using caches)")
     base_relative, buildout_filename = find_relative(buildout_filename)
     session = requests_session(nocache=nocache)
     version_sections, annotations = _extract_versions_section(
-        session,
-        buildout_filename,
-        relative=base_relative
+        session, buildout_filename, relative=base_relative
     )
-    sys.stderr.write('\nparsing finished.\n')
+    sys.stderr.write("\nparsing finished.\n")
     pkgs = {}
 
     for name in version_sections:
@@ -171,13 +171,13 @@ def parse(buildout_filename, nocache=False):
         pkg = pkgs[pkgname]
         for name in version_sections.keys():
             if pkgname in version_sections.get(name, {}):
-                pkg[name] = {'v': version_sections[name][pkgname], 'a': ''}
+                pkg[name] = {"v": version_sections[name][pkgname], "a": ""}
 
         for name in annotations.keys():
             if pkgname in annotations.get(name, {}):
                 if name in pkg:
-                    pkg[name]['a'] = annotations[name][pkgname]
+                    pkg[name]["a"] = annotations[name][pkgname]
                 else:
-                    pkg[name] = {'v': None, 'a': annotations[name][pkgname]}
+                    pkg[name] = {"v": None, "a": annotations[name][pkgname]}
 
     return pkgs

@@ -4,7 +4,8 @@ Changelog
 1.6.11 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Fix PyPI url and add output of URL in case of a problem.
+  [jensens]
 
 
 1.6.10 (2018-08-20)

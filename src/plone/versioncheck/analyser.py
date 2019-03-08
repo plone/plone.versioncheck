@@ -14,7 +14,7 @@ def uptodate_analysis(pkginfo, pypiinfo):
     """
     result = []
     if is_cfg_newer(pkginfo):
-        result.append('cfg')
+        result.append("cfg")
     newer = is_pypi_newer(pypiinfo)
     if newer:
         result.append(newer)
@@ -28,7 +28,7 @@ def is_cfgidx_newer(pkginfo, target_idx):
     """
     vcur = None
     for idx, key in enumerate(pkginfo):
-        version = pkginfo[key]['v']
+        version = pkginfo[key]["v"]
         if not version:
             continue
         if idx == 0:
@@ -48,14 +48,14 @@ def is_cfg_newer(pkginfo):
             return True
 
 
-TEST_FINALS = set(['major', 'minor', 'bugfix'])
-TEST_PRERELEASE = set(['majorpre', 'minorpre', 'bugfixpre'])
+TEST_FINALS = set(["major", "minor", "bugfix"])
+TEST_PRERELEASE = set(["majorpre", "minorpre", "bugfixpre"])
 
 
 def is_pypi_newer(pypiinfo):
     keys = {_ for _ in pypiinfo if pypiinfo.get(_, False)}
     if TEST_FINALS.intersection(keys):
-        return 'pypifinal'
+        return "pypifinal"
     if TEST_PRERELEASE.intersection(keys):
-        return 'pypiprerelease'
+        return "pypiprerelease"
     return False

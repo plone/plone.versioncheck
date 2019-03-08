@@ -26,28 +26,21 @@ COLORED = True
 
 _STATEMAP = {
     # develop egg
-    'D': Style.BRIGHT + Fore.GREEN,
-
+    "D": Style.BRIGHT + Fore.GREEN,
     # Active version
-    'A': Style.BRIGHT + Fore.WHITE,
-
+    "A": Style.BRIGHT + Fore.WHITE,
     # inherited, older or equal
-    'I': Style.NORMAL + Fore.WHITE,
-
+    "I": Style.NORMAL + Fore.WHITE,
     # inherited, newer
-    'In': Style.BRIGHT + Fore.YELLOW,
-
+    "In": Style.BRIGHT + Fore.YELLOW,
     # update
-    'U': Style.BRIGHT + Fore.CYAN,
-
+    "U": Style.BRIGHT + Fore.CYAN,
     # update prerelease
-    'P': Style.BRIGHT + Fore.BLUE,
-
+    "P": Style.BRIGHT + Fore.BLUE,
     # orphaned
-    'O': Style.BRIGHT + Fore.MAGENTA,
-
+    "O": Style.BRIGHT + Fore.MAGENTA,
     # unpinned
-    'X': Style.BRIGHT + Fore.RED,
+    "X": Style.BRIGHT + Fore.RED,
 }
 
 
@@ -59,54 +52,46 @@ def color_init():
 def color_by_state(state):
     if COLORED:
         return _STATEMAP.get(state, Style.DIM + Fore.RED)
-    return ''
+    return ""
 
 
 def color_dimmed():
     if COLORED:
         return Style.DIM + Fore.WHITE
-    return ''
+    return ""
 
 
 def dots(value, max):
     """ljust, but the dots only"""
-    dots = '.' * (max - len(value))
+    dots = "." * (max - len(value))
     if dots:
-        dots = ' ' + dots[1:]
+        dots = " " + dots[1:]
     return color_dimmed() + dots
 
 
-CACHE_FILENAME = '.plone.versioncheck.cache'
+CACHE_FILENAME = ".plone.versioncheck.cache"
 
 
 def requests_session(nocache=False):
     if nocache:
         return requests.Session()
-    return CacheControl(
-        requests.Session(),
-        cache=FileCache(CACHE_FILENAME)
-    )
+    return CacheControl(requests.Session(), cache=FileCache(CACHE_FILENAME))
 
 
-def find_relative(extend, relative=''):
+def find_relative(extend, relative=""):
     """the base dir or url and the actual filename as tuple
     """
-    if '://' in extend:
+    if "://" in extend:
         parts = list(urlparse(extend))
-        path = parts[2].split('/')
-        parts[2] = '/'.join(path[:-1])
+        path = parts[2].split("/")
+        parts[2] = "/".join(path[:-1])
         return urlunparse(parts), path[-1]
-    if '://' in relative:
-            return (
-                relative.strip('/'),
-                extend.strip('/'),
-            )
+    if "://" in relative:
+        return (relative.strip("/"), extend.strip("/"))
     if relative:
         extend = os.path.join(relative, extend)
-    return (
-        os.path.dirname(os.path.abspath(extend)),
-        os.path.basename(extend),
-    )
+    return (os.path.dirname(os.path.abspath(extend)), os.path.basename(extend))
+
 
 ###########################################################
 # below copied from https://gist.github.com/jtriley/1108174
@@ -121,21 +106,22 @@ def get_terminal_size():
     """
     current_os = platform.system()
     tuple_xy = None
-    if current_os == 'Windows':
+    if current_os == "Windows":
         tuple_xy = _get_terminal_size_windows()
         if tuple_xy is None:
             tuple_xy = _get_terminal_size_tput()
             # needed for window's python in cygwin's xterm!
-    if current_os in ['Linux', 'Darwin'] or current_os.startswith('CYGWIN'):
+    if current_os in ["Linux", "Darwin"] or current_os.startswith("CYGWIN"):
         tuple_xy = _get_terminal_size_linux()
     if tuple_xy is None:
-        tuple_xy = (80, 25)      # default value
+        tuple_xy = (80, 25)  # default value
     return tuple_xy
 
 
 def _get_terminal_size_windows():
     try:
         from ctypes import windll, create_string_buffer
+
         # stdin handle is -10
         # stdout handle is -11
         # stderr handle is -12
@@ -143,9 +129,19 @@ def _get_terminal_size_windows():
         csbi = create_string_buffer(22)
         res = windll.kernel32.GetConsoleScreenBufferInfo(h, csbi)
         if res:
-            (bufx, bufy, curx, cury, wattr,
-             left, top, right, bottom,
-             maxx, maxy) = struct.unpack('hhhhHhhhhhh', csbi.raw)
+            (
+                bufx,
+                bufy,
+                curx,
+                cury,
+                wattr,
+                left,
+                top,
+                right,
+                bottom,
+                maxx,
+                maxy,
+            ) = struct.unpack("hhhhHhhhhhh", csbi.raw)
             sizex = right - left + 1
             sizey = bottom - top + 1
             return sizex, sizey
@@ -157,8 +153,8 @@ def _get_terminal_size_tput():
     # get terminal width
     # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window  # noqa
     try:
-        cols = int(subprocess.check_call(shlex.split('tput cols')))
-        rows = int(subprocess.check_call(shlex.split('tput lines')))
+        cols = int(subprocess.check_call(shlex.split("tput cols")))
+        rows = int(subprocess.check_call(shlex.split("tput lines")))
         return (cols, rows)
     except Exception:
         pass
@@ -169,11 +165,14 @@ def _get_terminal_size_linux():
         try:
             import fcntl
             import termios
-            cr = struct.unpack('hh',
-                               fcntl.ioctl(fd, termios.TIOCGWINSZ, '1234'))
+
+            cr = struct.unpack(
+                "hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234")
+            )
             return cr
         except Exception:
             pass
+
     cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
     if not cr:
         try:
@@ -184,7 +183,7 @@ def _get_terminal_size_linux():
             pass
     if not cr:
         try:
-            cr = (os.environ['LINES'], os.environ['COLUMNS'])
+            cr = (os.environ["LINES"], os.environ["COLUMNS"])
         except Exception:
             return None
     return int(cr[1]), int(cr[0])
