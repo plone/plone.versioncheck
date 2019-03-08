@@ -67,13 +67,9 @@ def write_tracked(old_logging_shutdown, logfilepath):
 
 
 def install(buildout):
-    filepath = os.path.join(
-        buildout["buildout"]["directory"], TRACKINGFILENAME
-    )
+    filepath = os.path.join(buildout["buildout"]["directory"], TRACKINGFILENAME)
     easy_install.Installer.__tracked_versions = {}
-    easy_install.Installer._get_dist = track_get_dist(
-        easy_install.Installer._get_dist
-    )
+    easy_install.Installer._get_dist = track_get_dist(easy_install.Installer._get_dist)
     logging.shutdown = write_tracked(logging.shutdown, filepath)
 
 

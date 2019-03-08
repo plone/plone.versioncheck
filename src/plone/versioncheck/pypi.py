@@ -14,9 +14,7 @@ PYPI_URL = "https://pypi.org"
 
 Release = namedtuple("Release", ["version", "release_date"])
 
-FLOOR_RELEASE = Release(
-    version=u"0.0.0.0", release_date=datetime.date(1970, 1, 1)
-)
+FLOOR_RELEASE = Release(version=u"0.0.0.0", release_date=datetime.date(1970, 1, 1))
 
 
 def mmbp_tuple(version):
@@ -94,15 +92,11 @@ def check(name, version, session):  # noqa: C901
             if rel_v.is_prerelease and rel_v > parse_version(
                 result["majorpre"].version
             ):
-                result["majorpre"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["majorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
                 result["major"].version
             ):
-                result["major"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["major"] = Release(version=release, release_date=rel_date)
             continue
         if (  # Only compare same version line
             rel_vtuple[0] == vtuple[0] and rel_vtuple[1] > vtuple[1]
@@ -110,15 +104,11 @@ def check(name, version, session):  # noqa: C901
             if rel_v.is_prerelease and rel_v > parse_version(
                 result["minorpre"].version
             ):
-                result["minorpre"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["minorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
                 result["minor"].version
             ):
-                result["minor"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["minor"] = Release(version=release, release_date=rel_date)
             continue
         if (  # Only compare same version line
             rel_vtuple[0] == vtuple[0]
@@ -128,15 +118,11 @@ def check(name, version, session):  # noqa: C901
             if rel_v.is_prerelease and rel_v > parse_version(
                 result["bugfixpre"].version
             ):
-                result["bugfixpre"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["bugfixpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
                 result["bugfix"].version
             ):
-                result["bugfix"] = Release(
-                    version=release, release_date=rel_date
-                )
+                result["bugfix"] = Release(version=release, release_date=rel_date)
             continue
 
     # reset non existing versions
@@ -173,9 +159,7 @@ def check(name, version, session):  # noqa: C901
 def check_all(pkgsinfo, limit=None, nocache=False):
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write(
-        "Check PyPI for updates of {0:d} packages.".format(len(pkgs))
-    )
+    sys.stderr.write("Check PyPI for updates of {0:d} packages.".format(len(pkgs)))
     if limit:
         sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
     pkgsinfo["pypi"] = {}
@@ -194,9 +178,7 @@ def check_all(pkgsinfo, limit=None, nocache=False):
         if limit and idx == limit:
             break
     for error in errors:
-        sys.stderr.write(
-            "\nError in {0} version {1} reason: {2}".format(*error)
-        )
+        sys.stderr.write("\nError in {0} version {1} reason: {2}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
 
@@ -234,9 +216,7 @@ def update_pkg_info(pkg_name, pkg_data, session):
 def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write(
-        "Check PyPI for data of {0:d} packages.".format(len(pkgs))
-    )
+    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
     if limit:
         sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
     errors = []
@@ -297,9 +277,7 @@ def update_tracking_version_info(pkg_name, pkg_data, session):
 def update_tracking_info(pkgsinfo, nocache=False):
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["tracking"]["versions"]
-    sys.stderr.write(
-        "Check PyPI for data of {0:d} packages.".format(len(pkgs))
-    )
+    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
     errors = []
 
     idx = 0
@@ -307,9 +285,7 @@ def update_tracking_info(pkgsinfo, nocache=False):
         if not idx % 20:
             sys.stderr.write("\n{0:4d} ".format(idx))
 
-        state, result = update_tracking_version_info(
-            pkg_name, pkg_data, session
-        )
+        state, result = update_tracking_version_info(pkg_name, pkg_data, session)
         if not state:
             sys.stderr.write("E")
             errors.append((pkg_name, str(result)))

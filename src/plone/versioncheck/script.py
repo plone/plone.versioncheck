@@ -59,16 +59,14 @@ parser.add_argument(
 parser.add_argument(
     "-r",
     "--required-by",
-    help="show information about requirements (only if tracking file is "
-    "available)",
+    help="show information about requirements (only if tracking file is " "available)",
     default=False,
     action="store_true",
 )
 parser.add_argument(
     "-d",
     "--show-release-dates",
-    help="show information about release dates "
-    "(only for package lookup from PyPI)",
+    help="show information about release dates " "(only for package lookup from PyPI)",
     default=False,
     action="store_true",
     dest="show_release_dates",
@@ -78,6 +76,12 @@ parser.add_argument(
     "--ignore-tracking",
     help="ignore tracking file (if present)",
     action="store_true",
+)
+parser.add_argument(
+    "-e",
+    "--exclude-cfg",
+    help="exclude in listing if cfg-filename globs the given expression",
+    action="append",
 )
 parser.add_argument(
     "-m",
@@ -99,9 +103,7 @@ parser.add_argument(
     type=argparse.FileType("w"),
     default=sys.stdout,
 )
-parser.add_argument(
-    "--no-colors", help="do not show colors", action="store_true"
-)
+parser.add_argument("--no-colors", help="do not show colors", action="store_true")
 parser.add_argument(
     "--debug-limit",
     type=int,
@@ -131,6 +133,7 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             file=args.output,
         )
     elif args.browser:
@@ -139,6 +142,7 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
             show_release_dates=args.show_release_dates,
             file=args.output,
@@ -150,5 +154,6 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
         )

@@ -82,9 +82,7 @@ def _extract_versions_section(  # NOQA: C901
         raise ValueError("{0} does not exist!".format(filename))
 
     # first read own versions section
-    current_version_section_name = buildout["buildout"].get(
-        "versions", "versions"
-    )
+    current_version_section_name = buildout["buildout"].get("versions", "versions")
     if version_section_name is None:
         # initial name
         version_section_name = current_version_section_name
@@ -95,8 +93,7 @@ def _extract_versions_section(  # NOQA: C901
             '\nGlobal versions section name: "{gname}"'
             '\nVersions pinned under that new Section namespace "{nname}"'
             " will be ignored.".format(
-                gname=version_section_name,
-                nname=buildout["buildout"].get("versions"),
+                gname=version_section_name, nname=buildout["buildout"].get("versions")
             )
         )
 
@@ -106,9 +103,7 @@ def _extract_versions_section(  # NOQA: C901
         key_name = filename
 
     if config.has_section(version_section_name):
-        version_sections[key_name] = OrderedDict(
-            config.items(version_section_name)
-        )
+        version_sections[key_name] = OrderedDict(config.items(version_section_name))
         sys.stderr.write(
             "\n  {0:d} entries in versions section.".format(
                 len(version_sections[key_name])

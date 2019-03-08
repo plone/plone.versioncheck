@@ -18,6 +18,8 @@ import textwrap
 
 jenv = Environment(loader=PackageLoader("plone.versioncheck", "tpl"))
 
+FLOOR_DATE = datetime.date(1970, 1, 1)
+
 
 def build_version(
     name, pkg, pypi, tracked, key, idx, flavor="versions", orphaned=False
@@ -32,11 +34,7 @@ def build_version(
             return record
         else:
             record["version"] = pkg[key]["v"] or "(unset)"
-        if pkg[key].get(
-            "release_date", datetime.date(1970, 1, 1)
-        ) != datetime.date(
-            1970, 1, 1
-        ):  # NOQA: E501
+        if pkg[key].get("release_date", FLOOR_DATE) != FLOOR_DATE:  # NOQA: E501
             record["release_date"] = pkg[key].get("release_date")
         if idx == 0:
             if orphaned:
@@ -62,8 +60,8 @@ def build_version(
 
 
 def builder(
-    pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None
-):  # noqa: C901, E501
+    pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None, exclude_cfgs=[]
+):
     """build
     - OrderedDict with pkgname as keys
     - each entry an record:
@@ -118,9 +116,7 @@ def builder(
                     location,
                     idx,
                     flavor="versions",
-                    orphaned=tracked
-                    and current_tracked is None
-                    and not devegg,
+                    orphaned=tracked and current_tracked is None and not devegg,
                 )
             )
         if not devegg and current_tracked is not None and not len(versions):
@@ -181,7 +177,8 @@ def builder(
             and len(record["versions"]) == 1
         ):
             continue
-
+        for version in record["versions"]:
+            pass
         result[name] = record
     return result
 
@@ -270,19 +267,13 @@ def browser(
     )
     template = jenv.get_template("browser.jinja")
     print(
-        template.render(
-            data=data, req_by=show_requiredby, rel_date=show_release_dates
-        ),
+        template.render(data=data, req_by=show_requiredby, rel_date=show_release_dates),
         file=file,
     )
 
 
 def machine(
-    pkgsinfo,
-    newer_only=False,
-    newer_orphaned_only=False,
-    limit=None,
-    file=sys.stdout,
+    pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None, file=sys.stdout
 ):
     sys.stderr.write("\nReport for machines\n\n")
     data = builder(

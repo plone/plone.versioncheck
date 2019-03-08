@@ -6,7 +6,7 @@ import pytest
 import sys
 
 
-help_output = '''
+help_output = """
 usage: py.test [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-m] [--no-cache] [-b]
                [-o [OUTPUT]] [--no-colors] [--debug-limit DEBUG_LIMIT]
                [buildout]
@@ -51,19 +51,19 @@ States and color codes:
   [a] Annotation (gray)
 
 Color of package name helps to indicate overall state of a package.
-'''  # NOQA: E501
+"""  # NOQA: E501
 
 
 def test_script_help(capsys):
     with pytest.raises(SystemExit):
-        sys.argv = ['versioncheck', '--help']
+        sys.argv = ["versioncheck", "--help"]
         result = run()
         out, err = capsys.readouterr()
         assert result is None
         assert out == help_output
 
 
-json_output = '''{
+json_output = """{
 "collective.quickupload": {
     "versions": [
         {
@@ -133,11 +133,11 @@ json_output = '''{
     "state": "In"
 }
 }
-'''
+"""
 
 
 def test_script_machine(capsys):
-    sys.argv = ['versioncheck', '-m']
+    sys.argv = ["versioncheck", "-m"]
     result = run()
     out, err = capsys.readouterr()
     assert result is None
@@ -145,7 +145,7 @@ def test_script_machine(capsys):
 
 
 def test_script_browser(capsys):
-    sys.argv = ['versioncheck', '-b']
+    sys.argv = ["versioncheck", "-b"]
     result = run()
     out, err = capsys.readouterr()
     assert result is None
@@ -153,7 +153,7 @@ def test_script_browser(capsys):
 
 
 def test_script_pypi(capsys):
-    sys.argv = ['versioncheck', '-p']
+    sys.argv = ["versioncheck", "-p"]
     result = run()
     out, err = capsys.readouterr()
     assert result is None
@@ -161,7 +161,7 @@ def test_script_pypi(capsys):
 
 
 def test_script_ignore_tracking(capsys):
-    sys.argv = ['versioncheck', '-i']
+    sys.argv = ["versioncheck", "-i"]
     result = run()
     out, err = capsys.readouterr()
     assert result is None
@@ -169,7 +169,7 @@ def test_script_ignore_tracking(capsys):
 
 
 def test_script_ignore_tracking_pypi(capsys):
-    sys.argv = ['versioncheck', '-p', '-i']
+    sys.argv = ["versioncheck", "-p", "-i"]
     result = run()
     out, err = capsys.readouterr()
     assert result is None

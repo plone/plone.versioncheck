@@ -4,6 +4,9 @@ Changelog
 1.6.11 (unreleased)
 -------------------
 
+- Use pure black as code style.
+  [jensens]
+
 - Test on Python 3.7
   [jensens]
 
