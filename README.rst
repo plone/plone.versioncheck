@@ -9,6 +9,9 @@
 Checks pinned versions with overrides in a cascaded buildout
 =============================================================================
 
+.. image:: https://travis-ci.org/plone/plone.versioncheck.svg?branch=master
+    :target: https://travis-ci.org/plone/plone.versioncheck
+
 .. image:: https://coveralls.io/repos/github/plone/plone.versioncheck/badge.svg?branch=master
    :target: https://coveralls.io/github/plone/plone.versioncheck?branch=master
 
