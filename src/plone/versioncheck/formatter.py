@@ -85,7 +85,7 @@ def builder(
 
         # check excludes
         def match_patterns(filepath):
-            for pattern in exclude_cfgs:
+            for pattern in exclude_cfgs or []:
                 if fnmatch(filepath, pattern):
                     return True
             return False
