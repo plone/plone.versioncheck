@@ -75,7 +75,7 @@ def test_check():
     name = u"demo"
     responses.add(
         responses.GET,
-        "{0}/{1}/json".format(PYPI_URL, name),
+        "{url}/pypi/{name}/json".format(url=PYPI_URL, name=name),
         content_type="application/json",
         body=demo_json,
     )

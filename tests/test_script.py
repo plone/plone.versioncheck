@@ -29,6 +29,9 @@ optional arguments:
                         lookup from PyPI)
   -i, --ignore-tracking
                         ignore tracking file (if present)
+  -e EXCLUDE_CFG, --exclude-cfg EXCLUDE_CFG
+                        exclude in listing when cfg-filename pattern matches
+                        (fnmatch) the given expression
   -m, --machine         show as machine readable output (json)
   --no-cache            do not use a cache for PyPI
   -b, --browser         show as html for webbrowser
@@ -152,12 +155,12 @@ def test_script_browser(capsys):
     # assert out = browser_output
 
 
-def test_script_pypi(capsys):
-    sys.argv = ["versioncheck", "-p"]
-    result = run()
-    out, err = capsys.readouterr()
-    assert result is None
-    # assert out = browser_output
+# def test_script_pypi(capsys):
+#     sys.argv = ["versioncheck", "-p"]
+#     result = run()
+#     out, err = capsys.readouterr()
+#     assert result is None
+#     # assert out = browser_output
 
 
 def test_script_ignore_tracking(capsys):
