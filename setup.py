@@ -19,6 +19,8 @@ setup(
     # https://pypi.python.org/pypi?:action=list_classifiers
     classifiers=[
         'Development Status :: 5 - Production/Stable',
+        'Framework :: Buildout :: Extension',
+        'Framework :: Buildout :: Recipe',
         'Framework :: Buildout',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v2 (GPLv2)',

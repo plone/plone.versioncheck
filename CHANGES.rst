@@ -4,6 +4,9 @@ Changelog
 1.6.11 (unreleased)
 -------------------
 
+- Test on Python 3.7
+  [jensens]
+
 - Fix PyPI url and add output of URL in case of a problem.
   [jensens]
 
