@@ -1,7 +1,7 @@
 Changelog
 =========
 
-1.7.0 (unreleased)
+1.7.0 (2019-03-08)
 ------------------
 
 - Feature: Offers exclude pattern matching for cfg-files.
