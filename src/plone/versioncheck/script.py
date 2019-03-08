@@ -80,7 +80,10 @@ parser.add_argument(
 parser.add_argument(
     "-e",
     "--exclude-cfg",
-    help="exclude in listing if cfg-filename globs the given expression",
+    help=(
+        "exclude in listing when cfg-filename pattern matches (fnmatch) the "
+        "given expression"
+    ),
     action="append",
 )
 parser.add_argument(

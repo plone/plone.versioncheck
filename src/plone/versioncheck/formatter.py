@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function
 from collections import OrderedDict
+from fnmatch import fnmatch
 from jinja2 import Environment
 from jinja2 import PackageLoader
 from plone.versioncheck import analyser
@@ -81,6 +82,17 @@ def builder(
 
     for nidx, name in enumerate(names):
         current_pkg = pkgs.get(name, {})
+
+        # check excludes
+        def match_patterns(filepath):
+            for pattern in exclude_cfgs:
+                if fnmatch(filepath, pattern):
+                    return True
+            return False
+
+        if list(filter(match_patterns, current_pkg)):
+            continue
+
         record = dict()
         versions = record["versions"] = list()
         unpinned = False
@@ -177,8 +189,6 @@ def builder(
             and len(record["versions"]) == 1
         ):
             continue
-        for version in record["versions"]:
-            pass
         result[name] = record
     return result
 
@@ -188,6 +198,7 @@ def human(
     newer_only=False,
     newer_orphaned_only=False,
     limit=None,
+    exclude_cfgs=[],
     show_requiredby=False,
 ):
     color_init()
@@ -196,6 +207,7 @@ def human(
         pkgsinfo,
         newer_only=newer_only,
         newer_orphaned_only=newer_orphaned_only,
+        exclude_cfgs=exclude_cfgs,
         limit=limit,
     )
     termx, termy = get_terminal_size()
@@ -243,9 +255,8 @@ def json_serial(obj):
     """JSON serializer for objects not serializable by default json code"""
 
     if isinstance(obj, datetime.date):
-        serial = obj.isoformat()
-        return serial
-    raise TypeError("Type not serializable")
+        return obj.isoformat()
+    raise TypeError("Type not serializable to JSON")
 
 
 def browser(
@@ -253,6 +264,7 @@ def browser(
     newer_only=False,
     newer_orphaned_only=False,
     limit=None,
+    exclude_cfgs=[],
     show_requiredby=False,
     show_release_dates=False,
     file=sys.stdout,
@@ -263,6 +275,7 @@ def browser(
         pkgsinfo,
         newer_only=newer_only,
         newer_orphaned_only=newer_orphaned_only,
+        exclude_cfgs=exclude_cfgs,
         limit=limit,
     )
     template = jenv.get_template("browser.jinja")
@@ -273,13 +286,19 @@ def browser(
 
 
 def machine(
-    pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None, file=sys.stdout
+    pkgsinfo,
+    newer_only=False,
+    newer_orphaned_only=False,
+    limit=None,
+    file=sys.stdout,
+    exclude_cfgs=[],
 ):
     sys.stderr.write("\nReport for machines\n\n")
     data = builder(
         pkgsinfo,
         newer_only=newer_only,
         newer_orphaned_only=newer_orphaned_only,
+        exclude_cfgs=exclude_cfgs,
         limit=limit,
     )
     print(json.dumps(data, indent=4, default=json_serial), file=file)

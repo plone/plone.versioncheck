@@ -1,8 +1,11 @@
 Changelog
 =========
 
-1.6.11 (unreleased)
--------------------
+1.7.0 (unreleased)
+------------------
+
+- Feature: Offers exclude pattern matching for cfg-files.
+  [jensens]
 
 - Use pure black as code style.
   [jensens]

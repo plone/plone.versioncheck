@@ -84,50 +84,54 @@ commandline
 
 ::
 
-    usage: versioncheck [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-m] [--no-cache] [-b]
-                        [-o [OUTPUT]] [--no-colors] [--debug-limit DEBUG_LIMIT]
-                        [buildout]
+  usage: versioncheck [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-e EXCLUDE_CFG] [-m]
+                      [--no-cache] [-b] [-o [OUTPUT]] [--no-colors]
+                      [--debug-limit DEBUG_LIMIT]
+                      [buildout]
 
-    Fetch information about pinned versions and its overrides in simple and complex/cascaded buildouts.
+  Fetch information about pinned versions and its overrides in simple and complex/cascaded buildouts.
 
-    positional arguments:
-      buildout              path to buildout.cfg or other *.cfg file
+  positional arguments:
+    buildout              path to buildout.cfg or other *.cfg file
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      -p, --pypi            check PyPI for newer versions
-      -n, --newer           display only packages with newer version than active
-      -N, --newer-orphaned  display orphaned packages only when newer versions
-                            available
-      -r, --required-by     show information about requirements (only if tracking
-                            file is available)
-      -d, --show-release-dates
-                            show information about release dates (only for package
-                            lookup from PyPI)
-      -i, --ignore-tracking
-                            ignore tracking file (if present)
-      -m, --machine         show as machine readable output (json)
-      --no-cache            do not use a cache for PyPI
-      -b, --browser         show as html for webbrowser
-      -o [OUTPUT], --output [OUTPUT]
-                            safe output to output-file
-      --no-colors           do not show colors
-      --debug-limit DEBUG_LIMIT
-                            Limit the number of PyPI versions fetched for
-                            debugging
+  optional arguments:
+    -h, --help            show this help message and exit
+    -p, --pypi            check PyPI for newer versions
+    -n, --newer           display only packages with newer version than active
+    -N, --newer-orphaned  display orphaned packages only when newer versions
+                          available
+    -r, --required-by     show information about requirements (only if tracking
+                          file is available)
+    -d, --show-release-dates
+                          show information about release dates (only for package
+                          lookup from PyPI)
+    -i, --ignore-tracking
+                          ignore tracking file (if present)
+    -e EXCLUDE_CFG, --exclude-cfg EXCLUDE_CFG
+                          exclude in listing when cfg-filename pattern matches
+                          (fnmatch) the given expression
+    -m, --machine         show as machine readable output (json)
+    --no-cache            do not use a cache for PyPI
+    -b, --browser         show as html for webbrowser
+    -o [OUTPUT], --output [OUTPUT]
+                          safe output to output-file
+    --no-colors           do not show colors
+    --debug-limit DEBUG_LIMIT
+                          Limit the number of PyPI versions fetched for
+                          debugging
 
-    States and color codes:
-      [A]ctive (white)
-      [D]evelop (green)
-      [O]rphaned (magenta)
-      [I]nherited (older or same versions are gray, newer are yellow)
-      [U]pdate of final release on PyPI available (cyan)
-      [P]rerelease update on PyPI available (blue)
-      [X] unpinned (red)
-      [r] Requirement (gray)
-      [a] Annotation (gray)
+  States and color codes:
+    [A]ctive (white)
+    [D]evelop (green)
+    [O]rphaned (magenta)
+    [I]nherited (older or same versions are gray, newer are yellow)
+    [U]pdate of final release on PyPI available (cyan)
+    [P]rerelease update on PyPI available (blue)
+    [X] unpinned (red)
+    [r] Requirement (gray)
+    [a] Annotation (gray)
 
-    Color of package name helps to indicate overall state of a package.
+  Color of package name helps to indicate overall state of a package.
 
 
 Files created
