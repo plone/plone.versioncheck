@@ -5,23 +5,29 @@ from plone.versioncheck.formatter import browser
 from plone.versioncheck.formatter import machine
 
 
-pkgsinfo = {'pkgs': {
-    'collective.quickupload': OrderedDict([
-        ('foo.cfg', {'v': '1.5.8', 'a': ''}),
-        ('baz.cfg', {'v': '1.5.2', 'a': ''})
-    ]),
-    'ipython': OrderedDict([('buildout.cfg', {'v': '5.3.0', 'a': ''})]),
-    'lazy': OrderedDict([('buildout.cfg', {'v': '1.0', 'a': ''})]),
-    'products.cmfcore': OrderedDict([
-        ('buildout.cfg', {'v': '2.1.1', 'a': '\nJust a Test Case\nwith multiple lines'}),  # NOQA: E501
-        ('bar.cfg', {'v': '2.2.0', 'a': ''}),
-        ('foo.cfg', {'v': '3.0.1', 'a': ''}),
-        ('baz.cfg', {'v': '2.2.10', 'a': ''})
-    ]),
-}}
+pkgsinfo = {
+    "pkgs": {
+        "collective.quickupload": OrderedDict(
+            [("foo.cfg", {"v": "1.5.8", "a": ""}), ("baz.cfg", {"v": "1.5.2", "a": ""})]
+        ),
+        "ipython": OrderedDict([("buildout.cfg", {"v": "5.3.0", "a": ""})]),
+        "lazy": OrderedDict([("buildout.cfg", {"v": "1.0", "a": ""})]),
+        "products.cmfcore": OrderedDict(
+            [
+                (
+                    "buildout.cfg",
+                    {"v": "2.1.1", "a": "\nJust a Test Case\nwith multiple lines"},
+                ),  # NOQA: E501
+                ("bar.cfg", {"v": "2.2.0", "a": ""}),
+                ("foo.cfg", {"v": "3.0.1", "a": ""}),
+                ("baz.cfg", {"v": "2.2.10", "a": ""}),
+            ]
+        ),
+    }
+}
 
 
-json_output = '''{
+json_output = """{
 "collective.quickupload": {
     "versions": [
         {
@@ -91,7 +97,7 @@ json_output = '''{
     "state": "In"
 }
 }
-'''
+"""
 
 
 def test_json_formatter(capsys):
@@ -99,12 +105,12 @@ def test_json_formatter(capsys):
     out, err = capsys.readouterr()
     # Seems that stdout is not correctly captured
     assert result is None
-    assert out == ''
-    assert err == '\nReport for machines\n\n'
+    assert out == ""
+    assert err == "\nReport for machines\n\n"
     # assert out == json_output
 
 
-browser_output = '''<html>
+browser_output = """<html>
 <head>
   <meta charset="utf-8">
   <title>plone.versioncheck</title>
@@ -292,7 +298,7 @@ with multiple lines<br /></td>
   </tbody>
 </table>
 </body>
-</html>'''  # NOQA: E501
+</html>"""  # NOQA: E501
 
 
 def test_browser_formatter(capsys):
@@ -300,6 +306,6 @@ def test_browser_formatter(capsys):
     out, err = capsys.readouterr()
     # Seems that stdout is not correctly captured
     assert result is None
-    assert out == ''
-    assert err == '\nReport for browsers\n\n'
+    assert out == ""
+    assert err == "\nReport for browsers\n\n"
     # assert out == browser_output  # Why is this not working

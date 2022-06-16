@@ -1,10 +1,54 @@
 Changelog
 =========
 
-1.6.8 (unreleased)
+1.7.1 (unreleased)
 ------------------
 
 - Nothing changed yet.
+
+
+1.7.0 (2019-03-08)
+------------------
+
+- Feature: Offers exclude pattern matching for cfg-files.
+  [jensens]
+
+- Use pure black as code style.
+  [jensens]
+
+- Test on Python 3.7
+  [jensens]
+
+- Fix PyPI url and add output of URL in case of a problem.
+  [jensens]
+
+
+1.6.10 (2018-08-20)
+-------------------
+
+- Fixes another bug in ``find_relative``.
+  [jensens]
+
+
+1.6.9 (2018-08-20)
+------------------
+
+- Fixes bug in ``find_relative`` introducued in last release.
+  [jensens]
+
+
+1.6.8 (2018-08-14)
+------------------
+
+Bug fixes:
+
+- Better handling of relative paths as entry, like ``project/foo/dev.cfg``.
+  [jensens]
+
+- If a file does not extend any other file,
+  the return statement was returning only one parameter,
+  while callers expected 2.
+  [gforcada]
 
 
 1.6.7 (2018-03-26)
@@ -12,22 +56,12 @@ Changelog
 
 Bug fixes:
 
-- Fix: Do not trust on setuptools internals. 
+- Fix: Do not trust on setuptools internals.
   Works now with newest setuptools.
   [jensens]
 
 1.6.6 (2018-01-26)
 ------------------
-
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
-Bug fixes:
 
 - Fixed: Inherited extends with same name showed up as same.
   Now show relative to basedir if possible, else full.

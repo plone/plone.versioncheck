@@ -31,16 +31,16 @@ Color of package name helps to indicate overall state of a package.
 
 
 parser = ArgumentParser(
-    description='Fetch information about pinned versions and its overrides in '
-                'simple and complex/cascaded buildouts.',
+    description="Fetch information about pinned versions and its overrides in "
+    "simple and complex/cascaded buildouts.",
     epilog=EPILOG,
     formatter_class=RawDescriptionHelpFormatter,
 )
 parser.add_argument(
-    'buildout',
-    nargs='?',
-    default='buildout.cfg',
-    help='path to buildout.cfg or other *.cfg file'
+    "buildout",
+    nargs="?",
+    default="buildout.cfg",
+    help="path to buildout.cfg or other *.cfg file",
 )
 parser.add_argument(
     '-c',
@@ -56,74 +56,72 @@ parser.add_argument(
     action='store_true'
 )
 parser.add_argument(
-    '-n',
-    '--newer',
-    help='display only packages with newer version than active',
-    action='store_true'
+    "-n",
+    "--newer",
+    help="display only packages with newer version than active",
+    action="store_true",
 )
 parser.add_argument(
-    '-N',
-    '--newer-orphaned',
-    help='display orphaned packages only when newer versions available',
-    action='store_true'
+    "-N",
+    "--newer-orphaned",
+    help="display orphaned packages only when newer versions available",
+    action="store_true",
 )
 parser.add_argument(
-    '-r',
-    '--required-by',
-    help='show information about requirements (only if tracking file is '
-         'available)',
+    "-r",
+    "--required-by",
+    help="show information about requirements (only if tracking file is " "available)",
     default=False,
-    action='store_true'
+    action="store_true",
 )
 parser.add_argument(
-    '-d',
-    '--show-release-dates',
-    help='show information about release dates '
-         '(only for package lookup from PyPI)',
+    "-d",
+    "--show-release-dates",
+    help="show information about release dates " "(only for package lookup from PyPI)",
     default=False,
-    action='store_true',
-    dest='show_release_dates'
+    action="store_true",
+    dest="show_release_dates",
 )
 parser.add_argument(
-    '-i',
-    '--ignore-tracking',
-    help='ignore tracking file (if present)',
-    action='store_true'
+    "-i",
+    "--ignore-tracking",
+    help="ignore tracking file (if present)",
+    action="store_true",
 )
 parser.add_argument(
-    '-m',
-    '--machine',
-    help='show as machine readable output (json)',
-    action='store_true'
+    "-e",
+    "--exclude-cfg",
+    help=(
+        "exclude in listing when cfg-filename pattern matches (fnmatch) the "
+        "given expression"
+    ),
+    action="append",
 )
 parser.add_argument(
-    '--no-cache',
-    help='do not use a cache for PyPI',
-    action='store_true'
+    "-m",
+    "--machine",
+    help="show as machine readable output (json)",
+    action="store_true",
 )
 parser.add_argument(
-    '-b',
-    '--browser',
-    help='show as html for webbrowser',
-    action='store_true'
+    "--no-cache", help="do not use a cache for PyPI", action="store_true"
 )
 parser.add_argument(
-    '-o',
-    '--output',
-    help='safe output to output-file',
-    nargs='?',
-    type=argparse.FileType('w'),
-    default=sys.stdout
+    "-b", "--browser", help="show as html for webbrowser", action="store_true"
 )
 parser.add_argument(
-    '--no-colors',
-    help='do not show colors',
-    action='store_true'
+    "-o",
+    "--output",
+    help="safe output to output-file",
+    nargs="?",
+    type=argparse.FileType("w"),
+    default=sys.stdout,
 )
+parser.add_argument("--no-colors", help="do not show colors", action="store_true")
 parser.add_argument(
-    '--debug-limit',
+    "--debug-limit",
     type=int,
-    help='Limit the number of PyPI versions fetched for debugging'
+    help="Limit the number of PyPI versions fetched for debugging",
 )
 
 
@@ -152,6 +150,7 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             file=args.output,
         )
     elif args.browser:
@@ -160,6 +159,7 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
             show_release_dates=args.show_release_dates,
             file=args.output,
@@ -171,5 +171,6 @@ def run():
             newer_only=args.newer,
             newer_orphaned_only=args.newer_orphaned,
             limit=args.debug_limit,
+            exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
         )
