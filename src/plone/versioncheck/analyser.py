@@ -33,7 +33,7 @@ def is_cfgidx_newer(pkginfo, target_idx):
             continue
         if idx == 0:
             vcur = parse_version(version)
-        if idx == target_idx:
+        if idx == target_idx and vcur:
             return parse_version(version) > vcur
     return False
 
