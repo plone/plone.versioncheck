@@ -10,6 +10,9 @@ Changelog
 - Fix output of report for humans to actually show data in the terminal.
   [thet]
 
+- Format output for humans as table.
+  [thet]
+
 
 1.7.0 (2019-03-08)
 ------------------
