@@ -4,7 +4,8 @@ Changelog
 1.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not break in analyzing phase when vcur is None.
+  [thet]
 
 
 1.7.0 (2019-03-08)
