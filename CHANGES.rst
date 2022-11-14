@@ -4,7 +4,14 @@ Changelog
 1.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Do not break in analyzing phase when vcur is None.
+  [thet]
+
+- Fix output of report for humans to actually show data in the terminal.
+  [thet]
+
+- Format output for humans as table.
+  [thet]
 
 
 1.7.0 (2019-03-08)

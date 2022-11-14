@@ -211,10 +211,14 @@ def human(
         limit=limit,
     )
     termx, termy = get_terminal_size()
+    items = data.items()
+    max_name_length = max([len(name) for name, record in items])
+
     for name, record in data.items():
-        print(color_by_state(record["state"]) + name)
+        sys.stderr.write(color_by_state(record["state"]) + name)
+        sys.stderr.write(" " * (max_name_length - len(name)))
         for version in record["versions"]:
-            print(
+            sys.stderr.write(
                 " " * 4
                 + color_by_state(version["state"])
                 + version["version"]
@@ -227,7 +231,7 @@ def human(
             )
             if version.get("annotation", None):
                 indent = (pkgsinfo["ver_maxlen"] + 5) * " " + "a "
-                print(
+                sys.stderr.write(
                     color_dimmed()
                     + textwrap.fill(
                         version["annotation"],
@@ -240,7 +244,7 @@ def human(
         if show_requiredby and record.get("required_by", False):
             req = " ".join(sorted(record.get("required_by")))
             indent = (pkgsinfo["ver_maxlen"] + 5) * " " + "r "
-            print(
+            sys.stderr.write(
                 color_dimmed()
                 + textwrap.fill(
                     req,
@@ -249,6 +253,7 @@ def human(
                     subsequent_indent=indent,
                 )
             )
+        sys.stderr.write("\n")
 
 
 def json_serial(obj):
