@@ -4,7 +4,10 @@ Changelog
 1.7.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ignore invalid versions.
+  Needed for ``setuptools`` 66 and higher when checking a package that has invalid versions on PyPI.
+  Fixes `issue 52 <https://github.com/plone/plone.versioncheck/issues/52>`_.
+  [maurits]
 
 
 1.7.0 (2019-03-08)
