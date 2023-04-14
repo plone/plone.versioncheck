@@ -39,7 +39,7 @@ def is_cfgidx_newer(pkginfo, target_idx):
 
 
 def is_cfg_newer(pkginfo):
-    """ checks if one of the cfg is newer
+    """checks if one of the cfg is newer
 
     returns boolean
     """
