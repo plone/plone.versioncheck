@@ -74,7 +74,13 @@ def check(name, version, session):  # noqa: C901
     releases = sorted(data["releases"])
     for release in releases:
         # major check (overall)
-        rel_v = parse_version(release)
+        try:
+            rel_v = parse_version(release)
+        except Exception:
+            # likely pkg_resources.extern.packaging.version.InvalidVersion
+            # but really any exception can be ignored.
+            # See https://github.com/plone/plone.versioncheck/issues/52
+            continue
         if rel_v <= version:
             continue
         rel_vtuple = mmbp_tuple(rel_v)

@@ -3,7 +3,7 @@ from setuptools import find_packages
 from setuptools import setup
 
 
-version = '1.7.1.dev0'
+version = "1.7.1.dev0"
 
 long_description = "{0}\n\n{1}".format(
     open("README.rst").read(), open("CHANGES.rst").read()
@@ -28,6 +28,10 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python",
         "Topic :: Software Development :: Build Tools",
         "Topic :: Software Development :: Quality Assurance",
