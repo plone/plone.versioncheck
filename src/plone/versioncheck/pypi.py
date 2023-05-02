@@ -42,10 +42,16 @@ def check(name, version, session):  # noqa: C901
         ]
     )
 
+    if not version:
+        return False, "Empty version."
+
     # parse version to test against:
     try:
         version = parse_version(version)
-    except TypeError:
+    except Exception:
+        # likely pkg_resources.extern.packaging.version.InvalidVersion
+        # or TypeError, but really any exception can be ignored.
+        # See https://github.com/plone/plone.versioncheck/issues/52
         return False, "Version broken/ not checkable."
     try:
         vtuple = mmbp_tuple(version)

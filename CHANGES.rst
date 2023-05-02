@@ -14,7 +14,9 @@ New features:
 
 Bug fixes:
 
-- *add item here*
+- Catch empty version and ignore invalid versions in more places.
+  Needed when a package is explicitly unpinned, for example ``Zope =``.
+  [maurits]
 
 
 1.8.0 (2023-04-15)
