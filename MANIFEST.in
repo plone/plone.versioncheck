@@ -7,4 +7,5 @@ include *.rst
 include *.sh
 include tox.ini
 include .coveragerc
-
+include .editorconfig
+include buildout.d/spam.cfg
