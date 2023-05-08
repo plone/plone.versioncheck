@@ -4,14 +4,6 @@ Changelog
 1.8.1 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
 - Catch empty version and ignore invalid versions in more places.
