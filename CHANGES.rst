@@ -4,17 +4,10 @@ Changelog
 1.8.2 (unreleased)
 ------------------
 
-Breaking changes:
-
-- *add item here*
-
-New features:
-
-- *add item here*
-
 Bug fixes:
 
-- *add item here*
+- Fix for Python 3.12: configparser removed "readfp()"
+  [petschki]
 
 
 1.8.1 (2023-05-08)
