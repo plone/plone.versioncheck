@@ -71,7 +71,11 @@ def _extract_versions_section(  # NOQA: C901
         config.read(filename)
     elif "://" in filename:
         resp = session.get(filename)
-        config.readfp(StringIO(resp.text))
+        try:
+            config.readfp(StringIO(resp.text))
+        except AttributeError:
+            # py3.12 removed readfp()
+            config.read_file(StringIO(resp.text))
         if resp.from_cache:
             sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:
