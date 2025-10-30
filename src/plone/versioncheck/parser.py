@@ -1,18 +1,16 @@
+import contextlib
+import os.path
+import sys
 from collections import OrderedDict
-from plone.versioncheck.utils import find_relative
-from plone.versioncheck.utils import requests_session
+from configparser import ConfigParser, NoOptionError, NoSectionError
+from io import StringIO
 from typing import Any, Iterator
+
+import requests
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
-import contextlib
-import os.path
-import requests
-import sys
-from configparser import ConfigParser
-from configparser import NoOptionError
-from configparser import NoSectionError
-from io import StringIO
+from plone.versioncheck.utils import find_relative, requests_session
 
 
 @contextlib.contextmanager
@@ -33,7 +31,9 @@ def _extract_versions_section(  # NOQA: C901
     relative: str | None = None,
     version_section_name: str | None = None,
     versionannotation_section_name: str = "versionannotations",
-) -> tuple[OrderedDict[str, OrderedDict[str, str]], OrderedDict[str, OrderedDict[str, str]]]:
+) -> tuple[
+    OrderedDict[str, OrderedDict[str, str]], OrderedDict[str, OrderedDict[str, str]]
+]:
     """Extract versions section from buildout file recursively"""
     if base_dir is None:
         base_dir = os.path.dirname(os.path.abspath(filename))
@@ -139,7 +139,9 @@ def _extract_versions_section(  # NOQA: C901
     return version_sections, annotations
 
 
-def parse(buildout_filename: str, nocache: bool = False) -> dict[str, OrderedDict[str, dict[str, Any]]]:
+def parse(
+    buildout_filename: str, nocache: bool = False
+) -> dict[str, OrderedDict[str, dict[str, Any]]]:
     """Parse buildout configuration files and extract version information"""
     sys.stderr.write("Parsing buildout files:")
     if nocache:

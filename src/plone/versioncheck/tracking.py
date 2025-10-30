@@ -1,7 +1,9 @@
 # inspired partly by dumppickedversions
-from plone.versioncheck.utils import find_relative
 from typing import Any, Callable
+
 from zc.buildout import easy_install
+
+from plone.versioncheck.utils import find_relative
 
 # zc.buildout may vendorize its own copy of pkg_resources
 # Define DEVELOP_DIST locally as recommended in issue #57
@@ -12,7 +14,6 @@ import logging
 import os
 import sys
 import time
-
 
 logger = easy_install.logger
 

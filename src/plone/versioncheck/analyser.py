@@ -1,6 +1,8 @@
 from collections import OrderedDict
-from packaging.version import parse as parse_version
 from typing import Any
+
+from packaging.version import InvalidVersion
+from packaging.version import parse as parse_version
 
 
 def uptodate_analysis(
@@ -34,10 +36,14 @@ def is_cfgidx_newer(pkginfo: OrderedDict[str, dict[str, Any]], target_idx: int) 
         version = pkginfo[key]["v"]
         if not version:
             continue
-        if idx == 0:
-            vcur = parse_version(version)
-        if idx == target_idx:
-            return parse_version(version) > vcur
+        try:
+            if idx == 0:
+                vcur = parse_version(version)
+            if idx == target_idx:
+                return parse_version(version) > vcur
+        except (InvalidVersion, TypeError):
+            # Skip invalid versions (e.g., ">= 1.1" or other non-PEP 440 versions)
+            continue
     return False
 
 

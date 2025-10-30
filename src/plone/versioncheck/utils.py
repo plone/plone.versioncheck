@@ -1,20 +1,17 @@
-from cachecontrol import CacheControl
-from cachecontrol.caches import FileCache
-from colorama import Fore
-from colorama import init as colorama_init
-from colorama import Style
-from typing import Any
-
 import os
 import platform
-import requests
 import shlex
 import struct
 import subprocess
 import sys
-from urllib.parse import urlparse
-from urllib.parse import urlunparse
+from typing import Any, Union
+from urllib.parse import urlparse, urlunparse
 
+import requests
+from cachecontrol import CacheControl
+from cachecontrol.caches import FileCache
+from colorama import Fore, Style
+from colorama import init as colorama_init
 
 COLORED = True
 
@@ -69,7 +66,7 @@ def dots(value: str, max: int) -> str:
 CACHE_FILENAME = ".plone.versioncheck.cache"
 
 
-def requests_session(nocache: bool = False) -> requests.Session | CacheControl:
+def requests_session(nocache: bool = False) -> Union[requests.Session, CacheControl]:
     """Create a requests session with optional caching"""
     if nocache:
         return requests.Session()
@@ -118,8 +115,7 @@ def get_terminal_size() -> tuple[int, int]:
 def _get_terminal_size_windows() -> tuple[int, int] | None:
     """Get terminal size on Windows"""
     try:
-        from ctypes import create_string_buffer
-        from ctypes import windll
+        from ctypes import create_string_buffer, windll
 
         # stdin handle is -10
         # stdout handle is -11

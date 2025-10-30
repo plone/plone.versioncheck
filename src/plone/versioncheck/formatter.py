@@ -1,20 +1,21 @@
-from collections import OrderedDict
-from fnmatch import fnmatch
-from jinja2 import Environment
-from jinja2 import PackageLoader
-from plone.versioncheck import analyser
-from plone.versioncheck.utils import color_by_state
-from plone.versioncheck.utils import color_dimmed
-from plone.versioncheck.utils import color_init
-from plone.versioncheck.utils import dots
-from plone.versioncheck.utils import get_terminal_size
-from typing import Any, TextIO
-
 import datetime
 import json
 import sys
 import textwrap
+from collections import OrderedDict
+from fnmatch import fnmatch
+from typing import Any, TextIO
 
+from jinja2 import Environment, PackageLoader
+
+from plone.versioncheck import analyser
+from plone.versioncheck.utils import (
+    color_by_state,
+    color_dimmed,
+    color_init,
+    dots,
+    get_terminal_size,
+)
 
 jenv = Environment(loader=PackageLoader("plone.versioncheck", "tpl"))
 
@@ -148,9 +149,9 @@ def builder(
                     "version": current_tracked[0],
                     "state": "X",
                     "description": "unpinned",
-                    "release_date": current_tracked[2]
-                    if len(current_tracked) >= 3
-                    else "",  # NOQA: E501
+                    "release_date": (
+                        current_tracked[2] if len(current_tracked) >= 3 else ""
+                    ),  # NOQA: E501
                 }
             )
             unpinned = True

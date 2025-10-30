@@ -1,14 +1,13 @@
-from collections import namedtuple
-from collections import OrderedDict
-from packaging.version import parse as parse_version
-from packaging.version import Version
-from plone.versioncheck.utils import requests_session
+import datetime
+import sys
+from collections import OrderedDict, namedtuple
 from typing import Any
 
-import datetime
 import requests
-import sys
+from packaging.version import Version
+from packaging.version import parse as parse_version
 
+from plone.versioncheck.utils import requests_session
 
 PYPI_URL = "https://pypi.org"
 

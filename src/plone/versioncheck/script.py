@@ -1,17 +1,11 @@
-from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
-from plone.versioncheck import formatter
-from plone.versioncheck import tracking
-from plone.versioncheck import utils
-from plone.versioncheck.parser import parse
-from plone.versioncheck.pypi import check_all
-from plone.versioncheck.pypi import update_pkgs_info
-from plone.versioncheck.pypi import update_tracking_info
-from typing import Any
-
 import argparse
 import sys
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from typing import Any
 
+from plone.versioncheck import formatter, tracking, utils
+from plone.versioncheck.parser import parse
+from plone.versioncheck.pypi import check_all, update_pkgs_info, update_tracking_info
 
 EPILOG = """\
 States and color codes:

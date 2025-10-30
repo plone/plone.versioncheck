@@ -1,15 +1,13 @@
-
-from collections import OrderedDict
-from plone.versioncheck.analyser import is_cfg_newer
-from plone.versioncheck.analyser import is_pypi_newer
-from plone.versioncheck.pypi import Release
-
 import datetime
+from collections import OrderedDict
+
+from plone.versioncheck.analyser import is_cfg_newer, is_pypi_newer
+from plone.versioncheck.pypi import Release
 
 
 def test_is_cfg_newer():
     pkginfo = {}
-    assert is_cfg_newer(pkginfo) is None
+    assert is_cfg_newer(pkginfo) is False
 
     pkginfo = (
         OrderedDict(
@@ -53,7 +51,7 @@ def test_is_pypi_newer():
         [
             (
                 "major",
-                Release(version=u"1.0.0", release_date=datetime.date(1970, 1, 1)),
+                Release(version="1.0.0", release_date=datetime.date(1970, 1, 1)),
             ),  # NOQA: E501
             ("minor", None),
             ("bugfix", None),
@@ -69,7 +67,7 @@ def test_is_pypi_newer():
             ("major", None),
             (
                 "minor",
-                Release(version=u"1.1.0", release_date=datetime.date(1970, 1, 1)),
+                Release(version="1.1.0", release_date=datetime.date(1970, 1, 1)),
             ),  # NOQA: E501
             ("bugfix", None),
             ("majorpre", None),
@@ -85,7 +83,7 @@ def test_is_pypi_newer():
             ("minor", None),
             (
                 "bugfix",
-                Release(version=u"1.1.1", release_date=datetime.date(1970, 1, 1)),
+                Release(version="1.1.1", release_date=datetime.date(1970, 1, 1)),
             ),  # NOQA: E501
             ("majorpre", None),
             ("minorpre", None),
@@ -101,7 +99,7 @@ def test_is_pypi_newer():
             ("bugfix", None),
             (
                 "majorpre",
-                Release(version=u"2.0.0.a1", release_date=datetime.date(1970, 1, 1)),
+                Release(version="2.0.0.a1", release_date=datetime.date(1970, 1, 1)),
             ),  # NOQA: E501
             ("minorpre", None),
             ("bugfixpre", None),
@@ -117,7 +115,7 @@ def test_is_pypi_newer():
             ("majorpre", None),
             (
                 "minorpre",
-                Release(version=u"1.2.0.a1", release_date=datetime.date(1970, 1, 1)),
+                Release(version="1.2.0.a1", release_date=datetime.date(1970, 1, 1)),
             ),  # NOQA: E501
             ("bugfixpre", None),
         ]
@@ -133,7 +131,7 @@ def test_is_pypi_newer():
             ("minorpre", None),
             (
                 "bugfixpre",
-                Release(version=u"1.1.2.a1", release_date=datetime.date(1970, 1, 1)),
+                Release(version="1.1.2.a1", release_date=datetime.date(1970, 1, 1)),
             ),
         ]
     )  # NOQA: E501
