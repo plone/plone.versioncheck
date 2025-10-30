@@ -45,14 +45,14 @@ def color_init() -> None:
 def color_by_state(state: str) -> str:
     """Get color code for a given state"""
     if COLORED:
-        return _STATEMAP.get(state, Style.DIM + Fore.RED)
+        return _STATEMAP.get(state, Style.DIM + Fore.RED)  # type: ignore[return-value]
     return ""
 
 
 def color_dimmed() -> str:
     """Get dimmed color code"""
     if COLORED:
-        return Style.DIM + Fore.WHITE
+        return Style.DIM + Fore.WHITE  # type: ignore[return-value]
     return ""
 
 
