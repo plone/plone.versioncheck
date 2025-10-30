@@ -30,3 +30,7 @@ htmlcov/
 _build/
 
 /*.html
+
+# Claude Code files
+.claude/
+CLAUDE.md

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from collections import OrderedDict
 from plone.versioncheck.analyser import is_cfg_newer

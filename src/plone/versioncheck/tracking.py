@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # inspired partly by dumppickedversions
 from pkg_resources import DEVELOP_DIST
 from plone.versioncheck.utils import find_relative

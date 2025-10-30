@@ -1,0 +1,126 @@
+[project]
+name = "plone.versioncheck"
+version = "1.8.3.dev0"
+description = "Checks pinned versions with overrides in a cascaded buildout"
+readme = "README.md"
+authors = [
+    {name = "Jens W. Klein", email = "jens@bluedynamics.com"},
+]
+requires-python = ">=3.10"
+license = {text = "GPL version 2"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Buildout :: Extension",
+    "Framework :: Buildout :: Recipe",
+    "Framework :: Buildout",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Quality Assurance",
+]
+keywords = ["plone", "buildout", "version"]
+dependencies = [
+    "CacheControl[filecache]",
+    "colorama",
+    "jinja2",
+    "requests",
+    "zc.buildout",
+]
+
+[project.urls]
+Source = "https://github.com/plone/plone.versioncheck"
+Issues = "https://github.com/plone/plone.versioncheck/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-remove-stale-bytecode",
+    "pytest-html",
+    "responses",
+]
+typecheck = [
+    "mypy",
+    "types-colorama",
+    "types-requests",
+]
+develop = [
+    "pdbpp",
+    "isort",
+]
+docs = [
+    "Sphinx",
+]
+release = [
+    "zest.releaser[recommended]",
+]
+
+[project.scripts]
+versioncheck = "plone.versioncheck.script:run"
+
+[project.entry-points."zc.buildout.extension"]
+default = "plone.versioncheck.tracking:install"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/plone"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=xml --cov-report=html --cov-report=term --cov-branch --cov-fail-under=60"
+xfail_strict = true
+norecursedirs = ["fixtures"]
+
+[tool.mypy]
+mypy_path = "./src:./tests"
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+check_untyped_defs = true
+explicit_package_bases = true
+
+[[tool.mypy.overrides]]
+module = [
+    "zc.buildout.*",
+    "cachecontrol.*",
+    "jinja2.*",
+]
+ignore_missing_imports = true
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
+
+[tool.black]
+target-version = ["py310"]
+line-length = 88
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.coverage.html]
+directory = "_build/reports/coverage"

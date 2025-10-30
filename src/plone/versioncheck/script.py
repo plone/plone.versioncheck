@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from plone.versioncheck import formatter

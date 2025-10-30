@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from cachecontrol import CacheControl
 from cachecontrol.caches import FileCache
 from colorama import Fore

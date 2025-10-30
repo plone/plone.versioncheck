@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from collections import OrderedDict
 from pkg_resources import parse_version
 from plone.versioncheck.pypi import check
