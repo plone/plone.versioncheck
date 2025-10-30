@@ -5,6 +5,8 @@
 
 Checks pinned versions with overrides in a cascaded buildout
 
+**Requirements:** Python 3.10 or later
+
 ## Features
 
 ### 1. Checks buildouts `[versions]` sections while stepping through the cascaded `extends`
@@ -118,13 +120,10 @@ Color of package name helps to indicate overall state of a package.
 
 ### Files created
 
-If the script was used with the `--pypi` option, a directory `.plone.versioncheck.cache` will be created.
-It contains the cache of the requests to PyPI or external buildout configuration files.
-To clear the cache, remove the directory.
-The caching library uses the expiration headers of the response from PyPI, so even with cache it starts fetching new records.
-
 If the extension was used, a file `.plone.versioncheck.tracked.json` will be created.
-It contains the information from last buildout run.
+It contains the information from last buildout run, including version states and dependency tree.
+
+**Note:** HTTP caching is currently disabled. The performance gains from async concurrent requests (10-50x speedup) far outweigh the caching benefits. Caching may be re-enabled in a future release.
 
 ## Output explained
 
@@ -282,14 +281,55 @@ We appreciate any contribution and if a release is needed to be done on PyPI, pl
 
 ## Development
 
-There must be `python` with `virtualenv` and `pip` available in system path pointing to Python >=3.10.
-Clone the project. Then:
+### Requirements
+
+- Python 3.10 or later
+- [uv](https://github.com/astral-sh/uv) package manager
+
+### Setup
+
+Clone the project and set up the development environment:
 
 ```bash
-./bootstrap.sh
+# Install uv if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
+
+# Create virtual environment
+uv venv --python 3.10
+
+# Activate virtual environment
+source .venv/bin/activate  # Linux/macOS
+# or: .venv\Scripts\activate  # Windows
+
+# Install in development mode with all extras
+uv pip install -e ".[test,typecheck,develop]"
+
+# Install pre-commit hooks
+pre-commit install
 ```
 
-For non-unix systems please read the contents of bootstrap.py and execute the steps manually adapted to your OS.
+### Running Tests
+
+```bash
+# Run all tests with coverage
+pytest
+
+# Run tests for specific module
+pytest tests/test_pypi.py
+
+# Run linting and type checking
+pre-commit run --all-files
+```
+
+### Code Quality
+
+The project uses:
+- **ruff** for linting and formatting
+- **isort** for import sorting (Plone profile)
+- **ty** for type checking
+- **pre-commit** for automated quality checks
+
+Test coverage requirement: 77% minimum (currently ~78%)
 
 ## License
 
