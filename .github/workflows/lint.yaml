@@ -2,7 +2,7 @@ name: Lint
 
 on:
   push:
-    branches: [master, modernize-python3-only]
+    branches: [master]
   pull_request:
   workflow_dispatch:
 
@@ -13,10 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
+      - name: Install dependencies
+        run: uv pip install --system -e .[typecheck]
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1

@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [master, modernize-python3-only]
+    branches: [master]
   pull_request:
   workflow_call:
   workflow_dispatch:
