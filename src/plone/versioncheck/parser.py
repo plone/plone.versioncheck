@@ -1,12 +1,13 @@
-
 from collections import OrderedDict
 from plone.versioncheck.utils import find_relative
 from plone.versioncheck.utils import requests_session
+from typing import Any, Iterator
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
 import contextlib
 import os.path
+import requests
 import sys
 from configparser import ConfigParser
 from configparser import NoOptionError
@@ -15,7 +16,8 @@ from io import StringIO
 
 
 @contextlib.contextmanager
-def nostdout():
+def nostdout() -> Iterator[None]:
+    """Context manager to suppress stdout"""
     save_stdout = sys.stdout
     sys.stdout = StringIO()
     yield
@@ -23,15 +25,16 @@ def nostdout():
 
 
 def _extract_versions_section(  # NOQA: C901
-    session,
-    filename,
-    base_dir=None,
-    version_sections=None,
-    annotations=None,
-    relative=None,
-    version_section_name=None,
-    versionannotation_section_name="versionannotations",
-):
+    session: requests.Session,
+    filename: str,
+    base_dir: str | None = None,
+    version_sections: OrderedDict[str, OrderedDict[str, str]] | None = None,
+    annotations: OrderedDict[str, OrderedDict[str, str]] | None = None,
+    relative: str | None = None,
+    version_section_name: str | None = None,
+    versionannotation_section_name: str = "versionannotations",
+) -> tuple[OrderedDict[str, OrderedDict[str, str]], OrderedDict[str, OrderedDict[str, str]]]:
+    """Extract versions section from buildout file recursively"""
     if base_dir is None:
         base_dir = os.path.dirname(os.path.abspath(filename))
     if version_sections is None:
@@ -136,7 +139,8 @@ def _extract_versions_section(  # NOQA: C901
     return version_sections, annotations
 
 
-def parse(buildout_filename, nocache=False):
+def parse(buildout_filename: str, nocache: bool = False) -> dict[str, OrderedDict[str, dict[str, Any]]]:
+    """Parse buildout configuration files and extract version information"""
     sys.stderr.write("Parsing buildout files:")
     if nocache:
         sys.stderr.write("\n(not using caches)")

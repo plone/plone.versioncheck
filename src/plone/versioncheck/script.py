@@ -7,6 +7,7 @@ from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 from plone.versioncheck.pypi import update_pkgs_info
 from plone.versioncheck.pypi import update_tracking_info
+from typing import Any
 
 import argparse
 import sys
@@ -113,9 +114,10 @@ parser.add_argument(
 )
 
 
-def run():
+def run() -> None:
+    """Main entry point for the versioncheck CLI tool"""
     args = parser.parse_args()
-    pkgsinfo = {}
+    pkgsinfo: dict[str, Any] = {}
     pkgsinfo["pkgs"] = parse(args.buildout)
 
     # retrieve additional informations

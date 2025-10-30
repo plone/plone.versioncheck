@@ -3,6 +3,7 @@ from cachecontrol.caches import FileCache
 from colorama import Fore
 from colorama import init as colorama_init
 from colorama import Style
+from typing import Any
 
 import os
 import platform
@@ -37,24 +38,27 @@ _STATEMAP = {
 }
 
 
-def color_init():
+def color_init() -> None:
+    """Initialize colorama for colored terminal output"""
     if COLORED:
         colorama_init()
 
 
-def color_by_state(state):
+def color_by_state(state: str) -> str:
+    """Get color code for a given state"""
     if COLORED:
         return _STATEMAP.get(state, Style.DIM + Fore.RED)
     return ""
 
 
-def color_dimmed():
+def color_dimmed() -> str:
+    """Get dimmed color code"""
     if COLORED:
         return Style.DIM + Fore.WHITE
     return ""
 
 
-def dots(value, max):
+def dots(value: str, max: int) -> str:
     """ljust, but the dots only"""
     dots = "." * (max - len(value))
     if dots:
@@ -65,13 +69,14 @@ def dots(value, max):
 CACHE_FILENAME = ".plone.versioncheck.cache"
 
 
-def requests_session(nocache=False):
+def requests_session(nocache: bool = False) -> requests.Session | CacheControl:
+    """Create a requests session with optional caching"""
     if nocache:
         return requests.Session()
     return CacheControl(requests.Session(), cache=FileCache(CACHE_FILENAME))
 
 
-def find_relative(extend, relative=""):
+def find_relative(extend: str, relative: str = "") -> tuple[str, str]:
     """the base dir or url and the actual filename as tuple"""
     if "://" in extend:
         parts = list(urlparse(extend))
@@ -89,7 +94,7 @@ def find_relative(extend, relative=""):
 # below copied from https://gist.github.com/jtriley/1108174
 
 
-def get_terminal_size():
+def get_terminal_size() -> tuple[int, int]:
     """getTerminalSize()
     - get width and height of console
     - works on linux,os x,windows,cygwin(windows)
@@ -110,7 +115,8 @@ def get_terminal_size():
     return tuple_xy
 
 
-def _get_terminal_size_windows():
+def _get_terminal_size_windows() -> tuple[int, int] | None:
+    """Get terminal size on Windows"""
     try:
         from ctypes import create_string_buffer
         from ctypes import windll
@@ -140,9 +146,11 @@ def _get_terminal_size_windows():
             return sizex, sizey
     except Exception:
         pass
+    return None
 
 
-def _get_terminal_size_tput():
+def _get_terminal_size_tput() -> tuple[int, int] | None:
+    """Get terminal size using tput"""
     # get terminal width
     # src: http://stackoverflow.com/questions/263890/how-do-i-find-the-width-height-of-a-terminal-window  # noqa
     try:
@@ -151,10 +159,13 @@ def _get_terminal_size_tput():
         return (cols, rows)
     except Exception:
         pass
+    return None
 
 
-def _get_terminal_size_linux():
-    def ioctl_GWINSZ(fd):
+def _get_terminal_size_linux() -> tuple[int, int] | None:
+    """Get terminal size on Linux"""
+
+    def ioctl_GWINSZ(fd: int) -> tuple[int, int] | None:
         try:
             import fcntl
             import termios
@@ -163,6 +174,7 @@ def _get_terminal_size_linux():
             return cr
         except Exception:
             pass
+        return None
 
     cr = ioctl_GWINSZ(0) or ioctl_GWINSZ(1) or ioctl_GWINSZ(2)
     if not cr:

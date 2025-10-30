@@ -8,6 +8,7 @@ from plone.versioncheck.utils import color_dimmed
 from plone.versioncheck.utils import color_init
 from plone.versioncheck.utils import dots
 from plone.versioncheck.utils import get_terminal_size
+from typing import Any, TextIO
 
 import datetime
 import json
@@ -21,8 +22,15 @@ FLOOR_DATE = datetime.date(1970, 1, 1)
 
 
 def build_version(
-    name, pkg, pypi, tracked, key, idx, flavor="versions", orphaned=False
-):
+    name: str,
+    pkg: dict[str, Any],
+    pypi: dict[str, Any],
+    tracked: tuple[Any, ...] | None,
+    key: str,
+    idx: int,
+    flavor: str = "versions",
+    orphaned: bool = False,
+) -> dict[str, Any]:
     record = {}
     if flavor == "versions":
         record["description"] = key
@@ -59,8 +67,12 @@ def build_version(
 
 
 def builder(
-    pkgsinfo, newer_only=False, newer_orphaned_only=False, limit=None, exclude_cfgs=[]
-):
+    pkgsinfo: dict[str, Any],
+    newer_only: bool = False,
+    newer_orphaned_only: bool = False,
+    limit: int | None = None,
+    exclude_cfgs: list[str] = [],
+) -> OrderedDict[str, dict[str, Any]]:
     """build
     - OrderedDict with pkgname as keys
     - each entry an record:
@@ -192,13 +204,13 @@ def builder(
 
 
 def human(
-    pkgsinfo,
-    newer_only=False,
-    newer_orphaned_only=False,
-    limit=None,
-    exclude_cfgs=[],
-    show_requiredby=False,
-):
+    pkgsinfo: dict[str, Any],
+    newer_only: bool = False,
+    newer_orphaned_only: bool = False,
+    limit: int | None = None,
+    exclude_cfgs: list[str] = [],
+    show_requiredby: bool = False,
+) -> None:
     color_init()
     sys.stderr.write("\nReport for humans\n\n")
     data = builder(
@@ -249,7 +261,7 @@ def human(
             )
 
 
-def json_serial(obj):
+def json_serial(obj: Any) -> str:
     """JSON serializer for objects not serializable by default json code"""
 
     if isinstance(obj, datetime.date):
@@ -258,15 +270,15 @@ def json_serial(obj):
 
 
 def browser(
-    pkgsinfo,
-    newer_only=False,
-    newer_orphaned_only=False,
-    limit=None,
-    exclude_cfgs=[],
-    show_requiredby=False,
-    show_release_dates=False,
-    file=sys.stdout,
-):
+    pkgsinfo: dict[str, Any],
+    newer_only: bool = False,
+    newer_orphaned_only: bool = False,
+    limit: int | None = None,
+    exclude_cfgs: list[str] = [],
+    show_requiredby: bool = False,
+    show_release_dates: bool = False,
+    file: TextIO = sys.stdout,
+) -> None:
     color_init()
     sys.stderr.write("\nReport for browsers\n\n")
     data = builder(
@@ -284,13 +296,13 @@ def browser(
 
 
 def machine(
-    pkgsinfo,
-    newer_only=False,
-    newer_orphaned_only=False,
-    limit=None,
-    file=sys.stdout,
-    exclude_cfgs=[],
-):
+    pkgsinfo: dict[str, Any],
+    newer_only: bool = False,
+    newer_orphaned_only: bool = False,
+    limit: int | None = None,
+    file: TextIO = sys.stdout,
+    exclude_cfgs: list[str] = [],
+) -> None:
     sys.stderr.write("\nReport for machines\n\n")
     data = builder(
         pkgsinfo,

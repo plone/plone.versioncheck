@@ -1,10 +1,12 @@
-
 from collections import namedtuple
 from collections import OrderedDict
 from packaging.version import parse as parse_version
+from packaging.version import Version
 from plone.versioncheck.utils import requests_session
+from typing import Any
 
 import datetime
+import requests
 import sys
 
 
@@ -13,10 +15,10 @@ PYPI_URL = "https://pypi.org"
 
 Release = namedtuple("Release", ["version", "release_date"])
 
-FLOOR_RELEASE = Release(version=u"0.0.0.0", release_date=datetime.date(1970, 1, 1))
+FLOOR_RELEASE = Release(version="0.0.0.0", release_date=datetime.date(1970, 1, 1))
 
 
-def mmbp_tuple(version):
+def mmbp_tuple(version: Version) -> list[int]:
     """major minor bugfix, postfix tuple from version
 
     - 1.0     -> 1.0.0.0
@@ -29,8 +31,11 @@ def mmbp_tuple(version):
     return [int(_) for _ in parts]
 
 
-def check(name, version, session):  # noqa: C901
-    result = OrderedDict(
+def check(
+    name: str, version: str, session: requests.Session
+) -> tuple[bool | int, dict[str, Release | None] | str]:
+    """Check PyPI for newer versions of a package"""  # noqa: C901
+    result: OrderedDict[str, Release | None] = OrderedDict(
         [
             ("major", FLOOR_RELEASE),
             ("minor", FLOOR_RELEASE),
@@ -46,14 +51,14 @@ def check(name, version, session):  # noqa: C901
 
     # parse version to test against:
     try:
-        version = parse_version(version)
+        version_parsed = parse_version(version)
     except Exception:
         # likely packaging.version.InvalidVersion
         # or TypeError, but really any exception can be ignored.
         # See https://github.com/plone/plone.versioncheck/issues/52
         return False, "Version broken/ not checkable."
     try:
-        vtuple = mmbp_tuple(version)
+        vtuple = mmbp_tuple(version_parsed)
     except ValueError:
         return False, "Can not check legacy version number."
 
@@ -86,7 +91,7 @@ def check(name, version, session):  # noqa: C901
             # but really any exception can be ignored.
             # See https://github.com/plone/plone.versioncheck/issues/52
             continue
-        if rel_v <= version:
+        if rel_v <= version_parsed:
             continue
         rel_vtuple = mmbp_tuple(rel_v)
         rel_data = data["releases"][release]
@@ -101,11 +106,11 @@ def check(name, version, session):  # noqa: C901
                     rel_date = crel_date
         if rel_vtuple[0] > vtuple[0]:
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["majorpre"].version
+                result["majorpre"].version  # type: ignore
             ):
                 result["majorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["major"].version
+                result["major"].version  # type: ignore
             ):
                 result["major"] = Release(version=release, release_date=rel_date)
             continue
@@ -113,11 +118,11 @@ def check(name, version, session):  # noqa: C901
             rel_vtuple[0] == vtuple[0] and rel_vtuple[1] > vtuple[1]
         ):
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["minorpre"].version
+                result["minorpre"].version  # type: ignore
             ):
                 result["minorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["minor"].version
+                result["minor"].version  # type: ignore
             ):
                 result["minor"] = Release(version=release, release_date=rel_date)
             continue
@@ -127,47 +132,50 @@ def check(name, version, session):  # noqa: C901
             and rel_vtuple[2] > vtuple[2]
         ):
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["bugfixpre"].version
+                result["bugfixpre"].version  # type: ignore
             ):
                 result["bugfixpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["bugfix"].version
+                result["bugfix"].version  # type: ignore
             ):
                 result["bugfix"] = Release(version=release, release_date=rel_date)
             continue
 
     # reset non existing versions
     for version_tag in result.keys():
-        if result[version_tag].version == u"0.0.0.0":
+        if result[version_tag].version == "0.0.0.0":  # type: ignore
             result[version_tag] = None
 
     # filter out older
     if (
         result["major"]
         and result["majorpre"]
-        and parse_version(result["majorpre"].version)
-        < parse_version(result["major"].version)
+        and parse_version(result["majorpre"].version)  # type: ignore
+        < parse_version(result["major"].version)  # type: ignore
     ):
         result["majorpre"] = None
     if (
         result["minor"]
         and result["minorpre"]
-        and parse_version(result["minorpre"].version)
-        < parse_version(result["minor"].version)
+        and parse_version(result["minorpre"].version)  # type: ignore
+        < parse_version(result["minor"].version)  # type: ignore
     ):
         result["minorpre"] = None
     if (
         result["bugfix"]
         and result["bugfixpre"]
-        and parse_version(result["bugfixpre"].version)
-        < parse_version(result["bugfix"].version)
+        and parse_version(result["bugfixpre"].version)  # type: ignore
+        < parse_version(result["bugfix"].version)  # type: ignore
     ):
         result["bugfixpre"] = None
 
     return 2 if resp.from_cache else 1, result
 
 
-def check_all(pkgsinfo, limit=None, nocache=False):
+def check_all(
+    pkgsinfo: dict[str, Any], limit: int | None = None, nocache: bool = False
+) -> None:
+    """Check PyPI for updates of all packages"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
     sys.stderr.write("Check PyPI for updates of {0:d} packages.".format(len(pkgs)))
@@ -194,7 +202,10 @@ def check_all(pkgsinfo, limit=None, nocache=False):
     sys.stderr.write("\nPyPI check finished\n")
 
 
-def update_pkg_info(pkg_name, pkg_data, session):
+def update_pkg_info(
+    pkg_name: str, pkg_data: dict[str, dict[str, Any]], session: requests.Session
+) -> bool:
+    """Update package information with release dates from PyPI"""
     for filename, elemdata in pkg_data.items():
         # fetch pkgs json info from pypi
         url = "{url}/pypi/{name}/json".format(url=PYPI_URL, name=pkg_name)
@@ -224,7 +235,10 @@ def update_pkg_info(pkg_name, pkg_data, session):
     return True
 
 
-def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
+def update_pkgs_info(
+    pkgsinfo: dict[str, Any], limit: int | None = None, nocache: bool = False
+) -> None:
+    """Update package information for all packages"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
     sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
@@ -253,7 +267,10 @@ def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
     sys.stderr.write("\nPyPI check finished\n")
 
 
-def update_tracking_version_info(pkg_name, pkg_data, session):
+def update_tracking_version_info(
+    pkg_name: str, pkg_data: list[Any], session: requests.Session
+) -> tuple[bool | int, bool | str]:
+    """Update tracking version information from PyPI"""
     # fetch pkgs json info from pypi
     url = "{url}/pypi/{name}/{version}/json".format(
         url=PYPI_URL,
@@ -285,7 +302,8 @@ def update_tracking_version_info(pkg_name, pkg_data, session):
     return 2 if resp.from_cache else 1, True
 
 
-def update_tracking_info(pkgsinfo, nocache=False):
+def update_tracking_info(pkgsinfo: dict[str, Any], nocache: bool = False) -> None:
+    """Update tracking information from PyPI"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["tracking"]["versions"]
     sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))

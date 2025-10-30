@@ -1,5 +1,6 @@
 # inspired partly by dumppickedversions
 from plone.versioncheck.utils import find_relative
+from typing import Any, Callable
 from zc.buildout import easy_install
 
 # zc.buildout may vendorize its own copy of pkg_resources
@@ -15,14 +16,16 @@ import time
 
 logger = easy_install.logger
 
-required_by = {}
-versions_by_name = {}
+required_by: dict[str, list[str]] = {}
+versions_by_name: dict[str, tuple[str, str | bool]] = {}
 
 TRACKINGFILENAME = ".plone.versioncheck.tracked.json"
 
 
-def track_get_dist(old_get_dist):
-    def get_dist(self, requirement, *ags, **kw):
+def track_get_dist(old_get_dist: Callable) -> Callable:
+    """Wrap Installer._get_dist to track version usage"""
+
+    def get_dist(self: Any, requirement: Any, *ags: Any, **kw: Any) -> Any:
         dists = old_get_dist(self, requirement, *ags, **kw)
         for dist in dists:
             dist_name = dist.project_name.lower()
@@ -53,8 +56,10 @@ def track_get_dist(old_get_dist):
     return get_dist
 
 
-def write_tracked(old_logging_shutdown, logfilepath):
-    def logging_shutdown():
+def write_tracked(old_logging_shutdown: Callable, logfilepath: str) -> Callable:
+    """Wrap logging.shutdown to write tracking file"""
+
+    def logging_shutdown() -> None:
         # WRITE FILE
         result = {
             "generated": time.time(),
@@ -68,14 +73,16 @@ def write_tracked(old_logging_shutdown, logfilepath):
     return logging_shutdown
 
 
-def install(buildout):
+def install(buildout: dict[str, Any]) -> None:
+    """Install tracking extension into buildout"""
     filepath = os.path.join(buildout["buildout"]["directory"], TRACKINGFILENAME)
     easy_install.Installer.__tracked_versions = {}
     easy_install.Installer._get_dist = track_get_dist(easy_install.Installer._get_dist)
     logging.shutdown = write_tracked(logging.shutdown, filepath)
 
 
-def get(pkginfo, buildout):
+def get(pkginfo: dict[str, Any], buildout: str) -> None:
+    """Read tracking information from file"""
     filepath = TRACKINGFILENAME
     relative, filename = find_relative(buildout)
     if relative:
