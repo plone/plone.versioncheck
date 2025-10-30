@@ -75,7 +75,7 @@ packages = ["src/plone"]
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests"]
-addopts = "--cov=src --cov-report=xml --cov-report=html --cov-report=term --cov-branch --cov-fail-under=60"
+addopts = "--cov=src --cov-report=xml --cov-report=html --cov-report=term --cov-branch --cov-fail-under=70"
 xfail_strict = true
 norecursedirs = ["fixtures"]
 
