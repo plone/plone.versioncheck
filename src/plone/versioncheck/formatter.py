@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 from collections import OrderedDict
 from fnmatch import fnmatch
 from jinja2 import Environment

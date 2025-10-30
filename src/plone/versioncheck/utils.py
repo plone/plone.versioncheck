@@ -11,14 +11,8 @@ import shlex
 import struct
 import subprocess
 import sys
-
-
-if sys.version_info < (3, 0):
-    from urlparse import urlparse
-    from urlparse import urlunparse
-elif sys.version_info >= (3, 0):
-    from urllib.parse import urlparse
-    from urllib.parse import urlunparse
+from urllib.parse import urlparse
+from urllib.parse import urlunparse
 
 
 COLORED = True

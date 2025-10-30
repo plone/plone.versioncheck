@@ -1,7 +1,10 @@
 # inspired partly by dumppickedversions
-from pkg_resources import DEVELOP_DIST
 from plone.versioncheck.utils import find_relative
 from zc.buildout import easy_install
+
+# zc.buildout may vendorize its own copy of pkg_resources
+# Define DEVELOP_DIST locally as recommended in issue #57
+DEVELOP_DIST = "-1"
 
 import json
 import logging

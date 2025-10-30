@@ -8,18 +8,10 @@ from zc.buildout.buildout import Buildout
 import contextlib
 import os.path
 import sys
-
-
-if sys.version_info < (3, 0):
-    from ConfigParser import ConfigParser
-    from ConfigParser import NoOptionError
-    from ConfigParser import NoSectionError
-    from StringIO import StringIO
-elif sys.version_info >= (3, 0):
-    from configparser import ConfigParser
-    from configparser import NoOptionError
-    from configparser import NoSectionError
-    from io import StringIO
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
+from io import StringIO
 
 
 @contextlib.contextmanager
@@ -70,11 +62,7 @@ def _extract_versions_section(  # NOQA: C901
         config.read(filename)
     elif "://" in filename:
         resp = session.get(filename)
-        try:
-            config.readfp(StringIO(resp.text))
-        except AttributeError:
-            # py3.12 removed readfp()
-            config.read_file(StringIO(resp.text))
+        config.read_file(StringIO(resp.text))
         if resp.from_cache:
             sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:

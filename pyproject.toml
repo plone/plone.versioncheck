@@ -30,6 +30,7 @@ dependencies = [
     "CacheControl[filecache]",
     "colorama",
     "jinja2",
+    "packaging",
     "requests",
     "zc.buildout",
 ]

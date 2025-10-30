@@ -1,7 +1,7 @@
 
 from collections import namedtuple
 from collections import OrderedDict
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 from plone.versioncheck.utils import requests_session
 
 import datetime
@@ -48,7 +48,7 @@ def check(name, version, session):  # noqa: C901
     try:
         version = parse_version(version)
     except Exception:
-        # likely pkg_resources.extern.packaging.version.InvalidVersion
+        # likely packaging.version.InvalidVersion
         # or TypeError, but really any exception can be ignored.
         # See https://github.com/plone/plone.versioncheck/issues/52
         return False, "Version broken/ not checkable."
@@ -82,7 +82,7 @@ def check(name, version, session):  # noqa: C901
         try:
             rel_v = parse_version(release)
         except Exception:
-            # likely pkg_resources.extern.packaging.version.InvalidVersion
+            # likely packaging.version.InvalidVersion
             # but really any exception can be ignored.
             # See https://github.com/plone/plone.versioncheck/issues/52
             continue
