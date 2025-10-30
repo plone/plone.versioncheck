@@ -1,6 +1,7 @@
 from collections import OrderedDict
+from plone.versioncheck.formatter import browser
+from plone.versioncheck.formatter import machine
 
-from plone.versioncheck.formatter import browser, machine
 
 pkgsinfo = {
     "pkgs": {

@@ -1,16 +1,19 @@
-import contextlib
-import os.path
-import sys
 from collections import OrderedDict
-from configparser import ConfigParser, NoOptionError, NoSectionError
+from collections.abc import Iterator
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
 from io import StringIO
-from typing import Any, Iterator
-
-import requests
+from plone.versioncheck.utils import find_relative
+from plone.versioncheck.utils import requests_session
+from typing import Any
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
-from plone.versioncheck.utils import find_relative, requests_session
+import contextlib
+import os.path
+import requests
+import sys
 
 
 @contextlib.contextmanager
@@ -44,7 +47,7 @@ def _extract_versions_section(  # NOQA: C901
     if "://" not in filename:
         if relative and "://" in relative:
             # relative to url!
-            filename = "{0}/{1}".format(relative, filename)
+            filename = f"{relative}/{filename}"
         else:
             if relative:
                 if filename.startswith(relative + "/"):
@@ -53,7 +56,7 @@ def _extract_versions_section(  # NOQA: C901
             else:
                 filename = os.path.join(base_dir, filename)
 
-    sys.stderr.write("\n- {0}".format(filename))
+    sys.stderr.write(f"\n- {filename}")
 
     try:
         with nostdout():
@@ -66,14 +69,14 @@ def _extract_versions_section(  # NOQA: C901
     elif "://" in filename:
         resp = session.get(filename)
         config.read_file(StringIO(resp.text))
-        if resp.from_cache:
+        if resp.from_cache:  # type: ignore[attr-defined]
             sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:
-            sys.stderr.write("\n  ERROR {0:d}".format(resp.status_code))
+            sys.stderr.write(f"\n  ERROR {resp.status_code:d}")
         else:
             sys.stderr.write("\n  fresh from server")
     else:
-        raise ValueError("{0} does not exist!".format(filename))
+        raise ValueError(f"{filename} does not exist!")
 
     # first read own versions section
     current_version_section_name = buildout["buildout"].get("versions", "versions")
@@ -99,9 +102,7 @@ def _extract_versions_section(  # NOQA: C901
     if config.has_section(version_section_name):
         version_sections[key_name] = OrderedDict(config.items(version_section_name))
         sys.stderr.write(
-            "\n  {0:d} entries in versions section.".format(
-                len(version_sections[key_name])
-            )
+            f"\n  {len(version_sections[key_name]):d} entries in versions section."
         )
 
     # read versionannotations
@@ -113,9 +114,7 @@ def _extract_versions_section(  # NOQA: C901
             config.items(versionannotation_section_name)
         )
         sys.stderr.write(
-            "\n  {0:d} entries in annotations section.".format(
-                len(annotations[key_name])
-            )
+            f"\n  {len(annotations[key_name]):d} entries in annotations section."
         )
     try:
         extends = config.get("buildout", "extends").strip()
@@ -161,11 +160,11 @@ def parse(
 
     for pkgname in pkgs:
         pkg = pkgs[pkgname]
-        for name in version_sections.keys():
+        for name in version_sections:
             if pkgname in version_sections.get(name, {}):
                 pkg[name] = {"v": version_sections[name][pkgname], "a": ""}
 
-        for name in annotations.keys():
+        for name in annotations:
             if pkgname in annotations.get(name, {}):
                 if name in pkg:
                     pkg[name]["a"] = annotations[name][pkgname]

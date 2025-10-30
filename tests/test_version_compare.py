@@ -1,11 +1,13 @@
-import datetime
 from collections import OrderedDict
-
-import responses
 from pkg_resources import parse_version
-
-from plone.versioncheck.pypi import PYPI_URL, Release, check, mmbp_tuple
+from plone.versioncheck.pypi import check
+from plone.versioncheck.pypi import mmbp_tuple
+from plone.versioncheck.pypi import PYPI_URL
+from plone.versioncheck.pypi import Release
 from plone.versioncheck.utils import requests_session
+
+import datetime
+import responses
 
 
 def test_mmbp_tuple():
@@ -72,7 +74,7 @@ def test_check():
     name = "demo"
     responses.add(
         responses.GET,
-        "{url}/pypi/{name}/json".format(url=PYPI_URL, name=name),
+        f"{PYPI_URL}/pypi/{name}/json",
         content_type="application/json",
         body=demo_json,
     )

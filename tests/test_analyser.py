@@ -1,8 +1,9 @@
-import datetime
 from collections import OrderedDict
-
-from plone.versioncheck.analyser import is_cfg_newer, is_pypi_newer
+from plone.versioncheck.analyser import is_cfg_newer
+from plone.versioncheck.analyser import is_pypi_newer
 from plone.versioncheck.pypi import Release
+
+import datetime
 
 
 def test_is_cfg_newer():

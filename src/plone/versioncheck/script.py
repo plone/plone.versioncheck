@@ -1,11 +1,17 @@
-import argparse
-import sys
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from argparse import ArgumentParser
+from argparse import RawDescriptionHelpFormatter
+from plone.versioncheck import formatter
+from plone.versioncheck import tracking
+from plone.versioncheck import utils
+from plone.versioncheck.parser import parse
+from plone.versioncheck.pypi import check_all
+from plone.versioncheck.pypi import update_pkgs_info
+from plone.versioncheck.pypi import update_tracking_info
 from typing import Any
 
-from plone.versioncheck import formatter, tracking, utils
-from plone.versioncheck.parser import parse
-from plone.versioncheck.pypi import check_all, update_pkgs_info, update_tracking_info
+import argparse
+import sys
+
 
 EPILOG = """\
 States and color codes:
@@ -53,14 +59,14 @@ parser.add_argument(
 parser.add_argument(
     "-r",
     "--required-by",
-    help="show information about requirements (only if tracking file is " "available)",
+    help="show information about requirements (only if tracking file is available)",
     default=False,
     action="store_true",
 )
 parser.add_argument(
     "-d",
     "--show-release-dates",
-    help="show information about release dates " "(only for package lookup from PyPI)",
+    help="show information about release dates (only for package lookup from PyPI)",
     default=False,
     action="store_true",
     dest="show_release_dates",

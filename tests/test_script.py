@@ -1,8 +1,8 @@
-import sys
+from plone.versioncheck.script import run
 
 import pytest
+import sys
 
-from plone.versioncheck.script import run
 
 help_output = """
 usage: py.test [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-m] [--no-cache] [-b]

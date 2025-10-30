@@ -49,9 +49,7 @@ test = [
     "responses",
 ]
 typecheck = [
-    "mypy",
-    "types-colorama",
-    "types-requests",
+    "ty",
 ]
 develop = [
     "pdbpp",
@@ -81,30 +79,34 @@ addopts = "--cov=src --cov-report=xml --cov-report=html --cov-report=term --cov-
 xfail_strict = true
 norecursedirs = ["fixtures"]
 
-[tool.mypy]
-mypy_path = "./src:./tests"
-python_version = "3.10"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = false
-check_untyped_defs = true
-explicit_package_bases = true
-
-[[tool.mypy.overrides]]
-module = [
-    "zc.buildout.*",
-    "cachecontrol.*",
-    "jinja2.*",
-]
-ignore_missing_imports = true
-
 [tool.isort]
-profile = "black"
+profile = "plone"
 src_paths = ["src", "tests"]
 
-[tool.black]
-target-version = ["py310"]
+[tool.ruff]
+target-version = "py310"
 line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (disabled in favor of isort tool)
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "PIE", # flake8-pie
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "I001", # isort - we use isort directly with plone profile
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.coverage.run]
 branch = true

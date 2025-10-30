@@ -1,6 +1,6 @@
 from collections import OrderedDict
-
-from plone.versioncheck.parser import nostdout, parse
+from plone.versioncheck.parser import nostdout
+from plone.versioncheck.parser import parse
 
 
 def test_nostdout(capsys):

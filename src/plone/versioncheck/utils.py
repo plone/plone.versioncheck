@@ -1,17 +1,18 @@
+from cachecontrol import CacheControl
+from cachecontrol.caches import FileCache
+from colorama import Fore
+from colorama import init as colorama_init
+from colorama import Style
+from urllib.parse import urlparse
+from urllib.parse import urlunparse
+
 import os
 import platform
+import requests
 import shlex
 import struct
 import subprocess
-import sys
-from typing import Any, Union
-from urllib.parse import urlparse, urlunparse
 
-import requests
-from cachecontrol import CacheControl
-from cachecontrol.caches import FileCache
-from colorama import Fore, Style
-from colorama import init as colorama_init
 
 COLORED = True
 
@@ -66,21 +67,21 @@ def dots(value: str, max: int) -> str:
 CACHE_FILENAME = ".plone.versioncheck.cache"
 
 
-def requests_session(nocache: bool = False) -> Union[requests.Session, CacheControl]:
+def requests_session(nocache: bool = False) -> requests.Session:
     """Create a requests session with optional caching"""
     if nocache:
         return requests.Session()
     return CacheControl(requests.Session(), cache=FileCache(CACHE_FILENAME))
 
 
-def find_relative(extend: str, relative: str = "") -> tuple[str, str]:
+def find_relative(extend: str, relative: str | None = "") -> tuple[str, str]:
     """the base dir or url and the actual filename as tuple"""
     if "://" in extend:
         parts = list(urlparse(extend))
         path = parts[2].split("/")
         parts[2] = "/".join(path[:-1])
         return urlunparse(parts), path[-1]
-    if "://" in relative:
+    if relative and "://" in relative:
         return (relative.strip("/"), extend.strip("/"))
     if relative:
         extend = os.path.join(relative, extend)
@@ -115,7 +116,8 @@ def get_terminal_size() -> tuple[int, int]:
 def _get_terminal_size_windows() -> tuple[int, int] | None:
     """Get terminal size on Windows"""
     try:
-        from ctypes import create_string_buffer, windll
+        from ctypes import create_string_buffer
+        from ctypes import windll  # type: ignore[attr-defined]
 
         # stdin handle is -10
         # stdout handle is -11
@@ -166,7 +168,7 @@ def _get_terminal_size_linux() -> tuple[int, int] | None:
             import fcntl
             import termios
 
-            cr = struct.unpack("hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, "1234"))
+            cr = struct.unpack("hh", fcntl.ioctl(fd, termios.TIOCGWINSZ, b"1234"))
             return cr
         except Exception:
             pass

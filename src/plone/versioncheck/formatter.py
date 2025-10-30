@@ -1,21 +1,21 @@
+from collections import OrderedDict
+from fnmatch import fnmatch
+from jinja2 import Environment
+from jinja2 import PackageLoader
+from plone.versioncheck import analyser
+from plone.versioncheck.utils import color_by_state
+from plone.versioncheck.utils import color_dimmed
+from plone.versioncheck.utils import color_init
+from plone.versioncheck.utils import dots
+from plone.versioncheck.utils import get_terminal_size
+from typing import Any
+from typing import TextIO
+
 import datetime
 import json
 import sys
 import textwrap
-from collections import OrderedDict
-from fnmatch import fnmatch
-from typing import Any, TextIO
 
-from jinja2 import Environment, PackageLoader
-
-from plone.versioncheck import analyser
-from plone.versioncheck.utils import (
-    color_by_state,
-    color_dimmed,
-    color_init,
-    dots,
-    get_terminal_size,
-)
 
 jenv = Environment(loader=PackageLoader("plone.versioncheck", "tpl"))
 
@@ -24,7 +24,7 @@ FLOOR_DATE = datetime.date(1970, 1, 1)
 
 def build_version(
     name: str,
-    pkg: dict[str, Any],
+    pkg: dict[str, dict[str, Any]],
     pypi: dict[str, Any],
     tracked: tuple[Any, ...] | None,
     key: str,
@@ -72,7 +72,7 @@ def builder(
     newer_only: bool = False,
     newer_orphaned_only: bool = False,
     limit: int | None = None,
-    exclude_cfgs: list[str] = [],
+    exclude_cfgs: list[str] | None = None,
 ) -> OrderedDict[str, dict[str, Any]]:
     """build
     - OrderedDict with pkgname as keys
@@ -83,6 +83,8 @@ def builder(
         - state
         - description
     """
+    if exclude_cfgs is None:
+        exclude_cfgs = []
     result = OrderedDict()
     ver_maxlen = 0
     pkgs = pkgsinfo["pkgs"]
@@ -91,21 +93,18 @@ def builder(
     requ = pkgsinfo.get("tracking", {}).get("required_by", {})
     names = sorted(set(tracked.keys()) | set(pkgs.keys()))
 
-    for nidx, name in enumerate(names):
+    for _nidx, name in enumerate(names):
         current_pkg = pkgs.get(name, {})
 
         # check excludes
         def match_patterns(filepath):
-            for pattern in exclude_cfgs or []:
-                if fnmatch(filepath, pattern):
-                    return True
-            return False
+            return any(fnmatch(filepath, pattern) for pattern in exclude_cfgs or [])
 
         if list(filter(match_patterns, current_pkg)):
             continue
 
-        record = dict()
-        versions = record["versions"] = list()
+        record = {}
+        versions = record["versions"] = []
         unpinned = False
         required_by = requ.get(name, None)
         if required_by:
@@ -209,9 +208,11 @@ def human(
     newer_only: bool = False,
     newer_orphaned_only: bool = False,
     limit: int | None = None,
-    exclude_cfgs: list[str] = [],
+    exclude_cfgs: list[str] | None = None,
     show_requiredby: bool = False,
 ) -> None:
+    if exclude_cfgs is None:
+        exclude_cfgs = []
     color_init()
     sys.stderr.write("\nReport for humans\n\n")
     data = builder(
@@ -249,7 +250,7 @@ def human(
                 )
 
         if show_requiredby and record.get("required_by", False):
-            req = " ".join(sorted(record.get("required_by")))
+            req = " ".join(sorted(record.get("required_by", [])))
             indent = (pkgsinfo["ver_maxlen"] + 5) * " " + "r "
             print(
                 color_dimmed()
@@ -275,11 +276,13 @@ def browser(
     newer_only: bool = False,
     newer_orphaned_only: bool = False,
     limit: int | None = None,
-    exclude_cfgs: list[str] = [],
+    exclude_cfgs: list[str] | None = None,
     show_requiredby: bool = False,
     show_release_dates: bool = False,
     file: TextIO = sys.stdout,
 ) -> None:
+    if exclude_cfgs is None:
+        exclude_cfgs = []
     color_init()
     sys.stderr.write("\nReport for browsers\n\n")
     data = builder(
@@ -302,8 +305,10 @@ def machine(
     newer_orphaned_only: bool = False,
     limit: int | None = None,
     file: TextIO = sys.stdout,
-    exclude_cfgs: list[str] = [],
+    exclude_cfgs: list[str] | None = None,
 ) -> None:
+    if exclude_cfgs is None:
+        exclude_cfgs = []
     sys.stderr.write("\nReport for machines\n\n")
     data = builder(
         pkgsinfo,

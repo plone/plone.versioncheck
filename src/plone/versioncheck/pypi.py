@@ -1,13 +1,14 @@
-import datetime
-import sys
-from collections import OrderedDict, namedtuple
+from collections import namedtuple
+from collections import OrderedDict
+from packaging.version import parse as parse_version
+from packaging.version import Version
+from plone.versioncheck.utils import requests_session
 from typing import Any
 
+import datetime
 import requests
-from packaging.version import Version
-from packaging.version import parse as parse_version
+import sys
 
-from plone.versioncheck.utils import requests_session
 
 PYPI_URL = "https://pypi.org"
 
@@ -62,18 +63,18 @@ def check(
         return False, "Can not check legacy version number."
 
     # fetch pkgs json info from pypi
-    url = "{url}/pypi/{name}/json".format(url=PYPI_URL, name=name)
+    url = f"{PYPI_URL}/pypi/{name}/json"
     try:
         resp = session.get(url)
     except Exception:
-        print("Fatal problem while fetching URL: {0}".format(url))
+        print(f"Fatal problem while fetching URL: {url}")
         raise
 
     # check status code
     if resp.status_code == 404:
         return (
             False,
-            'Package "{name}" not on pypi ({url}).'.format(name=name, url=url),
+            f'Package "{name}" not on pypi ({url}).',
         )
     elif resp.status_code != 200:
         return False, str(resp.status_code)
@@ -141,7 +142,7 @@ def check(
             continue
 
     # reset non existing versions
-    for version_tag in result.keys():
+    for version_tag in result:
         if result[version_tag].version == "0.0.0.0":  # type: ignore
             result[version_tag] = None
 
@@ -168,7 +169,7 @@ def check(
     ):
         result["bugfixpre"] = None
 
-    return 2 if resp.from_cache else 1, result
+    return 2 if resp.from_cache else 1, result  # type: ignore[attr-defined]
 
 
 def check_all(
@@ -177,14 +178,14 @@ def check_all(
     """Check PyPI for updates of all packages"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write("Check PyPI for updates of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for updates of {len(pkgs):d} packages.")
     if limit:
-        sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
+        sys.stderr.write(f" Check limited to {limit:d} packages.")
     pkgsinfo["pypi"] = {}
     errors = []
     for idx, pkgname in enumerate(sorted(pkgs)):
         if not idx % 20 and idx != limit:
-            sys.stderr.write("\n{0:4d} ".format(idx))
+            sys.stderr.write(f"\n{idx:4d} ")
         current = next(iter(pkgs[pkgname]))
         state, result = check(pkgname, pkgs[pkgname][current]["v"], session)
         if not state:
@@ -196,7 +197,7 @@ def check_all(
         if limit and idx == limit:
             break
     for error in errors:
-        sys.stderr.write("\nError in {0} version {1} reason: {2}".format(*error))
+        sys.stderr.write("\nError in {} version {} reason: {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
 
@@ -205,9 +206,9 @@ def update_pkg_info(
     pkg_name: str, pkg_data: dict[str, dict[str, Any]], session: requests.Session
 ) -> bool:
     """Update package information with release dates from PyPI"""
-    for filename, elemdata in pkg_data.items():
+    for _filename, elemdata in pkg_data.items():
         # fetch pkgs json info from pypi
-        url = "{url}/pypi/{name}/json".format(url=PYPI_URL, name=pkg_name)
+        url = f"{PYPI_URL}/pypi/{pkg_name}/json"
         resp = session.get(url)
 
         # check status code
@@ -240,15 +241,15 @@ def update_pkgs_info(
     """Update package information for all packages"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for data of {len(pkgs):d} packages.")
     if limit:
-        sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
+        sys.stderr.write(f" Check limited to {limit:d} packages.")
     errors = []
 
     idx = 0
     for pkg_name, pkg_data in pkgs.items():
         if not idx % 20 and idx != limit:
-            sys.stderr.write("\n{0:4d} ".format(idx))
+            sys.stderr.write(f"\n{idx:4d} ")
 
         state = update_pkg_info(pkg_name, pkg_data, session)
         if not state:
@@ -261,7 +262,7 @@ def update_pkgs_info(
         idx += 1
 
     for error in errors:
-        sys.stderr.write("\nError in {0}".format(*error))
+        sys.stderr.write("\nError in {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
 
@@ -271,12 +272,7 @@ def update_tracking_version_info(
 ) -> tuple[bool | int, bool | str]:
     """Update tracking version information from PyPI"""
     # fetch pkgs json info from pypi
-    url = "{url}/pypi/{name}/{version}/json".format(
-        url=PYPI_URL,
-        name=pkg_name,
-        # version=pkg_data['version'])
-        version=pkg_data[0],
-    )
+    url = f"{PYPI_URL}/pypi/{pkg_name}/{pkg_data[0]}/json"
     resp = session.get(url)
 
     # check status code
@@ -298,20 +294,20 @@ def update_tracking_version_info(
     # pkg_data['release_date'] = rel_date
     pkg_data.append(rel_date)
 
-    return 2 if resp.from_cache else 1, True
+    return 2 if resp.from_cache else 1, True  # type: ignore[attr-defined]
 
 
 def update_tracking_info(pkgsinfo: dict[str, Any], nocache: bool = False) -> None:
     """Update tracking information from PyPI"""
     session = requests_session(nocache=nocache)
     pkgs = pkgsinfo["tracking"]["versions"]
-    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for data of {len(pkgs):d} packages.")
     errors = []
 
     idx = 0
     for pkg_name, pkg_data in pkgs.items():
         if not idx % 20:
-            sys.stderr.write("\n{0:4d} ".format(idx))
+            sys.stderr.write(f"\n{idx:4d} ")
 
         state, result = update_tracking_version_info(pkg_name, pkg_data, session)
         if not state:
@@ -322,6 +318,6 @@ def update_tracking_info(pkgsinfo: dict[str, Any], nocache: bool = False) -> Non
         idx += 1
 
     for error in errors:
-        sys.stderr.write("\nError in {0} reason: {1}".format(*error))
+        sys.stderr.write("\nError in {} reason: {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
