@@ -21,8 +21,18 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
-        run: uv pip install --system -e .[typecheck,test]
+      - name: Create virtual environment and install dependencies
+        run: |
+          uv venv
+          uv pip install -e .[typecheck,test]
 
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
+        env:
+          SKIP: ty
+          VIRTUAL_ENV: ${{ github.workspace }}/.venv
+
+      - name: Run ty
+        run: |
+          source .venv/bin/activate
+          ty check
