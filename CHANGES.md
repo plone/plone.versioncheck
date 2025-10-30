@@ -29,6 +29,8 @@
   [jensens]
 - Add concurrency control for PyPI requests (default: 20 concurrent).
   [jensens]
+- Convert to PEP 420 implicit namespace packages.
+  [jensens]
 
 ### Bug fixes
 
