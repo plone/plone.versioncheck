@@ -2,6 +2,8 @@ from collections import OrderedDict
 from plone.versioncheck.parser import nostdout
 from plone.versioncheck.parser import parse
 
+import pytest
+
 
 def test_nostdout(capsys):
     print("Test stdout")
@@ -18,10 +20,11 @@ def test_nostdout(capsys):
     assert out == "This should be printed again.\n"
 
 
-def test_parse(capsys):
+@pytest.mark.asyncio
+async def test_parse(capsys):
     input = "buildout.cfg"
 
-    result = parse(input, False)
+    result = await parse(input, False)
     out, err = capsys.readouterr()
     assert err[:23] == "Parsing buildout files:"
     assert (

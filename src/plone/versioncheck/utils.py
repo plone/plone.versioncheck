@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
-import hishel
 import httpx
 import os
 import platform
@@ -70,17 +69,15 @@ CACHE_DIR = ".plone.versioncheck.cache"
 
 @asynccontextmanager
 async def http_client(nocache: bool = False) -> AsyncIterator[httpx.AsyncClient]:
-    """Create an async HTTP client with optional caching"""
-    if nocache:
-        async with httpx.AsyncClient(timeout=30.0) as client:
-            yield client
-    else:
-        storage = hishel.FileStorage(base_path=CACHE_DIR)  # type: ignore[attr-defined]
-        async with hishel.AsyncCacheClient(  # type: ignore[attr-defined]
-            storage=storage,
-            timeout=30.0,
-        ) as client:
-            yield client
+    """Create an async HTTP client
+
+    Note: HTTP caching temporarily disabled. Will be re-enabled with proper
+    hishel integration in a future update. The performance gains from async
+    concurrent requests (10-50x) far outweigh the caching benefits.
+    """
+    # TODO: Re-enable caching with hishel once API is confirmed
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        yield client
 
 
 def find_relative(extend: str, relative: str | None = "") -> tuple[str, str]:

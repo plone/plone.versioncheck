@@ -210,9 +210,7 @@ async def check_all(
             check_with_limit(
                 idx,
                 pkgname,
-                next(iter(pkg_data))["v"]
-                if isinstance(pkg_data, dict)
-                else next(iter(pkgs[pkgname]))["v"],
+                pkg_data[next(iter(pkg_data))]["v"],
                 client,
             )
             for idx, (pkgname, pkg_data) in enumerate(pkg_list)
