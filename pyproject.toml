@@ -60,9 +60,6 @@ develop = [
 docs = [
     "Sphinx",
 ]
-release = [
-    "zest.releaser[recommended]",
-]
 
 [project.scripts]
 versioncheck = "plone.versioncheck.script:run"
