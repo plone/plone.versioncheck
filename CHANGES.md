@@ -35,6 +35,8 @@
   [jensens]
 - Increase test coverage from 65% to 77% with better edge case testing.
   [jensens]
+- Increase minimum coverage requirement from 60% to 77% in test suite.
+  [jensens]
 
 ### Bug fixes
 
