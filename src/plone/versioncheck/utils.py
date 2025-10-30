@@ -1,14 +1,15 @@
-from cachecontrol import CacheControl
-from cachecontrol.caches import FileCache
+from collections.abc import AsyncIterator
 from colorama import Fore
 from colorama import init as colorama_init
 from colorama import Style
+from contextlib import asynccontextmanager
 from urllib.parse import urlparse
 from urllib.parse import urlunparse
 
+import hishel
+import httpx
 import os
 import platform
-import requests
 import shlex
 import struct
 import subprocess
@@ -64,14 +65,22 @@ def dots(value: str, max: int) -> str:
     return color_dimmed() + dots
 
 
-CACHE_FILENAME = ".plone.versioncheck.cache"
+CACHE_DIR = ".plone.versioncheck.cache"
 
 
-def requests_session(nocache: bool = False) -> requests.Session:
-    """Create a requests session with optional caching"""
+@asynccontextmanager
+async def http_client(nocache: bool = False) -> AsyncIterator[httpx.AsyncClient]:
+    """Create an async HTTP client with optional caching"""
     if nocache:
-        return requests.Session()
-    return CacheControl(requests.Session(), cache=FileCache(CACHE_FILENAME))
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            yield client
+    else:
+        storage = hishel.FileStorage(base_path=CACHE_DIR)  # type: ignore[attr-defined]
+        async with hishel.AsyncCacheClient(  # type: ignore[attr-defined]
+            storage=storage,
+            timeout=30.0,
+        ) as client:
+            yield client
 
 
 def find_relative(extend: str, relative: str | None = "") -> tuple[str, str]:

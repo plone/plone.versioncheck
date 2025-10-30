@@ -5,14 +5,14 @@ from configparser import NoOptionError
 from configparser import NoSectionError
 from io import StringIO
 from plone.versioncheck.utils import find_relative
-from plone.versioncheck.utils import requests_session
+from plone.versioncheck.utils import http_client
 from typing import Any
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
 import contextlib
+import httpx
 import os.path
-import requests
 import sys
 
 
@@ -25,8 +25,8 @@ def nostdout() -> Iterator[None]:
     sys.stdout = save_stdout
 
 
-def _extract_versions_section(  # NOQA: C901
-    session: requests.Session,
+async def _extract_versions_section(  # NOQA: C901
+    client: httpx.AsyncClient,
     filename: str,
     base_dir: str | None = None,
     version_sections: OrderedDict[str, OrderedDict[str, str]] | None = None,
@@ -67,9 +67,11 @@ def _extract_versions_section(  # NOQA: C901
     if os.path.isfile(filename):
         config.read(filename)
     elif "://" in filename:
-        resp = session.get(filename)
+        resp = await client.get(filename)
         config.read_file(StringIO(resp.text))
-        if resp.from_cache:  # type: ignore[attr-defined]
+        # Check if response was from cache (hishel uses extensions)
+        from_cache = resp.extensions.get("from_cache", False)
+        if from_cache:
             sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:
             sys.stderr.write(f"\n  ERROR {resp.status_code:d}")
@@ -125,8 +127,8 @@ def _extract_versions_section(  # NOQA: C901
         if not extend:
             continue
         sub_relative, extend = find_relative(extend, relative)
-        _extract_versions_section(
-            session,
+        await _extract_versions_section(
+            client,
             extend,
             base_dir,
             version_sections,
@@ -138,7 +140,7 @@ def _extract_versions_section(  # NOQA: C901
     return version_sections, annotations
 
 
-def parse(
+async def parse(
     buildout_filename: str, nocache: bool = False
 ) -> dict[str, OrderedDict[str, dict[str, Any]]]:
     """Parse buildout configuration files and extract version information"""
@@ -146,10 +148,12 @@ def parse(
     if nocache:
         sys.stderr.write("\n(not using caches)")
     base_relative, buildout_filename = find_relative(buildout_filename)
-    session = requests_session(nocache=nocache)
-    version_sections, annotations = _extract_versions_section(
-        session, buildout_filename, relative=base_relative
-    )
+
+    async with http_client(nocache=nocache) as client:
+        version_sections, annotations = await _extract_versions_section(
+            client, buildout_filename, relative=base_relative
+        )
+
     sys.stderr.write("\nparsing finished.\n")
     pkgs = {}
 

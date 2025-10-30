@@ -1,13 +1,14 @@
 from collections import OrderedDict
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 from plone.versioncheck.pypi import check
 from plone.versioncheck.pypi import mmbp_tuple
 from plone.versioncheck.pypi import PYPI_URL
 from plone.versioncheck.pypi import Release
-from plone.versioncheck.utils import requests_session
 
 import datetime
-import responses
+import httpx
+import pytest
+import respx
 
 
 def test_mmbp_tuple():
@@ -68,14 +69,12 @@ assumed_demo_result = OrderedDict(
 )
 
 
-@responses.activate
-def test_check():
-    session = requests_session(nocache=False)
+@pytest.mark.asyncio
+async def test_check():
     name = "demo"
-    responses.add(
-        responses.GET,
-        f"{PYPI_URL}/pypi/{name}/json",
-        content_type="application/json",
-        body=demo_json,
-    )
-    assert check(name, "1.0", session) == (1, assumed_demo_result)
+    async with respx.mock:
+        respx.get(f"{PYPI_URL}/pypi/{name}/json").mock(
+            return_value=httpx.Response(200, json=eval(demo_json))
+        )
+        async with httpx.AsyncClient() as client:
+            assert await check(name, "1.0", client) == (1, assumed_demo_result)

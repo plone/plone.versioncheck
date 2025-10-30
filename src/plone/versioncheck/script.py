@@ -10,6 +10,7 @@ from plone.versioncheck.pypi import update_tracking_info
 from typing import Any
 
 import argparse
+import asyncio
 import sys
 
 
@@ -114,21 +115,21 @@ parser.add_argument(
 )
 
 
-def run() -> None:
-    """Main entry point for the versioncheck CLI tool"""
+async def async_run() -> None:
+    """Main async entry point for the versioncheck CLI tool"""
     args = parser.parse_args()
     pkgsinfo: dict[str, Any] = {}
-    pkgsinfo["pkgs"] = parse(args.buildout)
+    pkgsinfo["pkgs"] = await parse(args.buildout, nocache=args.no_cache)
 
     # retrieve additional informations
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
     if args.pypi:
-        check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+        await check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
         if args.show_release_dates:
-            update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+            await update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
             if not args.ignore_tracking:
-                update_tracking_info(pkgsinfo, nocache=args.no_cache)
+                await update_tracking_info(pkgsinfo, nocache=args.no_cache)
 
     # Create output
     if args.machine:
@@ -161,3 +162,8 @@ def run() -> None:
             exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
         )
+
+
+def run() -> None:
+    """Entry point that runs the async CLI tool"""
+    asyncio.run(async_run())
