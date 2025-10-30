@@ -31,6 +31,10 @@
   [jensens]
 - Convert to PEP 420 implicit namespace packages.
   [jensens]
+- Add comprehensive test coverage (pypi.py: 26 tests, utils.py: 25 tests, parser.py: 4 new tests).
+  [jensens]
+- Increase test coverage from 65% to 77% with better edge case testing.
+  [jensens]
 
 ### Bug fixes
 
