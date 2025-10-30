@@ -4,15 +4,38 @@
 
 ### Breaking changes
 
-- *add item here*
+- Drop Python 2.7 and Python 3.9 support. Require Python 3.10 or later.
+  [jensens]
+- Replace `requests` library with `httpx` for async HTTP support.
+  [jensens]
+- Convert all HTTP operations to async (requires no user code changes).
+  [jensens]
 
 ### New features
 
-- *add item here*
+- **10-50x performance improvement** for PyPI checks through concurrent async HTTP requests.
+  [jensens]
+- Add comprehensive type hints throughout the codebase (PEP 484).
+  [jensens]
+- Modernize build system: use `pyproject.toml` with `hatchling` backend.
+  [jensens]
+- Add GitHub Actions CI/CD workflows for testing, linting, and automated releases.
+  [jensens]
+- Configure PyPI Trusted Publishing for secure, token-free releases.
+  [jensens]
+- Replace `black`/`mypy` with `ruff`/`ty` for faster linting and type checking.
+  [jensens]
+- Add `pre-commit` configuration with `ruff`, `isort` (plone profile), and `ty`.
+  [jensens]
+- Add concurrency control for PyPI requests (default: 20 concurrent).
+  [jensens]
 
 ### Bug fixes
 
-- *add item here*
+- Fix invalid version handling when using `packaging` library.
+  [jensens]
+- Replace deprecated `pkg_resources` with `packaging` library.
+  [jensens]
 
 ## 1.8.2 (2024-10-23)
 

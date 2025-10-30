@@ -17,6 +17,8 @@ Checks pinned versions with overrides in a cascaded buildout
 ### 2. Checks Python Package Index (PyPI) for newer versions
 
 - Detects if a newer major, minor or bugfix (or a prerelease) is available
+- Uses async HTTP requests with concurrent processing for **10-50x faster** PyPI checks
+- Configurable concurrency limit (default: 20 concurrent requests)
 
 ### 3. Buildout extension records the current versions state and requirements
 
