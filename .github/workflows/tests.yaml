@@ -86,7 +86,7 @@ jobs:
       - name: Install package with dependencies
         run: |
           uv venv
-          uv pip install -e .
+          uv pip install -e ".[typecheck]"
 
       - name: Run pyright
         uses: jakebailey/pyright-action@v2
