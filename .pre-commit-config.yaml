@@ -18,6 +18,7 @@ repos:
       - id: pyright
         exclude: ^tests/
         additional_dependencies: [
+          "pyright[nodejs]",
           httpx,
           jinja2,
           colorama,
