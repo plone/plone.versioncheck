@@ -1,3 +1,7 @@
+ci:
+  # Skip pyright - run in GitHub Actions instead (requires package installation)
+  skip: [pyright]
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.2
