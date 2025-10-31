@@ -29,7 +29,7 @@ jobs:
       - name: Run pre-commit
         uses: pre-commit/action@v3.0.1
         env:
-          SKIP: ty
+          # SKIP: ty
           VIRTUAL_ENV: ${{ github.workspace }}/.venv
 
       - name: Run ty
