@@ -49,7 +49,7 @@ test = [
     "respx",
 ]
 typecheck = [
-    "ty",
+    "pyright",
 ]
 develop = [
     "pdbpp",
@@ -124,3 +124,12 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "_build/reports/coverage"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__", "**/.tox", "**/.venv"]
+pythonVersion = "3.10"
+pythonPlatform = "All"
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false

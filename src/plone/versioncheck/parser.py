@@ -101,6 +101,8 @@ async def _extract_versions_section(  # NOQA: C901
     else:
         key_name = filename
 
+    # At this point version_section_name is guaranteed to be a string
+    assert version_section_name is not None
     if config.has_section(version_section_name):
         version_sections[key_name] = OrderedDict(config.items(version_section_name))
         sys.stderr.write(

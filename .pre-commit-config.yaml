@@ -14,8 +14,8 @@ repos:
 
   - repo: local
     hooks:
-      - id: ty
-        name: ty
+      - id: pyright
+        name: pyright
         entry: ./typecheck.sh
         language: system
         types: [python]

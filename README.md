@@ -326,7 +326,7 @@ pre-commit run --all-files
 The project uses:
 - **ruff** for linting and formatting
 - **isort** for import sorting (Plone profile)
-- **ty** for type checking
+- **pyright** for type checking
 - **pre-commit** for automated quality checks
 - **[pre-commit.ci](https://pre-commit.ci)** for automated PR checks
 

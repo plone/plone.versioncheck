@@ -23,9 +23,9 @@
   [jensens]
 - Configure PyPI Trusted Publishing for secure, token-free releases.
   [jensens]
-- Replace `black`/`mypy` with `ruff`/`ty` for faster linting and type checking.
+- Replace `black`/`mypy` with `ruff`/`pyright` for faster linting and type checking.
   [jensens]
-- Add `pre-commit` configuration with `ruff`, `isort` (plone profile), and `ty`.
+- Add `pre-commit` configuration with `ruff`, `isort` (plone profile), and `pyright`.
   [jensens]
 - Add concurrency control for PyPI requests (default: 20 concurrent).
   [jensens]
