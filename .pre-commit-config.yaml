@@ -17,6 +17,7 @@ repos:
       - id: ty
         name: ty
         additional_dependencies:
+        - ty
         - ".[test, typecheck]"
         entry: ty check src tests
         language: python
