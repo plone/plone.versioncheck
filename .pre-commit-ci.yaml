@@ -5,7 +5,8 @@ ci:
   # Run pre-commit autoupdate monthly
   autoupdate_schedule: monthly
 
-  # Skip pyright hook in CI - it requires the package to be installed
+  # Skip pyright - run in GitHub Actions instead (requires package installation)
+  # Pre-commit.ci environment has network restrictions that prevent pyright dependencies
   skip: [pyright]
 
   # Automatically fix issues and commit
