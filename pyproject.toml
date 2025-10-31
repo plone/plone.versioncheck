@@ -127,7 +127,9 @@ directory = "_build/reports/coverage"
 
 [tool.pyright]
 include = ["src"]
-exclude = ["**/__pycache__", "**/.tox", "**/.venv"]
+exclude = ["**/__pycache__", "**/.tox"]
+venvPath = "."
+venv = ".venv"
 pythonVersion = "3.10"
 pythonPlatform = "All"
 typeCheckingMode = "basic"
