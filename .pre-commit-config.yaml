@@ -16,8 +16,10 @@ repos:
     hooks:
       - id: ty
         name: ty
-        entry: ty check src
-        language: system
+        additional_dependencies:
+        - ".[test, typecheck]"
+        entry: ty check src tests
+        language: python
         types: [python]
         pass_filenames: false
 
