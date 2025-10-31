@@ -2,6 +2,7 @@
 
 [![Tests](https://github.com/plone/plone.versioncheck/actions/workflows/tests.yaml/badge.svg)](https://github.com/plone/plone.versioncheck/actions/workflows/tests.yaml)
 [![Coverage](https://codecov.io/gh/plone/plone.versioncheck/branch/master/graph/badge.svg)](https://codecov.io/gh/plone/plone.versioncheck)
+[![Checked with pyright](https://microsoft.github.io/pyright/img/pyright_badge.svg)](https://microsoft.github.io/pyright/)
 
 Checks pinned versions with overrides in a cascaded buildout
 

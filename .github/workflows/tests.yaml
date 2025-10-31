@@ -83,12 +83,13 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Create virtual environment and install dependencies
+      - name: Install package with dependencies
         run: |
           uv venv
-          uv pip install -e .[typecheck]
+          uv pip install -e .
 
       - name: Run pyright
-        run: |
-          source .venv/bin/activate
-          pyright src
+        uses: jakebailey/pyright-action@v2
+        with:
+          version: PATH
+          working-directory: .
