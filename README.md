@@ -328,8 +328,11 @@ The project uses:
 - **isort** for import sorting (Plone profile)
 - **ty** for type checking
 - **pre-commit** for automated quality checks
+- **[pre-commit.ci](https://pre-commit.ci)** for automated PR checks
 
 Test coverage requirement: 77% minimum (currently ~78%)
+
+Pre-commit hooks will automatically fix issues when possible. On pull requests, pre-commit.ci will run all checks and auto-commit fixes.
 
 ## License
 
