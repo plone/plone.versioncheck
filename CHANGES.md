@@ -37,6 +37,10 @@
   [jensens]
 - Increase minimum coverage requirement from 60% to 77% in test suite.
   [jensens]
+- Add separate lint and type-check jobs to CI workflow for better feedback.
+  [jensens]
+- Use official pyright-action for CI type checking with PR annotations.
+  [jensens]
 
 ### Bug fixes
 
