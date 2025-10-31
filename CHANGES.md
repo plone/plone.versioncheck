@@ -17,7 +17,11 @@
   [jensens]
 - Add comprehensive type hints throughout the codebase (PEP 484).
   [jensens]
-- Modernize build system: use `pyproject.toml` with `hatchling` backend.
+- Modernize build system: use `pyproject.toml` with `setuptools` backend (PEP 621).
+  Changed from `hatchling` to `setuptools` for compatibility with `zc.buildout` develop installs.
+  [jensens]
+- Add upper bound version constraint for `httpx` dependency (`httpx>=0.27,<1.0`).
+  This prevents installation of `httpx==1.0dev3` which has breaking API changes (missing `AsyncClient`).
   [jensens]
 - Add GitHub Actions CI/CD workflows for testing, linting, and automated releases.
   [jensens]
