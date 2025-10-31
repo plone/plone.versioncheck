@@ -12,14 +12,18 @@ repos:
       - id: isort
         args: [--profile, plone]
 
-  - repo: local
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.407
     hooks:
       - id: pyright
-        name: pyright
-        entry: ./typecheck.sh
-        language: system
-        types: [python]
-        pass_filenames: false
+        exclude: ^tests/
+        additional_dependencies: [
+          httpx,
+          jinja2,
+          colorama,
+          packaging,
+          zc.buildout,
+        ]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
