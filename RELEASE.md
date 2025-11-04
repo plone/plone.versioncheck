@@ -167,7 +167,7 @@ Development releases are automatically published to Test PyPI on every push to m
 The release workflow (`.github/workflows/release.yaml`) performs these steps:
 
 1. **Run Tests** - Ensures all tests pass before building
-2. **Build Package** - Creates wheel and sdist with hatchling
+2. **Build Package** - Creates wheel and sdist with setuptools
 3. **Verify Package** - Uses `build-and-inspect-python-package`
 4. **Attest Build** - Generates SLSA provenance attestation
 5. **Publish to PyPI** - Uses Trusted Publishing (no API tokens needed)
@@ -197,16 +197,16 @@ If automated release fails, you can release manually:
 
 ```bash
 # Build the package
-python -m build
+uv build
 
 # Check the built package
-twine check dist/*
+uv run twine check dist/*
 
 # Upload to Test PyPI (optional)
-twine upload --repository testpypi dist/*
+uv run twine upload --repository testpypi dist/*
 
 # Upload to PyPI
-twine upload dist/*
+uv run twine upload dist/*
 ```
 
 **Note:** Manual releases won't have build provenance attestation.
