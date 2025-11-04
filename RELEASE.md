@@ -55,7 +55,7 @@ For additional security, configure deployment environments in GitHub:
 1. Go to: https://github.com/plone/plone.versioncheck/settings/environments
 2. Create environment: `release-pypi`
    - Add protection rules (e.g., require review from maintainers)
-   - Restrict to `master` branch only
+   - Restrict to `main` branch only
 3. Create environment: `release-test-pypi`
 
 #### Verification
@@ -63,7 +63,7 @@ For additional security, configure deployment environments in GitHub:
 To verify the setup:
 1. Check that the publisher appears in PyPI's Publishing settings
 2. The workflow will fail with a clear error if trusted publishing isn't configured
-3. Test with a push to master (will publish to Test PyPI if configured)
+3. Test with a push to main (will publish to Test PyPI if configured)
 
 #### Troubleshooting Setup
 
@@ -84,8 +84,8 @@ To verify the setup:
 ### 1. Prepare the Release
 
 ```bash
-# Ensure you're on master and up to date
-git checkout master
+# Ensure you're on main and up to date
+git checkout main
 git pull
 
 # Update CHANGES.md with release notes
@@ -156,9 +156,9 @@ git push
 
 ## Development Releases
 
-Development releases are automatically published to Test PyPI on every push to master:
+Development releases are automatically published to Test PyPI on every push to main:
 
-- Triggered by: Push to `master` branch
+- Triggered by: Push to `main` branch
 - Published to: https://test.pypi.org/project/plone.versioncheck/
 - Install from Test PyPI: `pip install --index-url https://test.pypi.org/simple/ plone.versioncheck`
 
