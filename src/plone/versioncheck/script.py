@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from plone.versioncheck import formatter
@@ -8,8 +7,10 @@ from plone.versioncheck.parser import parse
 from plone.versioncheck.pypi import check_all
 from plone.versioncheck.pypi import update_pkgs_info
 from plone.versioncheck.pypi import update_tracking_info
+from typing import Any
 
 import argparse
+import asyncio
 import sys
 
 
@@ -59,14 +60,14 @@ parser.add_argument(
 parser.add_argument(
     "-r",
     "--required-by",
-    help="show information about requirements (only if tracking file is " "available)",
+    help="show information about requirements (only if tracking file is available)",
     default=False,
     action="store_true",
 )
 parser.add_argument(
     "-d",
     "--show-release-dates",
-    help="show information about release dates " "(only for package lookup from PyPI)",
+    help="show information about release dates (only for package lookup from PyPI)",
     default=False,
     action="store_true",
     dest="show_release_dates",
@@ -114,20 +115,21 @@ parser.add_argument(
 )
 
 
-def run():
+async def async_run() -> None:
+    """Main async entry point for the versioncheck CLI tool"""
     args = parser.parse_args()
-    pkgsinfo = {}
-    pkgsinfo["pkgs"] = parse(args.buildout)
+    pkgsinfo: dict[str, Any] = {}
+    pkgsinfo["pkgs"] = await parse(args.buildout, nocache=args.no_cache)
 
     # retrieve additional informations
     if not args.ignore_tracking:
         tracking.get(pkgsinfo, args.buildout)
     if args.pypi:
-        check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+        await check_all(pkgsinfo, args.debug_limit, nocache=args.no_cache)
         if args.show_release_dates:
-            update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
+            await update_pkgs_info(pkgsinfo, args.debug_limit, nocache=args.no_cache)
             if not args.ignore_tracking:
-                update_tracking_info(pkgsinfo, nocache=args.no_cache)
+                await update_tracking_info(pkgsinfo, nocache=args.no_cache)
 
     # Create output
     if args.machine:
@@ -160,3 +162,8 @@ def run():
             exclude_cfgs=args.exclude_cfg,
             show_requiredby=args.required_by,
         )
+
+
+def run() -> None:
+    """Entry point that runs the async CLI tool"""
+    asyncio.run(async_run())

@@ -1,46 +1,43 @@
-# -*- coding: utf-8 -*-
-
 from collections import OrderedDict
+from collections.abc import Iterator
+from configparser import ConfigParser
+from configparser import NoOptionError
+from configparser import NoSectionError
+from io import StringIO
 from plone.versioncheck.utils import find_relative
-from plone.versioncheck.utils import requests_session
+from plone.versioncheck.utils import http_client
+from typing import Any
 from zc.buildout import UserError
 from zc.buildout.buildout import Buildout
 
 import contextlib
+import httpx
 import os.path
 import sys
 
 
-if sys.version_info < (3, 0):
-    from ConfigParser import ConfigParser
-    from ConfigParser import NoOptionError
-    from ConfigParser import NoSectionError
-    from StringIO import StringIO
-elif sys.version_info >= (3, 0):
-    from configparser import ConfigParser
-    from configparser import NoOptionError
-    from configparser import NoSectionError
-    from io import StringIO
-
-
 @contextlib.contextmanager
-def nostdout():
+def nostdout() -> Iterator[None]:
+    """Context manager to suppress stdout"""
     save_stdout = sys.stdout
     sys.stdout = StringIO()
     yield
     sys.stdout = save_stdout
 
 
-def _extract_versions_section(  # NOQA: C901
-    session,
-    filename,
-    base_dir=None,
-    version_sections=None,
-    annotations=None,
-    relative=None,
-    version_section_name=None,
-    versionannotation_section_name="versionannotations",
-):
+async def _extract_versions_section(  # NOQA: C901
+    client: httpx.AsyncClient,
+    filename: str,
+    base_dir: str | None = None,
+    version_sections: OrderedDict[str, OrderedDict[str, str]] | None = None,
+    annotations: OrderedDict[str, OrderedDict[str, str]] | None = None,
+    relative: str | None = None,
+    version_section_name: str | None = None,
+    versionannotation_section_name: str = "versionannotations",
+) -> tuple[
+    OrderedDict[str, OrderedDict[str, str]], OrderedDict[str, OrderedDict[str, str]]
+]:
+    """Extract versions section from buildout file recursively"""
     if base_dir is None:
         base_dir = os.path.dirname(os.path.abspath(filename))
     if version_sections is None:
@@ -50,7 +47,7 @@ def _extract_versions_section(  # NOQA: C901
     if "://" not in filename:
         if relative and "://" in relative:
             # relative to url!
-            filename = "{0}/{1}".format(relative, filename)
+            filename = f"{relative}/{filename}"
         else:
             if relative:
                 if filename.startswith(relative + "/"):
@@ -59,7 +56,7 @@ def _extract_versions_section(  # NOQA: C901
             else:
                 filename = os.path.join(base_dir, filename)
 
-    sys.stderr.write("\n- {0}".format(filename))
+    sys.stderr.write(f"\n- {filename}")
 
     try:
         with nostdout():
@@ -70,20 +67,18 @@ def _extract_versions_section(  # NOQA: C901
     if os.path.isfile(filename):
         config.read(filename)
     elif "://" in filename:
-        resp = session.get(filename)
-        try:
-            config.readfp(StringIO(resp.text))
-        except AttributeError:
-            # py3.12 removed readfp()
-            config.read_file(StringIO(resp.text))
-        if resp.from_cache:
+        resp = await client.get(filename)
+        config.read_file(StringIO(resp.text))
+        # Check if response was from cache (hishel uses extensions)
+        from_cache = resp.extensions.get("from_cache", False)
+        if from_cache:
             sys.stderr.write("\n  from cache")
         elif resp.status_code != 200:
-            sys.stderr.write("\n  ERROR {0:d}".format(resp.status_code))
+            sys.stderr.write(f"\n  ERROR {resp.status_code:d}")
         else:
             sys.stderr.write("\n  fresh from server")
     else:
-        raise ValueError("{0} does not exist!".format(filename))
+        raise ValueError(f"{filename} does not exist!")
 
     # first read own versions section
     current_version_section_name = buildout["buildout"].get("versions", "versions")
@@ -106,12 +101,12 @@ def _extract_versions_section(  # NOQA: C901
     else:
         key_name = filename
 
+    # At this point version_section_name is guaranteed to be a string
+    assert version_section_name is not None
     if config.has_section(version_section_name):
         version_sections[key_name] = OrderedDict(config.items(version_section_name))
         sys.stderr.write(
-            "\n  {0:d} entries in versions section.".format(
-                len(version_sections[key_name])
-            )
+            f"\n  {len(version_sections[key_name]):d} entries in versions section."
         )
 
     # read versionannotations
@@ -123,9 +118,7 @@ def _extract_versions_section(  # NOQA: C901
             config.items(versionannotation_section_name)
         )
         sys.stderr.write(
-            "\n  {0:d} entries in annotations section.".format(
-                len(annotations[key_name])
-            )
+            f"\n  {len(annotations[key_name]):d} entries in annotations section."
         )
     try:
         extends = config.get("buildout", "extends").strip()
@@ -136,8 +129,8 @@ def _extract_versions_section(  # NOQA: C901
         if not extend:
             continue
         sub_relative, extend = find_relative(extend, relative)
-        _extract_versions_section(
-            session,
+        await _extract_versions_section(
+            client,
             extend,
             base_dir,
             version_sections,
@@ -149,15 +142,20 @@ def _extract_versions_section(  # NOQA: C901
     return version_sections, annotations
 
 
-def parse(buildout_filename, nocache=False):
+async def parse(
+    buildout_filename: str, nocache: bool = False
+) -> dict[str, OrderedDict[str, dict[str, Any]]]:
+    """Parse buildout configuration files and extract version information"""
     sys.stderr.write("Parsing buildout files:")
     if nocache:
         sys.stderr.write("\n(not using caches)")
     base_relative, buildout_filename = find_relative(buildout_filename)
-    session = requests_session(nocache=nocache)
-    version_sections, annotations = _extract_versions_section(
-        session, buildout_filename, relative=base_relative
-    )
+
+    async with http_client(nocache=nocache) as client:
+        version_sections, annotations = await _extract_versions_section(
+            client, buildout_filename, relative=base_relative
+        )
+
     sys.stderr.write("\nparsing finished.\n")
     pkgs = {}
 
@@ -168,11 +166,11 @@ def parse(buildout_filename, nocache=False):
 
     for pkgname in pkgs:
         pkg = pkgs[pkgname]
-        for name in version_sections.keys():
+        for name in version_sections:
             if pkgname in version_sections.get(name, {}):
                 pkg[name] = {"v": version_sections[name][pkgname], "a": ""}
 
-        for name in annotations.keys():
+        for name in annotations:
             if pkgname in annotations.get(name, {}):
                 if name in pkg:
                     pkg[name]["a"] = annotations[name][pkgname]

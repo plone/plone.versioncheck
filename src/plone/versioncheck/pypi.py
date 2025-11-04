@@ -1,11 +1,13 @@
-# -*- coding: utf-8 -*-
-
 from collections import namedtuple
 from collections import OrderedDict
-from pkg_resources import parse_version
-from plone.versioncheck.utils import requests_session
+from packaging.version import parse as parse_version
+from packaging.version import Version
+from plone.versioncheck.utils import http_client
+from typing import Any
 
+import asyncio
 import datetime
+import httpx
 import sys
 
 
@@ -14,10 +16,10 @@ PYPI_URL = "https://pypi.org"
 
 Release = namedtuple("Release", ["version", "release_date"])
 
-FLOOR_RELEASE = Release(version=u"0.0.0.0", release_date=datetime.date(1970, 1, 1))
+FLOOR_RELEASE = Release(version="0.0.0.0", release_date=datetime.date(1970, 1, 1))
 
 
-def mmbp_tuple(version):
+def mmbp_tuple(version: Version) -> list[int]:
     """major minor bugfix, postfix tuple from version
 
     - 1.0     -> 1.0.0.0
@@ -30,8 +32,11 @@ def mmbp_tuple(version):
     return [int(_) for _ in parts]
 
 
-def check(name, version, session):  # noqa: C901
-    result = OrderedDict(
+async def check(
+    name: str, version: str, client: httpx.AsyncClient
+) -> tuple[bool | int, dict[str, Release | None] | str]:
+    """Check PyPI for newer versions of a package"""  # noqa: C901
+    result: OrderedDict[str, Release | None] = OrderedDict(
         [
             ("major", FLOOR_RELEASE),
             ("minor", FLOOR_RELEASE),
@@ -47,30 +52,30 @@ def check(name, version, session):  # noqa: C901
 
     # parse version to test against:
     try:
-        version = parse_version(version)
+        version_parsed = parse_version(version)
     except Exception:
-        # likely pkg_resources.extern.packaging.version.InvalidVersion
+        # likely packaging.version.InvalidVersion
         # or TypeError, but really any exception can be ignored.
         # See https://github.com/plone/plone.versioncheck/issues/52
         return False, "Version broken/ not checkable."
     try:
-        vtuple = mmbp_tuple(version)
+        vtuple = mmbp_tuple(version_parsed)
     except ValueError:
         return False, "Can not check legacy version number."
 
     # fetch pkgs json info from pypi
-    url = "{url}/pypi/{name}/json".format(url=PYPI_URL, name=name)
+    url = f"{PYPI_URL}/pypi/{name}/json"
     try:
-        resp = session.get(url)
+        resp = await client.get(url)
     except Exception:
-        print("Fatal problem while fetching URL: {0}".format(url))
+        print(f"Fatal problem while fetching URL: {url}")
         raise
 
     # check status code
     if resp.status_code == 404:
         return (
             False,
-            'Package "{name}" not on pypi ({url}).'.format(name=name, url=url),
+            f'Package "{name}" not on pypi ({url}).',
         )
     elif resp.status_code != 200:
         return False, str(resp.status_code)
@@ -83,11 +88,11 @@ def check(name, version, session):  # noqa: C901
         try:
             rel_v = parse_version(release)
         except Exception:
-            # likely pkg_resources.extern.packaging.version.InvalidVersion
+            # likely packaging.version.InvalidVersion
             # but really any exception can be ignored.
             # See https://github.com/plone/plone.versioncheck/issues/52
             continue
-        if rel_v <= version:
+        if rel_v <= version_parsed:
             continue
         rel_vtuple = mmbp_tuple(rel_v)
         rel_data = data["releases"][release]
@@ -102,11 +107,11 @@ def check(name, version, session):  # noqa: C901
                     rel_date = crel_date
         if rel_vtuple[0] > vtuple[0]:
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["majorpre"].version
+                result["majorpre"].version  # type: ignore
             ):
                 result["majorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["major"].version
+                result["major"].version  # type: ignore
             ):
                 result["major"] = Release(version=release, release_date=rel_date)
             continue
@@ -114,11 +119,11 @@ def check(name, version, session):  # noqa: C901
             rel_vtuple[0] == vtuple[0] and rel_vtuple[1] > vtuple[1]
         ):
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["minorpre"].version
+                result["minorpre"].version  # type: ignore
             ):
                 result["minorpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["minor"].version
+                result["minor"].version  # type: ignore
             ):
                 result["minor"] = Release(version=release, release_date=rel_date)
             continue
@@ -128,78 +133,119 @@ def check(name, version, session):  # noqa: C901
             and rel_vtuple[2] > vtuple[2]
         ):
             if rel_v.is_prerelease and rel_v > parse_version(
-                result["bugfixpre"].version
+                result["bugfixpre"].version  # type: ignore
             ):
                 result["bugfixpre"] = Release(version=release, release_date=rel_date)
             elif not rel_v.is_prerelease and rel_v > parse_version(
-                result["bugfix"].version
+                result["bugfix"].version  # type: ignore
             ):
                 result["bugfix"] = Release(version=release, release_date=rel_date)
             continue
 
     # reset non existing versions
-    for version_tag in result.keys():
-        if result[version_tag].version == u"0.0.0.0":
+    for version_tag in result:
+        if result[version_tag].version == "0.0.0.0":  # type: ignore
             result[version_tag] = None
 
     # filter out older
     if (
         result["major"]
         and result["majorpre"]
-        and parse_version(result["majorpre"].version)
-        < parse_version(result["major"].version)
+        and parse_version(result["majorpre"].version)  # type: ignore
+        < parse_version(result["major"].version)  # type: ignore
     ):
         result["majorpre"] = None
     if (
         result["minor"]
         and result["minorpre"]
-        and parse_version(result["minorpre"].version)
-        < parse_version(result["minor"].version)
+        and parse_version(result["minorpre"].version)  # type: ignore
+        < parse_version(result["minor"].version)  # type: ignore
     ):
         result["minorpre"] = None
     if (
         result["bugfix"]
         and result["bugfixpre"]
-        and parse_version(result["bugfixpre"].version)
-        < parse_version(result["bugfix"].version)
+        and parse_version(result["bugfixpre"].version)  # type: ignore
+        < parse_version(result["bugfix"].version)  # type: ignore
     ):
         result["bugfixpre"] = None
 
-    return 2 if resp.from_cache else 1, result
+    # Check if response was from cache (hishel uses extensions)
+    from_cache = resp.extensions.get("from_cache", False)
+    return 2 if from_cache else 1, result
 
 
-def check_all(pkgsinfo, limit=None, nocache=False):
-    session = requests_session(nocache=nocache)
+async def check_all(
+    pkgsinfo: dict[str, Any],
+    limit: int | None = None,
+    nocache: bool = False,
+    concurrency: int = 20,
+) -> None:
+    """Check PyPI for updates of all packages concurrently"""
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write("Check PyPI for updates of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for updates of {len(pkgs):d} packages.")
     if limit:
-        sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
+        sys.stderr.write(f" Check limited to {limit:d} packages.")
+    sys.stderr.write(f" (max {concurrency} concurrent)")
+
     pkgsinfo["pypi"] = {}
     errors = []
-    for idx, pkgname in enumerate(sorted(pkgs)):
-        if not idx % 20 and idx != limit:
-            sys.stderr.write("\n{0:4d} ".format(idx))
-        current = next(iter(pkgs[pkgname]))
-        state, result = check(pkgname, pkgs[pkgname][current]["v"], session)
-        if not state:
-            sys.stderr.write("E")
-            errors.append((pkgname, pkgs[pkgname][current]["v"], str(result)))
-            continue
-        pkgsinfo["pypi"][pkgname] = result
-        sys.stderr.write("O" if state == 1 else "o")
-        if limit and idx == limit:
-            break
+    semaphore = asyncio.Semaphore(concurrency)
+
+    async def check_with_limit(
+        idx: int, pkgname: str, version: str, client: httpx.AsyncClient
+    ) -> tuple[int, str, tuple[bool | int, dict[str, Release | None] | str]]:
+        """Check a single package with concurrency limiting"""
+        async with semaphore:
+            result = await check(pkgname, version, client)
+            return idx, pkgname, result
+
+    # Prepare all check tasks
+    pkg_list = sorted(pkgs.items())
+    if limit:
+        pkg_list = pkg_list[:limit]
+
+    async with http_client(nocache=nocache) as client:
+        tasks = [
+            check_with_limit(
+                idx,
+                pkgname,
+                pkg_data[next(iter(pkg_data))]["v"],
+                client,
+            )
+            for idx, (pkgname, pkg_data) in enumerate(pkg_list)
+        ]
+
+        # Process results as they complete
+        for idx, coro in enumerate(asyncio.as_completed(tasks)):
+            if idx % 20 == 0:
+                sys.stderr.write(f"\n{idx:4d} ")
+
+            task_idx, pkgname, (state, result) = await coro
+
+            if not state:
+                sys.stderr.write("E")
+                current = next(iter(pkgs[pkgname]))
+                errors.append((pkgname, pkgs[pkgname][current]["v"], str(result)))
+                continue
+
+            pkgsinfo["pypi"][pkgname] = result
+            sys.stderr.write("O" if state == 1 else "o")
+
     for error in errors:
-        sys.stderr.write("\nError in {0} version {1} reason: {2}".format(*error))
+        sys.stderr.write("\nError in {} version {} reason: {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
 
 
-def update_pkg_info(pkg_name, pkg_data, session):
-    for filename, elemdata in pkg_data.items():
+async def update_pkg_info(
+    pkg_name: str, pkg_data: dict[str, dict[str, Any]], client: httpx.AsyncClient
+) -> bool:
+    """Update package information with release dates from PyPI"""
+    for _filename, elemdata in pkg_data.items():
         # fetch pkgs json info from pypi
-        url = "{url}/pypi/{name}/json".format(url=PYPI_URL, name=pkg_name)
-        resp = session.get(url)
+        url = f"{PYPI_URL}/pypi/{pkg_name}/json"
+        resp = await client.get(url)
 
         # check status code
         if resp.status_code != 200:
@@ -225,44 +271,70 @@ def update_pkg_info(pkg_name, pkg_data, session):
     return True
 
 
-def update_pkgs_info(pkgsinfo, limit=None, nocache=False):
-    session = requests_session(nocache=nocache)
+async def update_pkgs_info(
+    pkgsinfo: dict[str, Any],
+    limit: int | None = None,
+    nocache: bool = False,
+    concurrency: int = 20,
+) -> None:
+    """Update package information for all packages concurrently"""
     pkgs = pkgsinfo["pkgs"]
-    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for data of {len(pkgs):d} packages.")
     if limit:
-        sys.stderr.write(" Check limited to {0:d} packages.".format(limit))
+        sys.stderr.write(f" Check limited to {limit:d} packages.")
+    sys.stderr.write(f" (max {concurrency} concurrent)")
+
     errors = []
+    semaphore = asyncio.Semaphore(concurrency)
 
-    idx = 0
-    for pkg_name, pkg_data in pkgs.items():
-        if not idx % 20 and idx != limit:
-            sys.stderr.write("\n{0:4d} ".format(idx))
+    async def update_with_limit(
+        idx: int,
+        pkg_name: str,
+        pkg_data: dict[str, dict[str, Any]],
+        client: httpx.AsyncClient,
+    ) -> tuple[int, str, bool]:
+        """Update a single package with concurrency limiting"""
+        async with semaphore:
+            result = await update_pkg_info(pkg_name, pkg_data, client)
+            return idx, pkg_name, result
 
-        state = update_pkg_info(pkg_name, pkg_data, session)
-        if not state:
-            sys.stderr.write("E")
-            errors.append((pkg_name,))
-            continue
-        sys.stderr.write("O" if state == 1 else "o")
-        if limit and idx == limit:
-            break
-        idx += 1
+    # Prepare all update tasks
+    pkg_list = list(pkgs.items())
+    if limit:
+        pkg_list = pkg_list[:limit]
+
+    async with http_client(nocache=nocache) as client:
+        tasks = [
+            update_with_limit(idx, pkg_name, pkg_data, client)
+            for idx, (pkg_name, pkg_data) in enumerate(pkg_list)
+        ]
+
+        # Process results as they complete
+        for idx, coro in enumerate(asyncio.as_completed(tasks)):
+            if idx % 20 == 0:
+                sys.stderr.write(f"\n{idx:4d} ")
+
+            task_idx, pkg_name, state = await coro
+
+            if not state:
+                sys.stderr.write("E")
+                errors.append((pkg_name,))
+                continue
+            sys.stderr.write("O")
 
     for error in errors:
-        sys.stderr.write("\nError in {0}".format(*error))
+        sys.stderr.write("\nError in {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")
 
 
-def update_tracking_version_info(pkg_name, pkg_data, session):
+async def update_tracking_version_info(
+    pkg_name: str, pkg_data: list[Any], client: httpx.AsyncClient
+) -> tuple[bool | int, bool | str]:
+    """Update tracking version information from PyPI"""
     # fetch pkgs json info from pypi
-    url = "{url}/pypi/{name}/{version}/json".format(
-        url=PYPI_URL,
-        name=pkg_name,
-        # version=pkg_data['version'])
-        version=pkg_data[0],
-    )
-    resp = session.get(url)
+    url = f"{PYPI_URL}/pypi/{pkg_name}/{pkg_data[0]}/json"
+    resp = await client.get(url)
 
     # check status code
     if resp.status_code == 404:
@@ -283,29 +355,52 @@ def update_tracking_version_info(pkg_name, pkg_data, session):
     # pkg_data['release_date'] = rel_date
     pkg_data.append(rel_date)
 
-    return 2 if resp.from_cache else 1, True
+    # Check if response was from cache (hishel uses extensions)
+    from_cache = resp.extensions.get("from_cache", False)
+    return 2 if from_cache else 1, True
 
 
-def update_tracking_info(pkgsinfo, nocache=False):
-    session = requests_session(nocache=nocache)
+async def update_tracking_info(
+    pkgsinfo: dict[str, Any], nocache: bool = False, concurrency: int = 20
+) -> None:
+    """Update tracking information from PyPI concurrently"""
     pkgs = pkgsinfo["tracking"]["versions"]
-    sys.stderr.write("Check PyPI for data of {0:d} packages.".format(len(pkgs)))
+    sys.stderr.write(f"Check PyPI for data of {len(pkgs):d} packages.")
+    sys.stderr.write(f" (max {concurrency} concurrent)")
     errors = []
+    semaphore = asyncio.Semaphore(concurrency)
 
-    idx = 0
-    for pkg_name, pkg_data in pkgs.items():
-        if not idx % 20:
-            sys.stderr.write("\n{0:4d} ".format(idx))
+    async def update_tracking_with_limit(
+        idx: int, pkg_name: str, pkg_data: list[Any], client: httpx.AsyncClient
+    ) -> tuple[int, str, tuple[bool | int, bool | str]]:
+        """Update tracking for a single package with concurrency limiting"""
+        async with semaphore:
+            result = await update_tracking_version_info(pkg_name, pkg_data, client)
+            return idx, pkg_name, result
 
-        state, result = update_tracking_version_info(pkg_name, pkg_data, session)
-        if not state:
-            sys.stderr.write("E")
-            errors.append((pkg_name, str(result)))
-            continue
-        sys.stderr.write("O" if state == 1 else "o")
-        idx += 1
+    # Prepare all update tasks
+    pkg_list = list(pkgs.items())
+
+    async with http_client(nocache=nocache) as client:
+        tasks = [
+            update_tracking_with_limit(idx, pkg_name, pkg_data, client)
+            for idx, (pkg_name, pkg_data) in enumerate(pkg_list)
+        ]
+
+        # Process results as they complete
+        for idx, coro in enumerate(asyncio.as_completed(tasks)):
+            if idx % 20 == 0:
+                sys.stderr.write(f"\n{idx:4d} ")
+
+            task_idx, pkg_name, (state, result) = await coro
+
+            if not state:
+                sys.stderr.write("E")
+                errors.append((pkg_name, str(result)))
+                continue
+            sys.stderr.write("O" if state == 1 else "o")
 
     for error in errors:
-        sys.stderr.write("\nError in {0} reason: {1}".format(*error))
+        sys.stderr.write("\nError in {} reason: {}".format(*error))
 
     sys.stderr.write("\nPyPI check finished\n")

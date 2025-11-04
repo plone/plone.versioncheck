@@ -1,24 +1,24 @@
-# -*- coding: utf-8 -*-
 from collections import OrderedDict
-from pkg_resources import parse_version
+from packaging.version import parse as parse_version
 from plone.versioncheck.pypi import check
 from plone.versioncheck.pypi import mmbp_tuple
 from plone.versioncheck.pypi import PYPI_URL
 from plone.versioncheck.pypi import Release
-from plone.versioncheck.utils import requests_session
 
 import datetime
-import responses
+import httpx
+import pytest
+import respx
 
 
 def test_mmbp_tuple():
-    assert mmbp_tuple(parse_version(u"0.0.0.0")) == [0, 0, 0, 0]
-    assert mmbp_tuple(parse_version(u"1.0")) == [1, 0, 0, 0]
-    assert mmbp_tuple(parse_version(u"1.1.0")) == [1, 1, 0, 0]
-    assert mmbp_tuple(parse_version(u"0.1")) == [0, 1, 0, 0]
-    assert mmbp_tuple(parse_version(u"0.10.1")) == [0, 10, 1, 0]
-    assert mmbp_tuple(parse_version(u"1.1.1.1")) == [1, 1, 1, 1]
-    assert mmbp_tuple(parse_version(u"1.1.0.a1")) == [1, 1, 0, 0]
+    assert mmbp_tuple(parse_version("0.0.0.0")) == [0, 0, 0, 0]
+    assert mmbp_tuple(parse_version("1.0")) == [1, 0, 0, 0]
+    assert mmbp_tuple(parse_version("1.1.0")) == [1, 1, 0, 0]
+    assert mmbp_tuple(parse_version("0.1")) == [0, 1, 0, 0]
+    assert mmbp_tuple(parse_version("0.10.1")) == [0, 10, 1, 0]
+    assert mmbp_tuple(parse_version("1.1.1.1")) == [1, 1, 1, 1]
+    assert mmbp_tuple(parse_version("1.1.0.a1")) == [1, 1, 0, 0]
 
 
 demo_json = """{
@@ -50,33 +50,31 @@ demo_json = """{
 
 assumed_demo_result = OrderedDict(
     [
-        ("major", Release(version=u"2.0.0", release_date=datetime.date(1970, 1, 1))),
-        ("minor", Release(version=u"1.1.1", release_date=datetime.date(1970, 1, 1))),
-        ("bugfix", Release(version=u"1.0.12", release_date=datetime.date(1970, 1, 1))),
+        ("major", Release(version="2.0.0", release_date=datetime.date(1970, 1, 1))),
+        ("minor", Release(version="1.1.1", release_date=datetime.date(1970, 1, 1))),
+        ("bugfix", Release(version="1.0.12", release_date=datetime.date(1970, 1, 1))),
         (
             "majorpre",
-            Release(version=u"3.0.a1", release_date=datetime.date(1970, 1, 1)),
+            Release(version="3.0.a1", release_date=datetime.date(1970, 1, 1)),
         ),
         (
             "minorpre",
-            Release(version=u"1.2.0.b1", release_date=datetime.date(1970, 1, 1)),
+            Release(version="1.2.0.b1", release_date=datetime.date(1970, 1, 1)),
         ),
         (
             "bugfixpre",
-            Release(version=u"1.0.13.dev0", release_date=datetime.date(1970, 1, 1)),
+            Release(version="1.0.13.dev0", release_date=datetime.date(1970, 1, 1)),
         ),
     ]
 )
 
 
-@responses.activate
-def test_check():
-    session = requests_session(nocache=False)
-    name = u"demo"
-    responses.add(
-        responses.GET,
-        "{url}/pypi/{name}/json".format(url=PYPI_URL, name=name),
-        content_type="application/json",
-        body=demo_json,
-    )
-    assert check(name, u"1.0", session) == (1, assumed_demo_result)
+@pytest.mark.asyncio
+async def test_check():
+    name = "demo"
+    async with respx.mock:
+        respx.get(f"{PYPI_URL}/pypi/{name}/json").mock(
+            return_value=httpx.Response(200, json=eval(demo_json))
+        )
+        async with httpx.AsyncClient() as client:
+            assert await check(name, "1.0", client) == (1, assumed_demo_result)

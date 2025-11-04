@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from collections import OrderedDict
 from plone.versioncheck.formatter import browser
 from plone.versioncheck.formatter import machine

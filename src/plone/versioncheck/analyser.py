@@ -1,8 +1,12 @@
-# -*- coding: utf-8 -*-
-from pkg_resources import parse_version
+from collections import OrderedDict
+from packaging.version import InvalidVersion
+from packaging.version import parse as parse_version
+from typing import Any
 
 
-def uptodate_analysis(pkginfo, pypiinfo):
+def uptodate_analysis(
+    pkginfo: OrderedDict[str, dict[str, Any]], pypiinfo: dict[str, Any]
+) -> list[str]:
     """analyse if used version is current:
 
     result:
@@ -21,7 +25,7 @@ def uptodate_analysis(pkginfo, pypiinfo):
     return result
 
 
-def is_cfgidx_newer(pkginfo, target_idx):
+def is_cfgidx_newer(pkginfo: dict[str, dict[str, Any]], target_idx: int) -> bool:
     """check if a given idx (>0) version is newer than the firstversion
 
     returns boolean
@@ -31,28 +35,31 @@ def is_cfgidx_newer(pkginfo, target_idx):
         version = pkginfo[key]["v"]
         if not version:
             continue
-        if idx == 0:
-            vcur = parse_version(version)
-        if idx == target_idx:
-            return parse_version(version) > vcur
+        try:
+            if idx == 0:
+                vcur = parse_version(version)
+            if idx == target_idx and vcur is not None:
+                return parse_version(version) > vcur
+        except (InvalidVersion, TypeError):
+            # Skip invalid versions (e.g., ">= 1.1" or other non-PEP 440 versions)
+            continue
     return False
 
 
-def is_cfg_newer(pkginfo):
+def is_cfg_newer(pkginfo: dict[str, dict[str, Any]]) -> bool:
     """checks if one of the cfg is newer
 
     returns boolean
     """
-    for idx in range(1, len(pkginfo)):
-        if is_cfgidx_newer(pkginfo, idx):
-            return True
+    return any(is_cfgidx_newer(pkginfo, idx) for idx in range(1, len(pkginfo)))
 
 
-TEST_FINALS = set(["major", "minor", "bugfix"])
-TEST_PRERELEASE = set(["majorpre", "minorpre", "bugfixpre"])
+TEST_FINALS = {"major", "minor", "bugfix"}
+TEST_PRERELEASE = {"majorpre", "minorpre", "bugfixpre"}
 
 
-def is_pypi_newer(pypiinfo):
+def is_pypi_newer(pypiinfo: dict[str, Any]) -> str | bool:
+    """Check if PyPI has newer versions"""
     keys = {_ for _ in pypiinfo if pypiinfo.get(_, False)}
     if TEST_FINALS.intersection(keys):
         return "pypifinal"

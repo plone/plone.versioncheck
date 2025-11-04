@@ -1,7 +1,7 @@
-# -*- coding: utf-8 -*-
 # inspired partly by dumppickedversions
-from pkg_resources import DEVELOP_DIST
+from collections.abc import Callable
 from plone.versioncheck.utils import find_relative
+from typing import Any
 from zc.buildout import easy_install
 
 import json
@@ -11,16 +11,23 @@ import sys
 import time
 
 
+# zc.buildout may vendorize its own copy of pkg_resources
+# Define DEVELOP_DIST locally as recommended in issue #57
+DEVELOP_DIST = "-1"
+
+
 logger = easy_install.logger
 
-required_by = {}
-versions_by_name = {}
+required_by: dict[str, list[str]] = {}
+versions_by_name: dict[str, tuple[str, str | bool]] = {}
 
 TRACKINGFILENAME = ".plone.versioncheck.tracked.json"
 
 
-def track_get_dist(old_get_dist):
-    def get_dist(self, requirement, *ags, **kw):
+def track_get_dist(old_get_dist: Callable) -> Callable:
+    """Wrap Installer._get_dist to track version usage"""
+
+    def get_dist(self: Any, requirement: Any, *ags: Any, **kw: Any) -> Any:
         dists = old_get_dist(self, requirement, *ags, **kw)
         for dist in dists:
             dist_name = dist.project_name.lower()
@@ -51,8 +58,10 @@ def track_get_dist(old_get_dist):
     return get_dist
 
 
-def write_tracked(old_logging_shutdown, logfilepath):
-    def logging_shutdown():
+def write_tracked(old_logging_shutdown: Callable, logfilepath: str) -> Callable:
+    """Wrap logging.shutdown to write tracking file"""
+
+    def logging_shutdown() -> None:
         # WRITE FILE
         result = {
             "generated": time.time(),
@@ -66,14 +75,16 @@ def write_tracked(old_logging_shutdown, logfilepath):
     return logging_shutdown
 
 
-def install(buildout):
+def install(buildout: dict[str, Any]) -> None:
+    """Install tracking extension into buildout"""
     filepath = os.path.join(buildout["buildout"]["directory"], TRACKINGFILENAME)
-    easy_install.Installer.__tracked_versions = {}
-    easy_install.Installer._get_dist = track_get_dist(easy_install.Installer._get_dist)
-    logging.shutdown = write_tracked(logging.shutdown, filepath)
+    easy_install.Installer.__tracked_versions = {}  # type: ignore[attr-defined]
+    easy_install.Installer._get_dist = track_get_dist(easy_install.Installer._get_dist)  # type: ignore[method-assign, attr-defined]
+    logging.shutdown = write_tracked(logging.shutdown, filepath)  # type: ignore[method-assign]
 
 
-def get(pkginfo, buildout):
+def get(pkginfo: dict[str, Any], buildout: str) -> None:
+    """Read tracking information from file"""
     filepath = TRACKINGFILENAME
     relative, filename = find_relative(buildout)
     if relative:
@@ -83,13 +94,12 @@ def get(pkginfo, buildout):
         # not available.
         return
     sys.stderr.write(
-        "\nRead tracking information from buildout extension: \n"
-        "- {0}\n".format(filepath)
+        f"\nRead tracking information from buildout extension: \n- {filepath}\n"
     )
     try:
-        with open(filepath, "r") as fp:
+        with open(filepath) as fp:
             pkginfo["tracking"] = json.load(fp)
-    except (IOError, ValueError) as e:
+    except (OSError, ValueError) as e:
         sys.stderr.write(" - " + str(e) + "\n")
         return
     delta = time.time() - pkginfo["tracking"]["generated"]
@@ -98,7 +108,5 @@ def get(pkginfo, buildout):
     minutes = int(delta // (60) - days * 60 * 60 - hours * 60)
     seconds = delta % 60
     sys.stderr.write(
-        "- age of gathered data: {0:d}d {1:d}h {2:d}m {3:2.3f}s\n".format(
-            days, hours, minutes, seconds
-        )
+        f"- age of gathered data: {days:d}d {hours:d}h {minutes:d}m {seconds:2.3f}s\n"
     )

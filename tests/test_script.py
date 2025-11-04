@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from plone.versioncheck.script import run
 
 import pytest

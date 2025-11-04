@@ -1,0 +1,137 @@
+[project]
+name = "plone.versioncheck"
+version = "2.0.0.dev0"
+description = "Checks pinned versions with overrides in a cascaded buildout"
+readme = "README.md"
+authors = [
+    {name = "Jens W. Klein", email = "jens@bluedynamics.com"},
+]
+requires-python = ">=3.10"
+license = {text = "GPL version 2"}
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Buildout :: Extension",
+    "Framework :: Buildout :: Recipe",
+    "Framework :: Buildout",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Software Development :: Quality Assurance",
+]
+keywords = ["plone", "buildout", "version"]
+dependencies = [
+    "colorama",
+    "httpx>=0.27,<1.0",
+    "jinja2",
+    "packaging",
+    "zc.buildout",
+]
+
+[project.urls]
+Source = "https://github.com/plone/plone.versioncheck"
+Issues = "https://github.com/plone/plone.versioncheck/issues"
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-mock",
+    "pytest-remove-stale-bytecode",
+    "pytest-html",
+    "respx",
+]
+typecheck = [
+    "pyright",
+]
+develop = [
+    "pdbpp",
+    "isort",
+]
+docs = [
+    "Sphinx",
+]
+
+[project.scripts]
+versioncheck = "plone.versioncheck.script:run"
+
+[project.entry-points."zc.buildout.extension"]
+default = "plone.versioncheck.tracking:install"
+
+[build-system]
+requires = ["setuptools>=68.2,<80"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+addopts = "--cov=src --cov-report=xml --cov-report=html --cov-report=term --cov-branch --cov-fail-under=77"
+xfail_strict = true
+norecursedirs = ["fixtures"]
+
+[tool.isort]
+profile = "plone"
+src_paths = ["src", "tests"]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 88
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort (disabled in favor of isort tool)
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "PIE", # flake8-pie
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "I001", # isort - we use isort directly with plone profile
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+precision = 2
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]
+
+[tool.coverage.html]
+directory = "_build/reports/coverage"
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__", "**/.tox"]
+venvPath = "."
+venv = ".venv"
+pythonVersion = "3.10"
+pythonPlatform = "All"
+typeCheckingMode = "basic"
+reportMissingImports = true
+reportMissingTypeStubs = false
