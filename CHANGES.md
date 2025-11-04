@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.1
+
+### Bug fixes
+
+- Update workflows and docs to use 'main' as default branch [jensens]
+- Fix uv cache configuration in CI workflows. [jensens]
+
 ## 2.0.0
 
 ### Breaking changes
