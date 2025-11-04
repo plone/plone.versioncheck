@@ -1,15 +1,15 @@
 # Changelog
 
-## 2.0.0 (unreleased)
+## 2.0.0
 
 ### Breaking changes
 
 - Drop Python 2.7 and Python 3.9 support. Require Python 3.10 or later.
-  [jensens]
+  [jensens, 2025-10-30]
 - Replace `requests` library with `httpx` for async HTTP support.
-  [jensens]
+  [jensens, 2025-10-30]
 - Convert all HTTP operations to async (requires no user code changes).
-  [jensens]
+  [jensens, 2025-10-30]
 
 ### New features
 
