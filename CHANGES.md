@@ -4,6 +4,7 @@
 
 ### Bug fixes
 
+- Define `DEVELOP_DIST` as -1 integer instead of string.  [maurits]
 - Update workflows and docs to use 'main' as default branch [jensens]
 - Fix uv cache configuration in CI workflows. [jensens]
 
