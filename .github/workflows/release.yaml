@@ -16,9 +16,7 @@ jobs:
   build-package:
     name: Build & verify package
     needs:
-      - lint
-      - unit-tests
-      - type-check
+      - tests
     runs-on: ubuntu-latest
     permissions:
       attestations: write
