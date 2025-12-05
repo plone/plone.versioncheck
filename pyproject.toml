@@ -1,6 +1,6 @@
 [project]
 name = "plone.versioncheck"
-version = "2.0.1.dev0"
+version = "2.0.1"
 description = "Checks pinned versions with overrides in a cascaded buildout"
 readme = "README.md"
 authors = [
