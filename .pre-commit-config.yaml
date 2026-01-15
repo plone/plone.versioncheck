@@ -4,7 +4,7 @@ ci:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.10
+    rev: v0.14.11
     hooks:
       - id: ruff
         args: [--fix]
@@ -17,7 +17,7 @@ repos:
         args: [--profile, plone]
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.407
+    rev: v1.1.408
     hooks:
       - id: pyright
         exclude: ^tests/
