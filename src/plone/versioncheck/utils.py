@@ -13,7 +13,6 @@ import shlex
 import struct
 import subprocess
 
-
 COLORED = True
 
 _STATEMAP = {

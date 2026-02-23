@@ -2,7 +2,6 @@ from collections import OrderedDict
 from plone.versioncheck.formatter import browser
 from plone.versioncheck.formatter import machine
 
-
 pkgsinfo = {
     "pkgs": {
         "collective.quickupload": OrderedDict(

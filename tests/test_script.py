@@ -3,7 +3,6 @@ from plone.versioncheck.script import run
 import pytest
 import sys
 
-
 help_output = """
 usage: py.test [-h] [-p] [-n] [-N] [-r] [-d] [-i] [-m] [--no-cache] [-b]
                [-o [OUTPUT]] [--no-colors] [--debug-limit DEBUG_LIMIT]

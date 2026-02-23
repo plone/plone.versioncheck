@@ -13,7 +13,6 @@ import argparse
 import asyncio
 import sys
 
-
 EPILOG = """\
 States and color codes:
   [A]ctive (white)
