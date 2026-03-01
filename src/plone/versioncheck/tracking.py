@@ -10,7 +10,6 @@ import os
 import sys
 import time
 
-
 # zc.buildout may vendorize its own copy of pkg_resources
 # Define DEVELOP_DIST locally as recommended in issue #57
 DEVELOP_DIST = -1

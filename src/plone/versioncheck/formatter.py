@@ -16,7 +16,6 @@ import json
 import sys
 import textwrap
 
-
 jenv = Environment(loader=PackageLoader("plone.versioncheck", "tpl"))
 
 FLOOR_DATE = datetime.date(1970, 1, 1)

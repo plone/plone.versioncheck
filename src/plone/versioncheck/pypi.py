@@ -10,7 +10,6 @@ import datetime
 import httpx
 import sys
 
-
 PYPI_URL = "https://pypi.org"
 
 
