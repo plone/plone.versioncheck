@@ -53,7 +53,7 @@ async def test_parse(capsys):
             [
                 (
                     "buildout.cfg",
-                    {"v": "2.1.1", "a": "\nJust a Test Case\nwith multiple lines"},
+                    {"v": "2.1.1", "a": "Just a Test Case\nwith multiple lines"},
                 ),  # NOQA: E501
                 ("bar.cfg", {"v": "2.2.0", "a": ""}),
                 ("foo.cfg", {"v": "3.0.1", "a": ""}),
@@ -186,3 +186,82 @@ async def test_extract_versions_empty_extend_lines(capsys):
             os.unlink(temp_file)
         # Restore working directory
         os.chdir(original_cwd)
+
+
+@pytest.mark.asyncio
+async def test_extract_versions_part_dependency_shorthand(tmp_path, monkeypatch):
+    """A ``=> other-part`` line must not stop the parser.
+
+    zc.buildout allows a section to declare a dependency on another part with
+    the ``=>`` shorthand.  It is not valid INI, so the stdlib ConfigParser
+    used to raise a ParsingError on any buildout.cfg containing one, for
+    example Zope's own buildout.cfg.  See
+    https://github.com/plone/plone.versioncheck/issues/56
+    """
+    from plone.versioncheck.utils import http_client
+
+    # zc.buildout's Buildout() chdirs into the directory of the config file,
+    # so keep that contained -- monkeypatch restores the cwd afterwards.
+    monkeypatch.chdir(tmp_path)
+
+    buildout_file = tmp_path / "buildout.cfg"
+    buildout_file.write_text(
+        "[buildout]\n"
+        "parts = sphinx\n"
+        "versions = versions\n"
+        "\n"
+        "[make-docs]\n"
+        "recipe = collective.recipe.template\n"
+        "\n"
+        "[sphinx]\n"
+        "=> make-docs\n"
+        "recipe = zc.recipe.egg\n"
+        "\n"
+        "[versions]\n"
+        "testpkg = 1.0\n"
+    )
+
+    async with http_client() as client:
+        version_sections, annotations = await _extract_versions_section(
+            client=client,
+            filename=str(buildout_file),
+            base_dir=str(tmp_path),
+        )
+
+    assert version_sections == OrderedDict(
+        [("buildout.cfg", OrderedDict([("testpkg", "1.0")]))]
+    )
+    assert annotations == OrderedDict()
+
+
+@pytest.mark.asyncio
+@respx.mock
+async def test_extract_versions_part_dependency_shorthand_remote():
+    """The same buildout-only syntax must be tolerated over HTTP too."""
+    from plone.versioncheck.utils import http_client
+
+    respx.get("http://example.com/buildout.cfg").mock(
+        return_value=httpx.Response(
+            200,
+            text=(
+                "[buildout]\n"
+                "versions = versions\n"
+                "\n"
+                "[sphinx]\n"
+                "=> make-docs\n"
+                "\n"
+                "[versions]\n"
+                "testpkg = 1.0.0\n"
+            ),
+        )
+    )
+
+    async with http_client() as client:
+        version_sections, annotations = await _extract_versions_section(
+            client=client,
+            filename="http://example.com/buildout.cfg",
+        )
+
+    assert version_sections["http://example.com/buildout.cfg"] == OrderedDict(
+        [("testpkg", "1.0.0")]
+    )
