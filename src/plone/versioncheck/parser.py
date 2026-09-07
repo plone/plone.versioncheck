@@ -8,7 +8,9 @@ from plone.versioncheck.utils import find_relative
 from plone.versioncheck.utils import http_client
 from typing import Any
 from zc.buildout import UserError
+from zc.buildout.buildout import _default_globals
 from zc.buildout.buildout import Buildout
+from zc.buildout.configparser import parse as buildout_parse
 
 import contextlib
 import httpx
@@ -23,6 +25,31 @@ def nostdout() -> Iterator[None]:
     sys.stdout = StringIO()
     yield
     sys.stdout = save_stdout
+
+
+def _read_config(text: str, filename: str) -> ConfigParser:
+    """Parse buildout configuration text into a ConfigParser.
+
+    Buildout configuration files are not plain INI files.  The stdlib
+    ConfigParser raises a ParsingError on buildout-only syntax, most notably
+    the ``=> other-part`` part-dependency shorthand, so parsing is delegated
+    to the very parser zc.buildout itself uses.  The result is loaded into a
+    ConfigParser afterwards so the rest of this module keeps working against
+    the familiar API, including the lower-cased option names it produces.
+
+    Interpolation is switched off because buildout has no ``%``
+    interpolation of its own; leaving it on would make a literal ``%`` in a
+    pinned version or an annotation blow up.
+    """
+    config = ConfigParser(interpolation=None)
+    # `parse` declares exp_globals with a `dict` default, so its inferred type
+    # is `type[dict]`, but buildout *calls* it to build the expression globals
+    # rather than instantiating it -- `_default_globals` is the callable
+    # buildout itself passes here.
+    config.read_dict(
+        buildout_parse(StringIO(text), filename, _default_globals)  # pyright: ignore[reportArgumentType]
+    )
+    return config
 
 
 async def _extract_versions_section(  # NOQA: C901
@@ -63,12 +90,12 @@ async def _extract_versions_section(  # NOQA: C901
             buildout = Buildout(filename, [])  # Use zc.buildout parser
     except UserError:
         buildout = {"buildout": {}}
-    config = ConfigParser()
     if os.path.isfile(filename):
-        config.read(filename)
+        with open(filename) as fio:
+            config = _read_config(fio.read(), filename)
     elif "://" in filename:
         resp = await client.get(filename)
-        config.read_file(StringIO(resp.text))
+        config = _read_config(resp.text, filename)
         # Check if response was from cache (hishel uses extensions)
         from_cache = resp.extensions.get("from_cache", False)
         if from_cache:

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.2 (unreleased)
+
+### Bug fixes
+
+- Parse buildout configuration with `zc.buildout`'s own parser instead of the
+  stdlib `configparser`, so buildout-only syntax no longer aborts the run.
+  Most visibly the `=> other-part` part-dependency shorthand, used for example
+  in Zope's `buildout.cfg`, raised a `configparser.ParsingError`.
+  [kunalKumar-13]
+
 ## 2.0.1
 
 ### Bug fixes
