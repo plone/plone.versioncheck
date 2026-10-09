@@ -4,20 +4,20 @@ ci:
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.16.6
+    rev: v0.16.10
     hooks:
       - id: ruff
         args: [--fix]
       - id: ruff-format
 
   - repo: https://github.com/PyCQA/isort
-    rev: 9.0.1
+    rev: 9.0.2
     hooks:
       - id: isort
         args: [--profile, plone]
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.411
+    rev: v1.1.414
     hooks:
       - id: pyright
         exclude: ^tests/
